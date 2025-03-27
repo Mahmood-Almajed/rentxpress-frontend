@@ -2,18 +2,6 @@ import React from "react";
 
 const teamMembers = [
   {
-    name: "Sayed Haider",
-    role: "Software Developer",
-    image: "./enhanced-image copy.png",
-    linkedin: "https://www.linkedin.com/in/sayed-haider-al-hashemi"
-  },
-  {
-    name: "Ahmed Abdulla",
-    role: "Software Developer",
-    image: "./ahmedii.png",
-    linkedin: "https://www.linkedin.com/in/ahmed-abdulla-amralla"
-  },
-  {
     name: "Mahmood Almajed",
     role: "Software Developer",
     image: "./out.png",

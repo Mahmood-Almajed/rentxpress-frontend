@@ -4,26 +4,79 @@ import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
 import * as carService from "../../services/carService";
 
 const brandModelMap = {
-  Toyota: ["Corolla", "Camry", "RAV4", "Highlander", "Yaris", "Prius"],
-  Honda: ["Civic", "Accord", "CR-V", "Pilot", "Fit", "Odyssey"],
-  Ford: ["Fusion", "Escape", "Focus", "Explorer", "Mustang", "Edge"],
-  Chevrolet: ["Malibu", "Equinox", "Tahoe", "Impala", "Cruze", "Traverse"],
-  BMW: ["3 Series", "5 Series", "X3", "X5", "X1", "X7"],
-  Tesla: ["Model S", "Model 3", "Model X", "Model Y", "Roadster", "Cybertruck"],
-  Hyundai: ["Elantra", "Tucson", "Santa Fe", "Sonata", "Accent"],
-  Kia: ["Sorento", "Sportage", "Soul", "Optima", "Rio"],
-  Jeep: ["Wrangler", "Cherokee", "Compass", "Grand Cherokee", "Renegade"],
-  Nissan: ["Altima", "Sentra", "Rogue", "Tiida", "Micra", "Pathfinder", "Maxima"],
-  MercedesBenz: ["C-Class", "E-Class", "S-Class", "GLC", "GLE"],
-  Audi: ["A3", "A4", "Q5", "Q7"],
-  Volkswagen: ["Golf", "Jetta", "Passat", "Tiguan"],
-  Subaru: ["Impreza", "Outback", "Forester", "Crosstrek"],
-  Mazda: ["Mazda3", "Mazda6", "CX-5", "CX-9"],
-  Dodge: ["Charger", "Challenger", "Durango"],
-  GMC: ["Sierra", "Yukon", "Terrain"],
-  Porsche: ["911", "Cayenne", "Macan"],
-  LandRover: ["Range Rover", "Discovery", "Defender"],
+  Toyota: [
+    "Corolla", "Camry", "RAV4", "Highlander", "Yaris", "Prius",
+    "Land Cruiser", "Fortuner", "Hilux", "Avalon", "Sequoia", "Tacoma", "4Runner", "Prado"
+  ],
+  Honda: [
+    "Civic", "Accord", "CR-V", "Pilot", "Fit", "Odyssey",
+    "HR-V", "Jazz", "Insight", "Element", "Ridgeline"
+  ],
+  Ford: [
+    "Fusion", "Escape", "Focus", "Explorer", "Mustang", "Edge",
+    "F-150", "Expedition", "Bronco", "Ranger", "Taurus"
+  ],
+  Chevrolet: [
+    "Malibu", "Equinox", "Tahoe", "Impala", "Cruze", "Traverse",
+    "Suburban", "Camaro", "Silverado", "Blazer", "Trailblazer"
+  ],
+  BMW: [
+    "3 Series", "5 Series", "7 Series", "X1", "X3", "X5", "X6", "X7",
+    "M3", "M5", "i3", "i8", "Z4"
+  ],
+  MercedesBenz: [
+    "A-Class", "C-Class", "E-Class", "S-Class", "GLA", "GLC", "GLE", "GLS",
+    "G-Class", "CLA", "SL-Class", "AMG GT"
+  ],
+  Audi: [
+    "A3", "A4", "A6", "A8", "Q3", "Q5", "Q7", "Q8",
+    "TT", "RS5", "e-tron"
+  ],
+  Volkswagen: [
+    "Golf", "Jetta", "Passat", "Tiguan", "Atlas", "Touareg", "Beetle", "Polo"
+  ],
+  Hyundai: [
+    "Elantra", "Tucson", "Santa Fe", "Sonata", "Accent", "Palisade", "Kona", "Venue", "Creta", "Elentra-N"
+  ],
+  Kia: [
+    "Sorento", "Sportage", "Soul", "Optima", "Rio", "Seltos", "Telluride", "Carnival", "Cerato"
+  ],
+  Nissan: [
+    "Altima", "Sentra", "Rogue", "Pathfinder", "Tiida", "Micra", "Maxima",
+    "Patrol", "X-Trail", "Juke", "Armada", "Navara"
+  ],
+  Tesla: [
+    "Model S", "Model 3", "Model X", "Model Y", "Roadster", "Cybertruck", "Semi"
+  ],
+  Lexus: [
+    "IS", "ES", "GS", "LS", "RX", "NX", "UX", "GX", "LX", "RC", "LC"
+  ],
+  Mazda: [
+    "Mazda2", "Mazda3", "Mazda6", "CX-3", "CX-5", "CX-9", "MX-5 Miata", "RX-8"
+  ],
+  Subaru: [
+    "Impreza", "Outback", "Forester", "Crosstrek", "Legacy", "BRZ", "Ascent", "WRX"
+  ],
+  Jeep: [
+    "Wrangler", "Cherokee", "Compass", "Grand Cherokee", "Renegade", "Gladiator"
+  ],
+  Dodge: [
+    "Charger", "Challenger", "Durango", "Journey", "Dart", "Ram 1500"
+  ],
+  GMC: [
+    "Sierra", "Yukon", "Terrain", "Acadia", "Canyon", "Envoy"
+  ],
+  Porsche: [
+    "911", "Cayenne", "Macan", "Panamera", "Taycan", "Boxster"
+  ],
+  LandRover: [
+    "Range Rover", "Range Rover Sport", "Range Rover Velar", "Discovery", "Discovery Sport", "Defender", "Freelander"
+  ],
+  Mitsubishi: [
+    "Lancer", "Outlander", "Pajero", "Mirage", "ASX", "Eclipse Cross"
+  ]
 };
+
 
 const CreateCar = (props) => {
   const { carId } = useParams();
