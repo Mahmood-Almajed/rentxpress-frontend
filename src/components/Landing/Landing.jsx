@@ -7,7 +7,8 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { AuthedUserContext } from "../../App";
 import * as carService from "../../services/carService";
-import { motion } from "framer-motion";
+// import './Dashboard.css'
+import { motion } from 'framer-motion';
 
 const testimonials = [
   {
@@ -47,6 +48,7 @@ const testimonials = [
   },
 ];
 
+
 const Dashboard = () => {
   const user = useContext(AuthedUserContext);
   const [cars, setCars] = useState([]);
@@ -63,6 +65,21 @@ const Dashboard = () => {
     fetchCars();
   }, []);
 
+  const teamMembers = [
+    {
+      name: "Mahmood Almajed",
+      role: "Software Developer",
+      image: "./mahmood-Photoroom-removebg-preview.png",
+      linkedin: "https://www.linkedin.com/in/mahmood-almajed"
+    },
+    {
+      name: "Abbas Hussain",
+      role: "Software Developer",
+      image: "./abbas.png",
+      linkedin: "https://www.linkedin.com/in/abbashussainj"
+    },
+  ];
+  
   const brands = [
     {
       name: "Audi",
@@ -91,172 +108,175 @@ const Dashboard = () => {
   ];
 
   return (
-    <>
-     <motion.div
+    <><motion.div
+  className="hero-video-wrapper"
   initial={{ opacity: 0 }}
-  animate={{ opacity: 1 }}
+  animate={{ opacity: 3 }}
   transition={{ duration: 2 }}
-  style={{
-    position: "relative",
-    width: "100%",
-    height: "100vh",
-    overflow: "hidden",
-  }}
 >
   <video
+    className="hero-video"
     autoPlay
     muted
     loop
     playsInline
-    style={{
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      objectFit: "cover",
-      zIndex: 0,
-    }}
   >
     <source src="./CINEMATIC.mp4" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
+  <div className="hero-overlay-content">
 
-  <div
-    style={{
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      textAlign: "center",
-      zIndex: 1,
-      outline: "none",
-    }}
-  >
-    <motion.h1
-      className="fw-bold text-light"
-      initial={{ scale: 0.8, letterSpacing: "-1px" }}
-      animate={{ scale: 1, letterSpacing: "2px" }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      style={{
-        fontSize: "clamp(2.5rem, 6vw, 5rem)",
-        marginBottom: "1rem",
-      }}
-    >
-      Rent<span className="text-warning">X</span>press
-    </motion.h1>
-    <p className="lead text-white fs-6 fs-md-5 mb-0">Find Your Perfect Car</p>
+<motion.h1
+  className="display-4 fw-bold text-light"
+  initial={{ scale: 0.8, letterSpacing: '-1px' }}
+  animate={{ scale: 1, letterSpacing: '2px' }}
+  transition={{ duration: 0.6, ease: 'easeOut' }}
+  style={{fontSize: 80}}
+>
+  Rent<span className="text-warning">X</span>press
+</motion.h1>
+  <p className="lead text-white">Find Your Perfect Car</p>
   </div>
 </motion.div>
 
 
-      <main className="container" style={{ marginTop: 100, marginBottom: 50 }}>
-        <motion.section
-          className="py-5"
+  
+  <main className="container" style={{ marginTop: 100, marginBottom: 50 }}>
+
+  <motion.section
+  className="py-5"
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 1 }}
+>
+  <div className="container">
+    <div className="d-flex justify-content-between align-items-center mb-4">
+      <h2 className="fw-bold">Explore Our Premium Brands</h2>
+      <span className="text-primary" style={{ cursor: "pointer" }}>
+      <a href="/signin" className="btn btn-warning" style={{textDecoration: "none"}}>Show All Brands  ↗</a> 
+      </span>
+    </div>
+    <div className="row g-4">
+      {brands.map((brand, idx) => (
+        <motion.div
+          className="col-6 col-sm-4 col-md-3 col-lg-2"
+          key={idx}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
+          transition={{ duration: 0.5, delay: idx * 0.2 }}
         >
-          <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 text-center text-md-start">
-            <h2 className="fw-bold mb-3 mb-md-0">Explore Our Premium Brands</h2>
-            <a href="/signin" className="btn btn-warning">
-              Show All Brands ↗
-            </a>
+          <div className="brand-card text-center p-3 shadow-sm bg-white rounded-4 h-100">
+            <img
+              src={brand.logo}
+              alt={brand.name}
+              className="brand-logo mb-2"
+              style={{ height: 50, objectFit: "contain" }}
+            />
+            <p className="mb-0 fw-medium">{brand.name}</p>
           </div>
-          <div className="row g-3 g-md-4">
-            {brands.map((brand, idx) => (
-              <motion.div
-                className="col-6 col-sm-4 col-md-3 col-lg-2"
-                key={idx}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: idx * 0.2 }}
-              >
-                <div className="text-center p-2 p-md-3 shadow-sm bg-white rounded-4 h-100">
-                  <img
-                    src={brand.logo}
-                    alt={brand.name}
-                    className="mb-2 img-fluid"
-                    style={{ height: 40, objectFit: "contain" }}
-                  />
-                  <p className="mb-0 small fw-medium">{brand.name}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.section>
+        </motion.div>
+      ))}
+    </div>
+  </div>
+</motion.section>
 
-        <hr />
+    <hr />
 
-        <section className="ftco-section ftco-about py-5">
-          <div className="row g-0 flex-column flex-md-row">
-            <div
-              className="col-md-6"
-              style={{
-                backgroundImage: `url('./enhanced-image.jpg')`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                minHeight: "300px",
-                borderRadius: "20px 20px 0 0",
+  <section className="ftco-section ftco-about py-5">
+      <div className="container" style={{width:1300}}>
+        <div className="row g-0">
+          <div
+            className="col-md-6 d-flex justify-content-center align-items-center"
+            style={{
+              backgroundImage: `url('./enhanced-image.jpg')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              minHeight: '500px',
+              borderTopLeftRadius: "20px",
+              borderBottomLeftRadius: "20px",
               }}
-            ></div>
-            <div className="col-md-6 bg-dark text-white p-4 rounded-bottom">
-              <div className="p-md-5 px-3 py-4 text-center text-md-start">
-                <span className="text-uppercase text-warning fw-semibold">
-                  About us
-                </span>
-                <h2 className="mb-4 mt-2 fs-3 fs-md-2">
-                  Welcome to Rent<span className="text-warning fw-bold">X</span>press
-                </h2>
-                <p className="small">
-                  RentXpress is created by a team of four passionate developers committed to revolutionizing car rentals.
-                </p>
-                <p className="small">
-                  We aim to provide a seamless, secure, and user-friendly platform that connects car owners with renters effortlessly.
+          ></div>
+
+          <div className="col-md-6 bg-dark text-white d-flex align-items-center" style={{              
+            borderTopRightRadius: "20px",
+              borderBottomRightRadius: "20px",}}>
+            <div className="p-md-5 px-4 py-5">
+              <span className="text-uppercase text-warning fw-semibold">About us</span>
+              <h2 className="mb-4 mt-2">Welcome to Rent<span className="text-warning fw-bold">X</span>press</h2>
+
+              <p>
+              RentXpress is created by a team of four passionate developers committed to revolutionizing car rentals.
+              </p>
+              <p >
+              
+                 We aim to provide a seamless, secure, and user-friendly platform that connects car owners with renters effortlessly.
+                  With a focus on convenience, trust, and accessibility, we make finding and listing cars easier than ever. 
                   Your perfect ride is just a few clicks away!
-                </p>
-                <a href="/signin" className="btn btn-warning mt-3">
-                  Search Vehicle
-                </a>
-              </div>
+              </p>
+              <a href="/signin" className="btn btn-warning py-2 px-4 mt-2">
+                Search Vehicle
+              </a>
             </div>
           </div>
-        </section>
+        </div>
+      </div>
+    </section>
+   
 
         <div className="text-center mb-4">
-          <h3 style={{ marginTop: 50 }}>Featured Vehicles</h3>
-          <p className="text-muted">Explore some of the top listed cars available now.</p>
+          <h3 style={{marginTop: 50}}>Featured Vehicles</h3>
+          <p className="text-muted">
+            Explore some of the top listed cars available now.
+          </p>
         </div>
 
         {cars.length > 0 ? (
           <Swiper
             modules={[Navigation, Pagination, Autoplay]}
-            spaceBetween={20}
+            spaceBetween={30}
             slidesPerView={1}
+            // navigation
             pagination={{ clickable: true }}
             autoplay={{ delay: 3000, disableOnInteraction: false }}
             breakpoints={{
-              576: { slidesPerView: 1 },
               768: { slidesPerView: 2 },
               1024: { slidesPerView: 3 },
             }}
           >
             {cars.map((car, idx) => (
               <SwiperSlide key={car._id || idx}>
-                <div className="card h-100 shadow-sm">
+                <div className="card h-100 shadow-sm" style={{ height: "400px" }}>
                   <div
                     className="card-img-top"
                     style={{
-                      height: "180px",
+                      height: "200px",
                       backgroundImage: `url(${car.image?.url || "/placeholder.jpg"})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
-                    }}
-                  />
-                  <div className="card-body text-center d-flex flex-column">
-                    <h6 className="card-title small">{car.brand} {car.model}</h6>
-                    <p className="fw-bold small">BHD {car.pricePerDay} / day</p>
-                    <Link to={`/signin`} className="btn btn-sm btn-warning mt-auto">Details</Link>
+                      borderTopLeftRadius: "8px",
+                      borderTopRightRadius: "8px",
+                    }} />
+                  <div
+                    className="card-body d-flex flex-column text-center"
+                    style={{ minHeight: "160px" }}
+                  >
+                    <h5 className="card-title">
+                      {car.brand} {car.model}
+                    </h5>
+
+
+                    <p className="fw-bold">
+                      BHD {car.pricePerDay} <span className="text-muted">/ day</span>
+                    </p>
+
+                    <div className="d-flex justify-content-center gap-2 mt-auto">
+                      <Link
+                        to={`/signin`}
+                        className="btn btn-sm btn-warning"
+                      >
+                        Details
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </SwiperSlide>
@@ -266,49 +286,54 @@ const Dashboard = () => {
           <p className="text-center text-muted">Loading featured vehicles...</p>
         )}
 
-        <section className="py-5">
-          <div className="container">
-            <div className="row justify-content-center mb-5">
-              <div className="col-md-7 text-center">
-                <span className="text-uppercase text-warning">Testimonial</span>
-                <h2 className="fw-bold">Happy Clients</h2>
-              </div>
-            </div>
 
-            <Swiper
-              modules={[Pagination, Navigation, Autoplay]}
-              spaceBetween={30}
-              slidesPerView={1}
-              pagination={{ clickable: true }}
-              autoplay={{ delay: 5000 }}
-              breakpoints={{
-                768: { slidesPerView: 2 },
-                992: { slidesPerView: 3 },
-              }}
-            >
-              {testimonials.map((item, index) => (
-                <SwiperSlide key={index}>
-                  <div className="text-center p-4 bg-white rounded-4 shadow-sm h-100 mx-2">
-                    <div
-                      className="mb-3 mx-auto rounded-circle"
-                      style={{
-                        width: 100,
-                        height: 100,
-                        backgroundImage: `url(${item.image})`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                      }}
-                    ></div>
-                    <p className="mb-3 fst-italic small px-3">"{item.text}"</p>
-                    <h6 className="fw-semibold mb-0">{item.name}</h6>
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
+
+<br />
+     <section className="py-5">
+      <div className="container" >
+        <div className="row justify-content-center mb-5">
+          <div className="col-md-7 text-center">
+          <span className="text-uppercase text-warning">Testimonial</span>
+          <h2 className="fw-bold">Happy Clients</h2>
           </div>
-        </section>
-      </main>
-    </>
+        </div>
+
+        <Swiper
+          modules={[Pagination, Navigation, Autoplay]}
+          spaceBetween={30}
+          slidesPerView={1}
+          // navigation
+          pagination={{ clickable: true }}
+          autoplay={{ delay: 5000 }}
+          breakpoints={{
+            768: { slidesPerView: 2 },
+            992: { slidesPerView: 3 },
+          }}
+        >
+          {testimonials.map((item, index) => (
+            <SwiperSlide key={index}>
+              <div className="testimony-wrap text-center p-4 bg-white rounded-4 shadow-sm h-100 mx-2">
+                <div
+                  className="user-img mb-3 mx-auto rounded-circle"
+                  style={{
+                    width: 100,
+                    height: 100,
+                    backgroundImage: `url(${item.image})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                ></div>
+                <p className="mb-3 fst-italic small px-3">"{item.text}"</p>
+                <h6 className="fw-semibold mb-0">{item.name}</h6>
+                <span className="text-muted small">{item.role}</span>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+    </section>
+
+      </main></>
   );
 };
 
