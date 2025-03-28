@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import "./NavBar.css";
+import "./NavBar.css"; 
 
 const NavBar = ({ user, handleSignout }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
@@ -10,7 +10,7 @@ const NavBar = ({ user, handleSignout }) => {
   };
 
   useEffect(() => {
-    const navbarHeight = document.getElementById("ftco-navbar")?.offsetHeight || 0;
+    const navbarHeight = document.getElementById("ftco-navbar").offsetHeight;
     document.body.style.paddingTop = `${navbarHeight}px`;
   }, []);
 
@@ -21,24 +21,31 @@ const NavBar = ({ user, handleSignout }) => {
       }`}
       id="ftco-navbar"
     >
-      <div className="container">
+      <div className="container d-flex justify-content-between align-items-center">
         <Link className="navbar-brand fw-bold" to="/">
           Rent<span className="text-warning fw-bold">X</span>press
         </Link>
-
         <button
-          className="navbar-toggler"
+          className="navbar-toggler collapsed"
           type="button"
           onClick={toggleNavbar}
           aria-controls="ftco-nav"
           aria-expanded={!isCollapsed}
           aria-label="Toggle navigation"
         >
-          <span className="navbar-toggler-icon"></span>
+          <span className="oi oi-menu"></span> Menu
         </button>
 
-        <div className={`collapse navbar-collapse ${!isCollapsed ? "show" : ""}`} id="ftco-nav">
-          <ul className="navbar-nav text-center">
+        <div
+          className={`navbar-collapse collapse ${!isCollapsed ? "show" : ""} justify-content-center`}
+          id="ftco-nav"
+        >
+          <ul className="navbar-nav">
+            {!user && (
+              <>
+
+              </>
+            )}
             {user?.role === "admin" && (
               <>
                 <li className="nav-item"><Link className="nav-link" to="/">Home</Link></li>
@@ -63,34 +70,20 @@ const NavBar = ({ user, handleSignout }) => {
                 <li className="nav-item"><Link className="nav-link" to="/become-dealer">Become a Dealer</Link></li>
               </>
             )}
-            {!user && (
-              <>
-                <li className="nav-item"><Link className="nav-link" to="/">Home</Link></li>
-                <li className="nav-item"><Link className="nav-link" to="/About">About</Link></li>
-              </>
-            )}
           </ul>
-
-          <div className="auth-buttons">
-            {!user ? (
-              <>
-                <Link className="btn btn-outline-light me-2 mb-2 mb-lg-0" to="/signin">
-                  Sign In
-                </Link>
-                <Link className="btn btn-warning text-dark mb-2 mb-lg-0" to="/signup">
-                  Sign Up
-                </Link>
-              </>
-            ) : (
-              <button
-                onClick={handleSignout}
-                className="btn btn-outline-light mb-2 mb-lg-0"
-              >
-                Sign Out
-              </button>
-            )}
-          </div>
         </div>
+        <ul className="navbar-nav ml-auto d-flex align-items-center">
+          {!user ? (
+            <>
+            <li className="nav-item"><Link className="nav-link" to="/">Home</Link></li>
+            <li className="nav-item"><Link className="nav-link" to="/About">About</Link></li>
+            <li className="nav-item"><Link className="nav-link" to="/signin">Sign In</Link></li>
+            <li className="nav-item"><Link className="nav-link" to="/signup">Sign Up</Link></li>
+            </>
+          ) : (
+            <li className="nav-item"><button onClick={handleSignout} className="btn btn-link nav-link">Sign Out</button></li>
+          )}
+        </ul>
       </div>
     </nav>
   );
