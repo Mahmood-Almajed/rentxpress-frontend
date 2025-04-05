@@ -4,12 +4,27 @@ import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
 import * as carService from "../../services/carService";
 
 const brandModelMap = {
-  Toyota: ["Corolla", "Camry", "RAV4", "Highlander"],
-  Honda: ["Civic", "Accord", "CR-V"],
-  Ford: ["Fusion", "Escape", "Focus"],
-  Chevrolet: ["Malibu", "Equinox", "Tahoe"],
-  BMW: ["3 Series", "5 Series", "X3"],
-  // Keep the rest...
+  Toyota: ["Corolla", "Camry", "RAV4", "Highlander", "Yaris", "Prius", "Land Cruiser", "Fortuner", "Hilux", "Avalon", "Sequoia", "Tacoma", "4Runner", "Prado"],
+  Honda: ["Civic", "Accord", "CR-V", "Pilot", "Fit", "Odyssey", "HR-V", "Jazz", "Insight", "Element", "Ridgeline"],
+  Ford: ["Fusion", "Escape", "Focus", "Explorer", "Mustang", "Edge", "F-150", "Expedition", "Bronco", "Ranger", "Taurus"],
+  Chevrolet: ["Malibu", "Equinox", "Tahoe", "Impala", "Cruze", "Traverse", "Suburban", "Camaro", "Silverado", "Blazer", "Trailblazer"],
+  BMW: ["3 Series", "5 Series", "7 Series", "X1", "X3", "X5", "X6", "X7", "M3", "M5", "i3", "i8", "Z4"],
+  MercedesBenz: ["A-Class", "C-Class", "E-Class", "S-Class", "GLA", "GLC", "GLE", "GLS", "G-Class", "CLA", "SL-Class", "AMG GT"],
+  Audi: ["A3", "A4", "A6", "A8", "Q3", "Q5", "Q7", "Q8", "TT", "RS5", "e-tron"],
+  Volkswagen: ["Golf", "Jetta", "Passat", "Tiguan", "Atlas", "Touareg", "Beetle", "Polo"],
+  Hyundai: ["Elantra", "Tucson", "Santa Fe", "Sonata", "Accent", "Palisade", "Kona", "Venue", "Creta", "Elentra-N"],
+  Kia: ["Sorento", "Sportage", "Soul", "Optima", "Rio", "Seltos", "Telluride", "Carnival", "Cerato"],
+  Nissan: ["Altima", "Sentra", "Rogue", "Pathfinder", "Tiida", "Micra", "Maxima", "Patrol", "X-Trail", "Juke", "Armada", "Navara"],
+  Tesla: ["Model S", "Model 3", "Model X", "Model Y", "Roadster", "Cybertruck", "Semi"],
+  Lexus: ["IS", "ES", "GS", "LS", "RX", "NX", "UX", "GX", "LX", "RC", "LC"],
+  Mazda: ["Mazda2", "Mazda3", "Mazda6", "CX-3", "CX-5", "CX-9", "MX-5 Miata", "RX-8"],
+  Subaru: ["Impreza", "Outback", "Forester", "Crosstrek", "Legacy", "BRZ", "Ascent", "WRX"],
+  Jeep: ["Wrangler", "Cherokee", "Compass", "Grand Cherokee", "Renegade", "Gladiator"],
+  Dodge: ["Charger", "Challenger", "Durango", "Journey", "Dart", "Ram 1500"],
+  GMC: ["Sierra", "Yukon", "Terrain", "Acadia", "Canyon", "Envoy"],
+  Porsche: ["911", "Cayenne", "Macan", "Panamera", "Taycan", "Boxster"],
+  LandRover: ["Range Rover", "Range Rover Sport", "Range Rover Velar", "Discovery", "Discovery Sport", "Defender", "Freelander"],
+  Mitsubishi: ["Lancer", "Outlander", "Pajero", "Mirage", "ASX", "Eclipse Cross"]
 };
 
 const CreateCar = (props) => {
@@ -25,17 +40,16 @@ const CreateCar = (props) => {
     listingType: "rent",
     pricePerDay: "",
     salePrice: "",
+    forSale: false,
+    isSold: false,
+    buyerId: "",
     isCompatible: false,
   });
 
   const [imageFile, setImageFile] = useState(null);
   const [marker, setMarker] = useState(null);
 
-  const mapContainerStyle = {
-    width: "100%",
-    height: "300px",
-  };
-
+  const mapContainerStyle = { width: "100%", height: "300px" };
   const center = { lat: 26.2235, lng: 50.5876 };
 
   const { isLoaded } = useLoadScript({
@@ -44,12 +58,14 @@ const CreateCar = (props) => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleBrandChange = (e) => {
-    const brand = e.target.value;
-    setFormData({ ...formData, brand, model: "" });
+    setFormData({ ...formData, brand: e.target.value, model: "" });
   };
 
   const handleMapClick = (e) => {
@@ -62,23 +78,25 @@ const CreateCar = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = new FormData();
-  
+
     const payload = {
       ...formData,
       forSale: formData.listingType === "sale",
-      pricePerDay: formData.listingType === "rent" ? formData.pricePerDay : undefined,
-      salePrice: formData.listingType === "sale" ? formData.salePrice : undefined,
-      listingType: formData.listingType, // ✅ make sure this goes in!
+      pricePerDay: formData.listingType === "rent" ? formData.pricePerDay : "",
+      salePrice: formData.listingType === "sale" ? formData.salePrice : "",
+      isSold: formData.listingType === "sale" ? formData.isSold : false,
+      buyerId: formData.listingType === "sale" ? formData.buyerId : "",
     };
-  
+
     for (const key in payload) {
-      if (payload[key] !== undefined) {
-        data.append(key, payload[key]);
+      const value = payload[key];
+      if (value !== undefined && value !== null) {
+        data.append(key, String(value));
       }
     }
-  
+
     if (imageFile) data.append("image", imageFile);
-  
+
     carId ? props.handleUpdateCar(carId, data) : props.handleAddCar(data);
   };
 
@@ -92,6 +110,8 @@ const CreateCar = (props) => {
           pricePerDay: carData.pricePerDay || "",
           salePrice: carData.salePrice || "",
           isCompatible: carData.isCompatible || false,
+          isSold: carData.isSold || false,
+          buyerId: carData.buyerId || "",
         });
 
         if (carData.location) {
@@ -144,7 +164,6 @@ const CreateCar = (props) => {
                 </select>
               </div>
 
-              {/* 🔘 Listing Type */}
               <div className="col-md-8">
                 <label className="form-label">Listing Type</label>
                 <select className="form-select" name="listingType" value={formData.listingType} onChange={handleChange} required>
@@ -153,7 +172,6 @@ const CreateCar = (props) => {
                 </select>
               </div>
 
-              {/* 💰 Price Input */}
               {formData.listingType === "rent" && (
                 <div className="col-md-12">
                   <label className="form-label">Price Per Day (BHD)</label>
@@ -162,10 +180,19 @@ const CreateCar = (props) => {
               )}
 
               {formData.listingType === "sale" && (
-                <div className="col-md-12">
-                  <label className="form-label">Sale Price (BHD)</label>
-                  <input type="number" className="form-control" name="salePrice" value={formData.salePrice} onChange={handleChange} required />
-                </div>
+                <>
+                  <div className="col-md-6">
+                    <label className="form-label">Sale Price (BHD)</label>
+                    <input type="number" className="form-control" name="salePrice" value={formData.salePrice} onChange={handleChange} required />
+                  </div>
+                  <div className="col-md-6">
+                    <label className="form-label">Mark as Sold?</label>
+                    <select name="isSold" className="form-select" value={formData.isSold ? "true" : "false"} onChange={(e) => setFormData({ ...formData, isSold: e.target.value === "true" })}>
+                      <option value="false">No</option>
+                      <option value="true">Yes</option>
+                    </select>
+                  </div>
+                </>
               )}
 
               <div className="col-12">
@@ -190,7 +217,6 @@ const CreateCar = (props) => {
                 )}
               </div>
 
-              {/* ♿ Special Needs */}
               <div className="col-md-6">
                 <div className="form-check mt-2">
                   <input className="form-check-input" type="checkbox" name="isCompatible" checked={formData.isCompatible} onChange={handleChange} id="compatibleCheck" />

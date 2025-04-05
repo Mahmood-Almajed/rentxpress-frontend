@@ -16,7 +16,6 @@ const buyCar = async (carId) => {
   }
 };
 
-// 📦 Get all sales for current user (buyer), or dealer, or admin
 const getMySales = async () => {
   try {
     const res = await fetch(BASE_URL, {
