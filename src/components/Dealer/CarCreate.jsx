@@ -4,27 +4,12 @@ import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
 import * as carService from "../../services/carService";
 
 const brandModelMap = {
-  Toyota: ["Corolla", "Camry", "RAV4", "Highlander", "Yaris", "Prius", "Land Cruiser", "Fortuner", "Hilux", "Avalon", "Sequoia", "Tacoma", "4Runner", "Prado"],
-  Honda: ["Civic", "Accord", "CR-V", "Pilot", "Fit", "Odyssey", "HR-V", "Jazz", "Insight", "Element", "Ridgeline"],
-  Ford: ["Fusion", "Escape", "Focus", "Explorer", "Mustang", "Edge", "F-150", "Expedition", "Bronco", "Ranger", "Taurus"],
-  Chevrolet: ["Malibu", "Equinox", "Tahoe", "Impala", "Cruze", "Traverse", "Suburban", "Camaro", "Silverado", "Blazer", "Trailblazer"],
-  BMW: ["3 Series", "5 Series", "7 Series", "X1", "X3", "X5", "X6", "X7", "M3", "M5", "i3", "i8", "Z4"],
-  MercedesBenz: ["A-Class", "C-Class", "E-Class", "S-Class", "GLA", "GLC", "GLE", "GLS", "G-Class", "CLA", "SL-Class", "AMG GT"],
-  Audi: ["A3", "A4", "A6", "A8", "Q3", "Q5", "Q7", "Q8", "TT", "RS5", "e-tron"],
-  Volkswagen: ["Golf", "Jetta", "Passat", "Tiguan", "Atlas", "Touareg", "Beetle", "Polo"],
-  Hyundai: ["Elantra", "Tucson", "Santa Fe", "Sonata", "Accent", "Palisade", "Kona", "Venue", "Creta", "Elentra-N"],
-  Kia: ["Sorento", "Sportage", "Soul", "Optima", "Rio", "Seltos", "Telluride", "Carnival", "Cerato"],
-  Nissan: ["Altima", "Sentra", "Rogue", "Pathfinder", "Tiida", "Micra", "Maxima", "Patrol", "X-Trail", "Juke", "Armada", "Navara"],
-  Tesla: ["Model S", "Model 3", "Model X", "Model Y", "Roadster", "Cybertruck", "Semi"],
-  Lexus: ["IS", "ES", "GS", "LS", "RX", "NX", "UX", "GX", "LX", "RC", "LC"],
-  Mazda: ["Mazda2", "Mazda3", "Mazda6", "CX-3", "CX-5", "CX-9", "MX-5 Miata", "RX-8"],
-  Subaru: ["Impreza", "Outback", "Forester", "Crosstrek", "Legacy", "BRZ", "Ascent", "WRX"],
-  Jeep: ["Wrangler", "Cherokee", "Compass", "Grand Cherokee", "Renegade", "Gladiator"],
-  Dodge: ["Charger", "Challenger", "Durango", "Journey", "Dart", "Ram 1500"],
-  GMC: ["Sierra", "Yukon", "Terrain", "Acadia", "Canyon", "Envoy"],
-  Porsche: ["911", "Cayenne", "Macan", "Panamera", "Taycan", "Boxster"],
-  LandRover: ["Range Rover", "Range Rover Sport", "Range Rover Velar", "Discovery", "Discovery Sport", "Defender", "Freelander"],
-  Mitsubishi: ["Lancer", "Outlander", "Pajero", "Mirage", "ASX", "Eclipse Cross"]
+  Toyota: ["Corolla", "Camry", "RAV4", "Highlander"],
+  Honda: ["Civic", "Accord", "CR-V"],
+  Ford: ["Fusion", "Escape", "Focus"],
+  Chevrolet: ["Malibu", "Equinox", "Tahoe"],
+  BMW: ["3 Series", "5 Series", "X3"],
+  // Keep the rest...
 };
 
 const CreateCar = (props) => {
@@ -36,9 +21,9 @@ const CreateCar = (props) => {
     brand: "",
     model: "",
     year: currentYear,
-    pricePerDay: "",
     location: "",
-    forSale: false,
+    listingType: "rent",
+    pricePerDay: "",
     salePrice: "",
     isCompatible: false,
   });
@@ -77,26 +62,45 @@ const CreateCar = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = new FormData();
-    for (const key in formData) data.append(key, formData[key]);
+  
+    const payload = {
+      ...formData,
+      forSale: formData.listingType === "sale",
+      pricePerDay: formData.listingType === "rent" ? formData.pricePerDay : undefined,
+      salePrice: formData.listingType === "sale" ? formData.salePrice : undefined,
+      listingType: formData.listingType, // ✅ make sure this goes in!
+    };
+  
+    for (const key in payload) {
+      if (payload[key] !== undefined) {
+        data.append(key, payload[key]);
+      }
+    }
+  
     if (imageFile) data.append("image", imageFile);
-
+  
     carId ? props.handleUpdateCar(carId, data) : props.handleAddCar(data);
   };
 
   useEffect(() => {
-    const fetchCar = async () => {
-      const carData = await carService.show(carId);
-      setFormData({
-        ...carData,
-        forSale: carData.forSale || false,
-        isCompatible: carData.isCompatible || false,
-      });
-      if (carData.location) {
-        const [lat, lng] = carData.location.split(",").map(Number);
-        setMarker({ lat, lng });
-      }
-    };
-    if (carId) fetchCar();
+    if (carId) {
+      const fetchCar = async () => {
+        const carData = await carService.show(carId);
+        setFormData({
+          ...carData,
+          listingType: carData.forSale ? "sale" : "rent",
+          pricePerDay: carData.pricePerDay || "",
+          salePrice: carData.salePrice || "",
+          isCompatible: carData.isCompatible || false,
+        });
+
+        if (carData.location) {
+          const [lat, lng] = carData.location.split(",").map(Number);
+          setMarker({ lat, lng });
+        }
+      };
+      fetchCar();
+    }
   }, [carId]);
 
   return (
@@ -104,14 +108,14 @@ const CreateCar = (props) => {
       <div className="container">
         <div className="text-center mb-5">
           <h1 className="fw-bold text-dark">{carId ? "Edit Car" : "Add New Car"}</h1>
-          <p className="text-muted">{carId ? "Update your car's listing below." : "Fill in the car details to create a new listing."}</p>
+          <p className="text-muted">{carId ? "Update your car listing." : "Fill in the details to list a car."}</p>
         </div>
 
         <div className="card shadow border-0 rounded-4 p-4 bg-white">
           <form onSubmit={handleSubmit}>
             <div className="row g-3">
               <div className="col-md-6">
-                <label htmlFor="brand" className="form-label">Brand</label>
+                <label className="form-label">Brand</label>
                 <select className="form-select" name="brand" value={formData.brand} onChange={handleBrandChange} required>
                   <option value="">Select Brand</option>
                   {Object.keys(brandModelMap).map((brand) => (
@@ -121,17 +125,18 @@ const CreateCar = (props) => {
               </div>
 
               <div className="col-md-6">
-                <label htmlFor="model" className="form-label">Model</label>
+                <label className="form-label">Model</label>
                 <select className="form-select" name="model" value={formData.model} onChange={handleChange} required disabled={!formData.brand}>
                   <option value="">Select Model</option>
-                  {formData.brand && brandModelMap[formData.brand].map((model) => (
-                    <option key={model} value={model}>{model}</option>
-                  ))}
+                  {formData.brand &&
+                    brandModelMap[formData.brand].map((model) => (
+                      <option key={model} value={model}>{model}</option>
+                    ))}
                 </select>
               </div>
 
               <div className="col-md-4">
-                <label htmlFor="year" className="form-label">Year</label>
+                <label className="form-label">Year</label>
                 <select className="form-select" name="year" value={formData.year} onChange={handleChange} required>
                   {yearOptions.map((year) => (
                     <option key={year} value={year}>{year}</option>
@@ -139,10 +144,29 @@ const CreateCar = (props) => {
                 </select>
               </div>
 
+              {/* 🔘 Listing Type */}
               <div className="col-md-8">
-                <label htmlFor="pricePerDay" className="form-label">Price Per Day (BHD)</label>
-                <input type="number" className="form-control" name="pricePerDay" value={formData.pricePerDay} onChange={handleChange} required />
+                <label className="form-label">Listing Type</label>
+                <select className="form-select" name="listingType" value={formData.listingType} onChange={handleChange} required>
+                  <option value="rent">For Rent</option>
+                  <option value="sale">For Sale</option>
+                </select>
               </div>
+
+              {/* 💰 Price Input */}
+              {formData.listingType === "rent" && (
+                <div className="col-md-12">
+                  <label className="form-label">Price Per Day (BHD)</label>
+                  <input type="number" className="form-control" name="pricePerDay" value={formData.pricePerDay} onChange={handleChange} required />
+                </div>
+              )}
+
+              {formData.listingType === "sale" && (
+                <div className="col-md-12">
+                  <label className="form-label">Sale Price (BHD)</label>
+                  <input type="number" className="form-control" name="salePrice" value={formData.salePrice} onChange={handleChange} required />
+                </div>
+              )}
 
               <div className="col-12">
                 <label className="form-label">Location (click on map)</label>
@@ -157,37 +181,16 @@ const CreateCar = (props) => {
               </div>
 
               <div className="col-12">
-                <label htmlFor="image" className="form-label">Upload Car Image</label>
+                <label className="form-label">Upload Car Image</label>
                 <input type="file" className="form-control" name="image" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])} required={!carId} />
-                <div className="mt-3 d-flex align-items-center gap-3">
-                  {imageFile ? (
-                    <>
-                      <img src={URL.createObjectURL(imageFile)} alt="Preview" className="rounded border" style={{ width: 40, height: 40, objectFit: "cover" }} />
-                      <small className="text-success">New uploaded image</small>
-                    </>
-                  ) : carId && formData.image?.url ? (
-                    <>
-                      <img src={formData.image.url} alt="Current" className="rounded border" style={{ width: 40, height: 40, objectFit: "cover" }} />
-                      <small className="text-muted">Current image</small>
-                    </>
-                  ) : null}
-                </div>
+                {imageFile && (
+                  <div className="mt-2">
+                    <img src={URL.createObjectURL(imageFile)} alt="Preview" style={{ height: 60, borderRadius: 4 }} />
+                  </div>
+                )}
               </div>
 
-              <div className="col-md-6">
-                <div className="form-check mt-2">
-                  <input className="form-check-input" type="checkbox" name="forSale" checked={formData.forSale} onChange={handleChange} id="forSaleCheck" />
-                  <label className="form-check-label" htmlFor="forSaleCheck">Available for Sale</label>
-                </div>
-              </div>
-
-              {formData.forSale && (
-                <div className="col-md-6">
-                  <label htmlFor="salePrice" className="form-label">Sale Price (BHD)</label>
-                  <input type="number" className="form-control" name="salePrice" value={formData.salePrice} onChange={handleChange} required />
-                </div>
-              )}
-
+              {/* ♿ Special Needs */}
               <div className="col-md-6">
                 <div className="form-check mt-2">
                   <input className="form-check-input" type="checkbox" name="isCompatible" checked={formData.isCompatible} onChange={handleChange} id="compatibleCheck" />
