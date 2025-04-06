@@ -44,6 +44,7 @@ const CreateCar = (props) => {
     isSold: false,
     buyerId: "",
     isCompatible: false,
+    dealerPhone: "", // Added dealerPhone field
     image: {}
   });
 
@@ -225,6 +226,18 @@ const CreateCar = (props) => {
                     </>
                   )}
                 </div>
+              </div>
+
+              <div className="col-md-6">
+                <label className="form-label">Dealer Phone</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="dealerPhone"
+                  value={formData.dealerPhone}
+                  onChange={handleChange}
+                  required
+                />
               </div>
 
               <div className="col-md-6">

@@ -135,13 +135,19 @@ function DealerCarsList() {
                       <>BHD <strong>{car.pricePerDay}</strong> / Day</>
                     )}
                   </p>
-
-                  <small className={`mb-2 ${
-                    car.availability === 'available' ? 'text-success' :
-                    car.availability === 'unavailable' ? 'text-danger' :
-                    car.availability === 'rented' ? 'text-secondary' : 'text-muted'
-                  }`}>
-                    {car.availability}
+                  <small
+                    className={`mb-2 ${car.isSold
+                        ? 'text-danger'
+                        : car.availability === 'available'
+                          ? 'text-success'
+                          : car.availability === 'unavailable'
+                            ? 'text-danger'
+                            : car.availability === 'rented'
+                              ? 'text-secondary'
+                              : 'text-muted'
+                      }`}
+                  >
+                    {car.isSold ? 'unavailable' : car.availability}
                   </small>
 
                   <motion.div
