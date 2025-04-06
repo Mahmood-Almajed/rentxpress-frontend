@@ -105,16 +105,12 @@ const CarDetails = () => {
         </div>
       </div>
     );
-    
-  return (
-    <motion.div
-      className="container my-5"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
-    >
-      <div className="row g-5">
 
+  const isForSale = car.forSale;
+
+  return (
+    <motion.div className="container my-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+      <div className="row g-5">
         <div className="col-md-6">
           <div className="card shadow rounded-4 overflow-hidden">
             {car.image?.url ? (
@@ -125,87 +121,93 @@ const CarDetails = () => {
                 alt={`${car.brand} ${car.model}`}
               />
             ) : (
-              <div
-                className="d-flex justify-content-center align-items-center bg-secondary text-white"
-                style={{ height: "300px" }}
-              >
+              <div className="d-flex justify-content-center align-items-center bg-secondary text-white" style={{ height: "300px" }}>
                 No Image Available
               </div>
             )}
             <div className="card-body">
-              <h3 className="fw-bold">
-                {car.brand} {car.model}
-              </h3>
-              <p>
-                <strong>Year:</strong> {car.year}
-              </p>
+              <h3 className="fw-bold">{car.brand} {car.model}</h3>
+              <p><strong>Year:</strong> {car.year}</p>
               <p>
                 <strong>Status:</strong>{" "}
-                <span className={`fw-semibold ${
-    car.availability === 'available'
-      ? 'text-success'
-      : car.availability === 'unavailable'
-      ? 'text-danger'
-      : car.availability === 'rented'
-      ? 'text-secondary'
-      : 'text-muted'
-  }`}>
-                {car.availability}
-              </span>
+                <span className={`fw-semibold ${isForSale ? (car.isSold ? 'text-danger' : 'text-success') : 
+                  car.availability === 'available'
+                  ? 'text-success'
+                  : car.availability === 'unavailable'
+                  ? 'text-danger'
+                  : 'text-muted'}`}>
+                  {isForSale ? (car.isSold ? 'SOLD' : 'Available') : car.availability}
+                </span>
               </p>
-              <p>
-                <strong>Price per day:</strong> BHD {car.pricePerDay}
-              </p>
-              {totalPrice !== null && (
-                <p className="mt-2">
-                  <strong>Total Price:</strong> BHD {totalPrice}
-                </p>
+
+              {isForSale ? (
+                <p><strong>Sale Price:</strong> BHD {car.salePrice}</p>
+              ) : (
+                <>
+                  <p><strong>Price per day:</strong> BHD {car.pricePerDay}</p>
+                  {totalPrice !== null && (
+                    <p className="mt-2">
+                      <strong>Total Price:</strong> BHD {totalPrice}
+                    </p>
+                  )}
+                </>
               )}
+
+{isForSale && (
+            <div className="mt-4">
+              <div
+                className="card bg-dark text-white text-center py-4"
+                style={{ width: "100%" }}
+              >
+                <h5 className="fw-bold mb-2">📞 Dealer Contact</h5>
+                <p className="fs-4 m-0">+973 {car.dealerPhone || "N/A"}</p>
+              </div>
             </div>
+          )}
+            </div>
+            
           </div>
         </div>
 
         <div className="col-md-6">
-          <motion.div
-            className="card shadow p-4 mb-4 rounded-4"
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.1 }}
-          >
-            <h5 className="fw-bold mb-3">Rent this Car</h5>
-            <form onSubmit={handleRent}>
-              <div className="mb-3">
-                <label className="form-label">Start Date</label>
-                <input
-                  type="date"
-                  className="form-control"
-                  name="startDate"
-                  value={rentalData.startDate}
-                  min={today}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <label className="form-label">End Date</label>
-                <input
-                  type="date"
-                  className="form-control"
-                  name="endDate"
-                  value={rentalData.endDate}
-                  min={rentalData.startDate || today}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <button
-                className="btn btn-warning w-100 fw-semibold"
-                type="submit"
-              >
-                Rent Now
-              </button>
-            </form>
-          </motion.div>
+          {!isForSale && (
+            <motion.div className="card shadow p-4 mb-4 rounded-4"
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.1 }}
+            >
+              <h5 className="fw-bold mb-3">Rent this Car</h5>
+              <form onSubmit={handleRent}>
+                <div className="mb-3">
+                  <label className="form-label">Start Date</label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    name="startDate"
+                    value={rentalData.startDate}
+                    min={today}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">End Date</label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    name="endDate"
+                    value={rentalData.endDate}
+                    min={rentalData.startDate || today}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <button className="btn btn-warning w-100 fw-semibold" type="submit">
+                  Rent Now
+                </button>
+              </form>
+            </motion.div>
+          )}
 
           <motion.div
             className="rounded overflow-hidden shadow"
@@ -217,29 +219,23 @@ const CarDetails = () => {
               title="Car Location"
               src={`https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}&z=15&output=embed`}
               width="100%"
-              height="250"
+              height="600"
               style={{ border: 0 }}
               loading="lazy"
               allowFullScreen
             ></iframe>
           </motion.div>
+
+          
         </div>
       </div>
 
-      <motion.div
-        className="mt-5"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 }}
-      >
+      <motion.div className="mt-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
         <ReviewForm handleAddReview={handleAddReview} />
         {car.reviews && car.reviews.length > 0 && (
           <div className="mt-4">
             <h4 className="mb-3">Customer Reviews</h4>
-            <div
-              className="list-group border rounded"
-              style={{ maxHeight: "400px", overflowY: "auto" }}
-            >
+            <div className="list-group border rounded" style={{ maxHeight: "400px", overflowY: "auto" }}>
               {car.reviews.map((review) => (
                 <div key={review._id} className="list-group-item">
                   <div className="d-flex justify-content-between align-items-center">
@@ -249,7 +245,6 @@ const CarDetails = () => {
                         {new Date(review.createdAt).toLocaleDateString()}
                       </small>
                     </div>
-
                     {user?._id === review.userId?._id && (
                       <button
                         className="btn btn-sm btn-outline-danger"
@@ -268,10 +263,7 @@ const CarDetails = () => {
                       </button>
                     )}
                   </div>
-
-                  <p className="mb-1">
-                    <strong>Rating:</strong> {review.rating}/5
-                  </p>
+                  <p className="mb-1"><strong>Rating:</strong> {review.rating}/5</p>
                   <p>{review.comment}</p>
                 </div>
               ))}
