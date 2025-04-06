@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
 import * as carService from "../../services/carService";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const brandModelMap = {
   Toyota: ["Corolla", "Camry", "RAV4", "Highlander", "Yaris", "Prius", "Land Cruiser", "Fortuner", "Hilux", "Avalon", "Sequoia", "Tacoma", "4Runner", "Prado"],
@@ -44,7 +46,7 @@ const CreateCar = (props) => {
     isSold: false,
     buyerId: "",
     isCompatible: false,
-    dealerPhone: "", // Added dealerPhone field
+    dealerPhone: "",
     image: {}
   });
 
@@ -79,8 +81,13 @@ const CreateCar = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const data = new FormData();
 
+    if (!/^\d{8}$/.test(formData.dealerPhone)) {
+      toast.error("Phone number must be exactly 8 digits.");
+      return;
+    }
+
+    const data = new FormData();
     const payload = {
       ...formData,
       forSale: formData.listingType === "sale",
@@ -114,6 +121,7 @@ const CreateCar = (props) => {
           isCompatible: carData.isCompatible || false,
           isSold: carData.isSold || false,
           buyerId: carData.buyerId || "",
+          dealerPhone: carData.dealerPhone || "",
         });
 
         if (carData.location) {
@@ -212,36 +220,29 @@ const CreateCar = (props) => {
               <div className="col-12">
                 <label className="form-label">Upload Car Image</label>
                 <input type="file" className="form-control" name="image" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])} required={!carId} />
-                <div className="mt-3 d-flex align-items-center gap-3">
-                  {imageFile && (
-                    <>
-                      <img src={URL.createObjectURL(imageFile)} alt="Preview" className="rounded border" style={{ width: 40, height: 40, objectFit: "cover" }} />
-                      <small className="text-success">New uploaded image</small>
-                    </>
-                  )}
-                  {!imageFile && carId && formData.image?.url && (
-                    <>
-                      <img src={formData.image.url} alt="Current" className="rounded border" style={{ width: 40, height: 40, objectFit: "cover" }} />
-                      <small className="text-muted">Current image</small>
-                    </>
-                  )}
-                </div>
               </div>
 
               <div className="col-md-6">
                 <label className="form-label">Dealer Phone</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="dealerPhone"
-                  value={formData.dealerPhone}
-                  onChange={handleChange}
-                  required
-                />
+                <div className="input-group">
+                  <span className="input-group-text">🇧🇭 +973</span>
+                  <input
+                    type="tel"
+                    className="form-control"
+                    name="dealerPhone"
+                    value={formData.dealerPhone}
+                    onChange={handleChange}
+                    placeholder="Enter your number"
+                    required
+                    pattern="\d{8}"
+                    maxLength={8}
+                  />
+                </div>
               </div>
 
-              <div className="col-md-6">
-                <div className="form-check mt-2">
+
+              <div className="col-md-6 mt-4">
+                <div className="form-check">
                   <input className="form-check-input" type="checkbox" name="isCompatible" checked={formData.isCompatible} onChange={handleChange} id="compatibleCheck" />
                   <label className="form-check-label" htmlFor="compatibleCheck">Compatible for Special Needs</label>
                 </div>
@@ -259,6 +260,8 @@ const CreateCar = (props) => {
           </form>
         </div>
       </div>
+
+      <ToastContainer position="top-right" autoClose={4000} hideProgressBar />
     </div>
   );
 };
