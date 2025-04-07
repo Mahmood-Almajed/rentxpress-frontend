@@ -136,19 +136,24 @@ function DealerCarsList() {
                     )}
                   </p>
                   <small
-                    className={`mb-2 ${car.isSold
-                        ? 'text-danger'
+                    className={`mb-2 ${car.forSale
+                        ? car.isSold
+                          ? 'text-danger'
+                          : 'text-success'
                         : car.availability === 'available'
                           ? 'text-success'
-                          : car.availability === 'unavailable'
-                            ? 'text-danger'
-                            : car.availability === 'rented'
-                              ? 'text-secondary'
-                              : 'text-muted'
+                          : car.availability === 'rented'
+                            ? 'text-secondary'
+                            : 'text-muted'
                       }`}
                   >
-                    {car.isSold ? 'unavailable' : car.availability}
+                    {car.forSale
+                      ? car.isSold
+                        ? 'SOLD'
+                        : 'available'
+                      : car.availability}
                   </small>
+
 
                   <motion.div
                     className="card-text small mb-2"

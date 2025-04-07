@@ -249,18 +249,30 @@ const CarList = () => {
                       )}
                     </p>
                     <small
-                      className={`mb-2 ${car.isSold
-                        ? 'text-danger'
-                        : car.availability === 'available'
-                          ? 'text-success'
-                          : car.availability === 'rented'
-                            ? 'text-secondary'
-                            : 'text-muted'
+                      className={`mb-2 ${car.forSale
+                          ? car.isSold
+                            ? 'text-danger'
+                            : 'text-success'
+                          : car.availability === 'available'
+                            ? 'text-success'
+                            : car.availability === 'rented'
+                              ? 'text-secondary'
+                              : 'text-muted'
                         }`}
                     >
-                      {car.isSold ? 'Unavailable' : car.availability}
+                      {car.forSale
+                        ? car.isSold
+                          ? 'SOLD'
+                          : 'available'
+                        : car.availability}
                     </small>
+
+
+                    {car.dealerId?.username && (
+                      <small className="text-muted">Dealer: <strong>{car.dealerId.username}</strong></small>
+                    )}
                     <motion.div className="d-flex justify-content-end mt-auto">
+
                       <Link to={`/cars/${car._id}`} className="btn btn-sm btn-secondary">
                         View Details
                       </Link>

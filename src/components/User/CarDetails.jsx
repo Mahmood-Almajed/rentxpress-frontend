@@ -22,16 +22,19 @@ const CarDetails = () => {
 
   const { isLoaded } = useLoadScript({ googleMapsApiKey: GAPI });
 
+  const fetchCar = async () => {
+    try {
+      const data = await carService.show(carId);
+      setCar(data);
+    } catch (err) {
+      console.error("Error loading car details:", err);
+    }
+  };
+
   useEffect(() => {
-    const fetchCar = async () => {
-      try {
-        const data = await carService.show(carId);
-        setCar(data);
-      } catch (err) {
-        console.error("Error loading car details:", err);
-      }
-    };
     fetchCar();
+    const interval = setInterval(fetchCar, 2000);
+    return () => clearInterval(interval);
   }, [carId]);
 
   useEffect(() => {
@@ -68,8 +71,7 @@ const CarDetails = () => {
       toast.success("Rental request submitted!");
       setRentalData({ startDate: "", endDate: "" });
       setTotalPrice(null);
-      const updatedCar = await carService.show(carId);
-      setCar(updatedCar);
+      await fetchCar();
       setTimeout(() => nav("/my-rentals"), 1500);
     } catch (err) {
       toast.error("Error submitting rental request.");
@@ -78,12 +80,19 @@ const CarDetails = () => {
 
   const handleAddReview = async (reviewData) => {
     try {
-      const updatedCar = await carService.createReview(carId, reviewData);
-      if (!updatedCar || updatedCar.error)
-        throw new Error("Failed to post review");
-      setCar(updatedCar);
+      await carService.createReview(carId, reviewData);
+      toast.success("Review submitted!");
     } catch (err) {
       toast.error("Failed to submit review");
+    }
+  };
+
+  const handleDeleteReview = async (reviewId) => {
+    try {
+      await carService.deleteReview(carId, reviewId);
+      toast.success("Review deleted.");
+    } catch (err) {
+      toast.error("Error deleting review.");
     }
   };
 
@@ -99,7 +108,7 @@ const CarDetails = () => {
 
   if (!isLoaded || !car)
     return (
-      <div className="d-flex justify-content-center align-items-center mt-5" style={{ minHeight: '200px' }}>
+      <div className="d-flex justify-content-center align-items-center mt-5" style={{ minHeight: "200px" }}>
         <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
@@ -111,7 +120,6 @@ const CarDetails = () => {
   return (
     <motion.div className="container my-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
       <div className="row g-5 align-items-start">
-        {/* Left Column */}
         <div className="col-md-6">
           <div className="card shadow rounded-4 overflow-hidden" style={{ minHeight: "600px" }}>
             {car.image?.url ? (
@@ -129,39 +137,32 @@ const CarDetails = () => {
             <div className="card-body">
               <h3 className="fw-bold">{car.brand} {car.model}</h3>
 
-              {/* ♿ Special Needs Badge */}
-              {car.isCompatible && (
-                <span className="badge bg-primary me-2 mb-3">
-                  ♿ Compatible for Special Needs
-                </span>
-              )}
 
+              {car.isCompatible && (
+                <span className="badge bg-primary me-2 mb-3">♿ Compatible for Special Needs</span>
+              )}
               <p><strong>Year:</strong> {car.year}</p>
               <p>
                 <strong>Status:</strong>{" "}
-                <span className={`fw-semibold ${isForSale ? (car.isSold ? 'text-danger' : 'text-success') : 
-                  car.availability === 'available'
-                  ? 'text-success'
-                  : car.availability === 'unavailable'
-                  ? 'text-danger'
-                  : 'text-muted'}`}>
-                  {isForSale ? (car.isSold ? 'SOLD' : 'Available') : car.availability}
+                <span className={`fw-semibold ${isForSale
+                    ? car.isSold ? "text-danger" : "text-success"
+                    : car.availability === "available" ? "text-success"
+                      : car.availability === "unavailable" ? "text-danger"
+                        : "text-muted"
+                  }`}>
+                  {isForSale ? (car.isSold ? "SOLD" : "Available") : car.availability}
                 </span>
               </p>
-
               {isForSale ? (
                 <p><strong>Sale Price:</strong> BHD {car.salePrice}</p>
               ) : (
                 <>
                   <p><strong>Price per day:</strong> BHD {car.pricePerDay}</p>
                   {totalPrice !== null && (
-                    <p className="mt-2">
-                      <strong>Total Price:</strong> BHD {totalPrice}
-                    </p>
+                    <p className="mt-2"><strong>Total Price:</strong> BHD {totalPrice}</p>
                   )}
                 </>
               )}
-
               {isForSale && (
                 <div className="mt-4">
                   <div className="card bg-dark text-white text-center py-4">
@@ -174,7 +175,6 @@ const CarDetails = () => {
           </div>
         </div>
 
-        {/* Right Column: Map */}
         <div className="col-md-6">
           <motion.div
             className="rounded overflow-hidden shadow"
@@ -195,19 +195,17 @@ const CarDetails = () => {
         </div>
       </div>
 
-      {/* Rent Form Below */}
       {!isForSale && (
         <motion.div
           className="card shadow p-4 mt-5 rounded-4"
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1 }}
-          // change the color to dark grey
           style={{ backgroundColor: "#181616", color: "white" }}
         >
-          <h5 className="fw-bold mb-3" color="white">Rent this Car</h5>
+          <h5 className="fw-bold mb-3">Rent this Car</h5>
           <form onSubmit={handleRent}>
-            <div className="mb-3" >
+            <div className="mb-3">
               <label className="form-label">Start Date</label>
               <input
                 type="date"
@@ -238,7 +236,6 @@ const CarDetails = () => {
         </motion.div>
       )}
 
-      {/* Reviews */}
       <motion.div className="mt-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
         <ReviewForm handleAddReview={handleAddReview} />
         {car.reviews && car.reviews.length > 0 && (
@@ -250,23 +247,12 @@ const CarDetails = () => {
                   <div className="d-flex justify-content-between align-items-center">
                     <div>
                       <strong>{review.userId?.username || "Anonymous"}</strong>
-                      <small className="d-block">
-                        {new Date(review.createdAt).toLocaleDateString()}
-                      </small>
+                      <small className="d-block">{new Date(review.createdAt).toLocaleDateString()}</small>
                     </div>
                     {user?._id === review.userId?._id && (
                       <button
                         className="btn btn-sm btn-outline-danger"
-                        onClick={async () => {
-                          try {
-                            await carService.deleteReview(carId, review._id);
-                            const updated = await carService.show(carId);
-                            setCar(updated);
-                            toast.success("Review deleted.");
-                          } catch (err) {
-                            toast.error("Error deleting review.");
-                          }
-                        }}
+                        onClick={() => handleDeleteReview(review._id)}
                       >
                         Delete
                       </button>

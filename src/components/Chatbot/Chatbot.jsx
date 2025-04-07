@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import './Chatbot.css'; // Optional: style below or use your own
-const BACKEND_URL = import.meta.env.VITE_EXPRESS_BACKEND_URL
-
+import './Chatbot.css'; // your existing styles
+const BACKEND_URL = import.meta.env.VITE_EXPRESS_BACKEND_URL;
 
 const Chatbot = () => {
   const [messages, setMessages] = useState([
     { sender: 'bot', text: 'Hi! 👋 I’m your RentXpress assistant. Ask me anything about cars, rentals, or dealer access!' },
   ]);
+
+  const [messageHistory, setMessageHistory] = useState([]); // 🧠 for GPT's memory
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -21,11 +22,19 @@ const Chatbot = () => {
       const res = await fetch(`${BACKEND_URL}/chatbot`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({
+          message: input,
+          history: messageHistory, // 👈 Send memory
+        }),
       });
+
       const data = await res.json();
+
       const botMessage = { sender: 'bot', text: data.reply || 'Sorry, something went wrong.' };
       setMessages(prev => [...prev, botMessage]);
+
+      // 👇 Store updated memory from backend
+      setMessageHistory(data.history || []);
     } catch (err) {
       setMessages(prev => [...prev, { sender: 'bot', text: 'Error connecting to AI. Try again later.' }]);
     } finally {
