@@ -32,6 +32,7 @@ import RentRequest from './components/Dealer/RentRequest';
 //admin
 import RentalList from './components/Admin/RentalList';
 import DealerCarList from './components/Admin/DealerCarList';
+import Chatbot from './components/Chatbot/Chatbot';
 
 
 
@@ -143,6 +144,10 @@ const App = () => {
         </main>
   
         <Footer />
+        <div className="chatbot-container">
+          <Chatbot />
+          </div>
+        
       </div>
     </AuthedUserContext.Provider>
   );
