@@ -9,9 +9,17 @@ const CarList = () => {
   const [search, setSearch] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [sorting, setSorting] = useState('all');
+  const [specialNeedsOnly, setSpecialNeedsOnly] = useState(false);
+  const [specialNeedsListingType, setSpecialNeedsListingType] = useState('all');
   const [loading, setLoading] = useState(true);
 
-  // Fetch cars once
+  const filtersActive =
+    search ||
+    filterType !== 'all' ||
+    sorting !== 'all' ||
+    specialNeedsOnly ||
+    (specialNeedsOnly && specialNeedsListingType !== 'all');
+
   useEffect(() => {
     const fetchCars = async () => {
       try {
@@ -29,11 +37,15 @@ const CarList = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Filter and sort cars
+  useEffect(() => {
+    if (!specialNeedsOnly) {
+      setSpecialNeedsListingType('all');
+    }
+  }, [specialNeedsOnly]);
+
   useEffect(() => {
     let result = [...cars];
 
-    // Search filter
     if (search) {
       const q = search.toLowerCase();
       result = result.filter(car =>
@@ -41,14 +53,23 @@ const CarList = () => {
       );
     }
 
-    // Listing type filter
-    if (filterType !== 'all') {
-      result = result.filter(car =>
-        filterType === 'rent' ? !car.forSale : car.forSale
-      );
+    if (specialNeedsOnly) {
+      result = result.filter(car => car.isCompatible);
+      if (specialNeedsListingType !== 'all') {
+        result = result.filter(car =>
+          specialNeedsListingType === 'rent' ? !car.forSale : car.forSale
+        );
+      }
+    } else {
+      // Exclude special needs cars unless filter is explicitly enabled
+      result = result.filter(car => !car.isCompatible);
+      if (filterType !== 'all') {
+        result = result.filter(car =>
+          filterType === 'rent' ? !car.forSale : car.forSale
+        );
+      }
     }
 
-    // Sort by price
     if (sorting === 'lowToHigh') {
       result.sort((a, b) =>
         (a.forSale ? a.salePrice : a.pricePerDay) - (b.forSale ? b.salePrice : b.pricePerDay)
@@ -60,7 +81,15 @@ const CarList = () => {
     }
 
     setFilteredCars(result);
-  }, [cars, search, filterType, sorting]);
+  }, [cars, search, filterType, sorting, specialNeedsOnly, specialNeedsListingType]);
+
+  const handleClearFilters = () => {
+    setSearch('');
+    setFilterType('all');
+    setSorting('all');
+    setSpecialNeedsOnly(false);
+    setSpecialNeedsListingType('all');
+  };
 
   return (
     <div>
@@ -72,33 +101,70 @@ const CarList = () => {
               Browse our cars available for rent and sale. Whether you're traveling or buying, we’ve got you covered.
             </p>
 
-            {/* Filter buttons */}
+            {/* Main Filters */}
             <div className="d-flex justify-content-center gap-3 mt-2 mb-3 flex-wrap">
               <button
-                className={`btn px-4 py-2 rounded-pill shadow-sm ${
-                  filterType === 'rent' ? 'btn-warning' : 'btn-outline-warning'
-                }`}
+                className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'all' ? 'active-warning' : 'btn-warning-outline-hover'}`}
+                onClick={() => setFilterType('all')}
+              >
+                All
+              </button>
+              <button
+                className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'rent' ? 'active-warning' : 'btn-warning-outline-hover'}`}
                 onClick={() => setFilterType('rent')}
               >
                 Cars for Rent
               </button>
               <button
-                className={`btn px-4 py-2 rounded-pill shadow-sm ${
-                  filterType === 'sale' ? 'btn-warning' : 'btn-outline-warning'
-                }`}
+                className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'sale' ? 'active-warning' : 'btn-warning-outline-hover'}`}
                 onClick={() => setFilterType('sale')}
               >
                 Cars For Sale
               </button>
               <button
-                className={`btn px-4 py-2 rounded-pill shadow-sm ${
-                  filterType === 'all' ? 'btn-secondary' : 'btn-outline-secondary'
-                }`}
-                onClick={() => setFilterType('all')}
+                className={`btn px-4 py-2 rounded-pill shadow-sm ${specialNeedsOnly ? 'btn-primary' : 'btn-outline-primary'}`}
+                onClick={() => setSpecialNeedsOnly(prev => !prev)}
               >
-                All
+                ♿ Special Needs
               </button>
             </div>
+
+            {/* Special Needs Subfilter */}
+            {specialNeedsOnly && (
+              <div className="d-flex justify-content-center gap-2 mb-3 flex-wrap">
+                <span className="fw-semibold mt-2">Showing:</span>
+                <button
+                  className={`btn btn-sm rounded-pill ${specialNeedsListingType === 'all' ? 'btn-secondary' : 'btn-outline-secondary'}`}
+                  onClick={() => setSpecialNeedsListingType('all')}
+                >
+                  All
+                </button>
+                <button
+                  className={`btn btn-sm rounded-pill ${specialNeedsListingType === 'rent' ? 'btn-secondary' : 'btn-outline-secondary'}`}
+                  onClick={() => setSpecialNeedsListingType('rent')}
+                >
+                  For Rent
+                </button>
+                <button
+                  className={`btn btn-sm rounded-pill ${specialNeedsListingType === 'sale' ? 'btn-secondary' : 'btn-outline-secondary'}`}
+                  onClick={() => setSpecialNeedsListingType('sale')}
+                >
+                  For Sale
+                </button>
+              </div>
+            )}
+
+            {/* Clear All Filters (Conditional) */}
+            {filtersActive && (
+              <div className="d-flex justify-content-center mt-3">
+                <button
+                  className="btn btn-outline-dark btn-sm rounded-pill px-4"
+                  onClick={handleClearFilters}
+                >
+                  Clear All Filters
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -153,7 +219,6 @@ const CarList = () => {
                       SOLD
                     </span>
                   )}
-
                   {car.image?.url ? (
                     <img
                       src={car.image.url}
@@ -169,15 +234,13 @@ const CarList = () => {
                       No Image Available
                     </div>
                   )}
-
-                  <motion.div
-                    className="card-body d-flex flex-column"
-                    initial="rest"
-                    whileHover="hover"
-                    animate="rest"
-                  >
-                    <h5 className="card-title fw-bold">{car.brand} {car.model}</h5>
-
+                  <motion.div className="card-body d-flex flex-column">
+                    <h5 className="card-title fw-bold">
+                      {car.brand} {car.model}
+                      {car.isCompatible && (
+                        <span className="badge bg-primary ms-2">♿</span>
+                      )}
+                    </h5>
                     <p className="card-text mb-2">
                       {car.forSale ? (
                         <>BHD <strong>{car.salePrice || 'N/A'}</strong> <small className="text-muted">(For Sale)</small></>
@@ -185,29 +248,19 @@ const CarList = () => {
                         <>BHD <strong>{car.pricePerDay || 'N/A'}</strong> / Day</>
                       )}
                     </p>
-
                     <small
-                      className={`mb-2 ${
-                        car.isSold
-                          ? 'text-danger'
-                          : car.availability === 'available'
+                      className={`mb-2 ${car.isSold
+                        ? 'text-danger'
+                        : car.availability === 'available'
                           ? 'text-success'
                           : car.availability === 'rented'
-                          ? 'text-secondary'
-                          : 'text-muted'
-                      }`}
+                            ? 'text-secondary'
+                            : 'text-muted'
+                        }`}
                     >
                       {car.isSold ? 'Unavailable' : car.availability}
                     </small>
-
-                    <motion.div
-                      className="d-flex justify-content-end mt-auto"
-                      variants={{
-                        hover: { opacity: 1, height: 'auto' },
-                        rest: { opacity: 0, height: 0 }
-                      }}
-                      transition={{ duration: 0.3 }}
-                    >
+                    <motion.div className="d-flex justify-content-end mt-auto">
                       <Link to={`/cars/${car._id}`} className="btn btn-sm btn-secondary">
                         View Details
                       </Link>

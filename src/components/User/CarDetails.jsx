@@ -110,7 +110,8 @@ const CarDetails = () => {
 
   return (
     <motion.div className="container my-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
-      <div className="row g-5">
+      <div className="row g-5 align-items-start">
+        {/* Left Column */}
         <div className="col-md-6">
           <div className="card shadow rounded-4 overflow-hidden">
             {car.image?.url ? (
@@ -127,6 +128,14 @@ const CarDetails = () => {
             )}
             <div className="card-body">
               <h3 className="fw-bold">{car.brand} {car.model}</h3>
+
+              {/* ♿ Special Needs Badge */}
+              {car.isCompatible && (
+                <span className="badge bg-primary me-2 mb-3">
+                  ♿ Compatible for Special Needs
+                </span>
+              )}
+
               <p><strong>Year:</strong> {car.year}</p>
               <p>
                 <strong>Status:</strong>{" "}
@@ -153,62 +162,20 @@ const CarDetails = () => {
                 </>
               )}
 
-{isForSale && (
-            <div className="mt-4">
-              <div
-                className="card bg-dark text-white text-center py-4"
-                style={{ width: "100%" }}
-              >
-                <h5 className="fw-bold mb-2">📞 Dealer Contact</h5>
-                <p className="fs-4 m-0">+973 {car.dealerPhone || "N/A"}</p>
-              </div>
+              {isForSale && (
+                <div className="mt-4">
+                  <div className="card bg-dark text-white text-center py-4">
+                    <h5 className="fw-bold mb-2">📞 Dealer Contact</h5>
+                    <p className="fs-4 m-0">+973 {car.dealerPhone || "N/A"}</p>
+                  </div>
+                </div>
+              )}
             </div>
-          )}
-            </div>
-            
           </div>
         </div>
 
+        {/* Right Column: Map */}
         <div className="col-md-6">
-          {!isForSale && (
-            <motion.div className="card shadow p-4 mb-4 rounded-4"
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.1 }}
-            >
-              <h5 className="fw-bold mb-3">Rent this Car</h5>
-              <form onSubmit={handleRent}>
-                <div className="mb-3">
-                  <label className="form-label">Start Date</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    name="startDate"
-                    value={rentalData.startDate}
-                    min={today}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">End Date</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    name="endDate"
-                    value={rentalData.endDate}
-                    min={rentalData.startDate || today}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-                <button className="btn btn-warning w-100 fw-semibold" type="submit">
-                  Rent Now
-                </button>
-              </form>
-            </motion.div>
-          )}
-
           <motion.div
             className="rounded overflow-hidden shadow"
             initial={{ opacity: 0 }}
@@ -225,11 +192,51 @@ const CarDetails = () => {
               allowFullScreen
             ></iframe>
           </motion.div>
-
-          
         </div>
       </div>
 
+      {/* Rent Form Below */}
+      {!isForSale && (
+        <motion.div
+          className="card shadow p-4 mt-5 rounded-4"
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.1 }}
+        >
+          <h5 className="fw-bold mb-3">Rent this Car</h5>
+          <form onSubmit={handleRent}>
+            <div className="mb-3">
+              <label className="form-label">Start Date</label>
+              <input
+                type="date"
+                className="form-control"
+                name="startDate"
+                value={rentalData.startDate}
+                min={today}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">End Date</label>
+              <input
+                type="date"
+                className="form-control"
+                name="endDate"
+                value={rentalData.endDate}
+                min={rentalData.startDate || today}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <button className="btn btn-warning w-100 fw-semibold" type="submit">
+              Rent Now
+            </button>
+          </form>
+        </motion.div>
+      )}
+
+      {/* Reviews */}
       <motion.div className="mt-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
         <ReviewForm handleAddReview={handleAddReview} />
         {car.reviews && car.reviews.length > 0 && (
