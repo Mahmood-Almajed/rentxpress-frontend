@@ -113,7 +113,7 @@ const CarDetails = () => {
       <div className="row g-5 align-items-start">
         {/* Left Column */}
         <div className="col-md-6">
-          <div className="card shadow rounded-4 overflow-hidden">
+          <div className="card shadow rounded-4 overflow-hidden" style={{ minHeight: "600px" }}>
             {car.image?.url ? (
               <img
                 src={car.image.url}
@@ -202,10 +202,12 @@ const CarDetails = () => {
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1 }}
+          // change the color to dark grey
+          style={{ backgroundColor: "#181616", color: "white" }}
         >
-          <h5 className="fw-bold mb-3">Rent this Car</h5>
+          <h5 className="fw-bold mb-3" color="white">Rent this Car</h5>
           <form onSubmit={handleRent}>
-            <div className="mb-3">
+            <div className="mb-3" >
               <label className="form-label">Start Date</label>
               <input
                 type="date"
