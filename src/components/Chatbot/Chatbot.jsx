@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import './Chatbot.css'; // your existing styles
+import ReactMarkdown from 'react-markdown';
+import './Chatbot.css';
+
 const BACKEND_URL = import.meta.env.VITE_EXPRESS_BACKEND_URL;
 
 const Chatbot = () => {
@@ -49,7 +51,15 @@ const Chatbot = () => {
         <div className="chatbot-messages">
           {messages.map((msg, i) => (
             <div key={i} className={`chatbot-message ${msg.sender}`}>
-              {msg.text}
+              <ReactMarkdown
+                components={{
+                  a: ({ node, ...props }) => (
+                    <a {...props} target="_blank" rel="noopener noreferrer" style={{ color: '#007bff' }} />
+                  )
+                }}
+              >
+                {msg.text}
+              </ReactMarkdown>
             </div>
           ))}
           {loading && <div className="chatbot-message bot">Typing...</div>}
