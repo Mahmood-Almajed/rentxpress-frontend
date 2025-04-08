@@ -144,10 +144,11 @@ const App = () => {
         </main>
   
         <Footer />
+        {user &&  (
         <div className="chatbot-container">
           <Chatbot />
           </div>
-        
+        )}
       </div>
     </AuthedUserContext.Provider>
   );
