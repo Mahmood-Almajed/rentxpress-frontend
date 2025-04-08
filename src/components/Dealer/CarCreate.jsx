@@ -253,6 +253,24 @@ const CreateCar = (props) => {
                 </div>
               </div>
 
+             
+                <label className="form-label">Dealer Phone</label>
+                <div className="input-group">
+                    <span className="input-group-text"> 🇧🇭 +973</span>
+                  <input
+                    type="tel"
+                    className="form-control"
+                    name="dealerPhone"
+                    value={formData.dealerPhone}
+                    onChange={handleChange}
+                    placeholder="Enter your number"
+                    required
+                    pattern="\d{8}"
+                    maxLength={8}
+                  />
+                </div>
+
+
               <div className="col-md-6 mt-4">
                 <div className="form-check">
                   <input className="form-check-input" type="checkbox" name="isCompatible" checked={formData.isCompatible} onChange={handleChange} id="compatibleCheck" />
