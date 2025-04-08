@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { AuthedUserContext } from '../../App';
 import './Chatbot.css';
 
 const BACKEND_URL = import.meta.env.VITE_EXPRESS_BACKEND_URL;
 
 const Chatbot = () => {
+  const user = useContext(AuthedUserContext);
   const [messages, setMessages] = useState([
-    { sender: 'bot', text: 'Hi! 👋 I’m your RentXpress assistant. Ask me anything about cars, rentals, or dealer access!' },
+    { sender: 'bot', text: `Hi!👋 ${user.username} I’m your RentXpress assistant. Ask me anything about cars, rentals, or dealer access!` },
   ]);
 
   const [messageHistory, setMessageHistory] = useState([]); // 🧠 for GPT's memory
