@@ -126,7 +126,13 @@ function DealerCarsList() {
                     hover: { y: -5 }
                   }}
                 >
-                  <h5 className="card-title fw-bold">{car.brand} {car.model}</h5>
+                  <h5 className="card-title fw-bold">
+                    {car.brand} {car.model}
+                    {car.isCompatible && (
+                      <span className="badge bg-primary ms-2">♿</span>
+                    )}
+                  </h5>
+
 
                   <p className="card-text mb-2">
                     {car.forSale ? (
@@ -137,14 +143,14 @@ function DealerCarsList() {
                   </p>
                   <small
                     className={`mb-2 ${car.forSale
-                        ? car.isSold
-                          ? 'text-danger'
-                          : 'text-success'
-                        : car.availability === 'available'
-                          ? 'text-success'
-                          : car.availability === 'rented'
-                            ? 'text-secondary'
-                            : 'text-muted'
+                      ? car.isSold
+                        ? 'text-danger'
+                        : 'text-success'
+                      : car.availability === 'available'
+                        ? 'text-success'
+                        : car.availability === 'rented'
+                          ? 'text-secondary'
+                          : 'text-muted'
                       }`}
                   >
                     {car.forSale

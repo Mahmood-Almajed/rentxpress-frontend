@@ -163,6 +163,9 @@ const CarDetails = () => {
                   )}
                 </>
               )}
+              {car.dealerId?.username && (
+                <p><strong>Dealer Name:</strong> {car.dealerId?.username}</p>
+               )} 
               {isForSale && (
                 <div className="mt-4">
                   <div className="card bg-dark text-white text-center py-4">

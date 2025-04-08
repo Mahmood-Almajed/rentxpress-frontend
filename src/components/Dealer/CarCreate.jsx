@@ -218,28 +218,40 @@ const CreateCar = (props) => {
               </div>
 
               <div className="col-12">
-                <label className="form-label">Upload Car Image</label>
-                <input type="file" className="form-control" name="image" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])} required={!carId} />
-              </div>
-
-              <div className="col-md-6">
-                <label className="form-label">Dealer Phone</label>
-                <div className="input-group">
-                  <span className="input-group-text">🇧🇭 +973</span>
-                  <input
-                    type="tel"
-                    className="form-control"
-                    name="dealerPhone"
-                    value={formData.dealerPhone}
-                    onChange={handleChange}
-                    placeholder="Enter your number"
-                    required
-                    pattern="\d{8}"
-                    maxLength={8}
-                  />
+                <label htmlFor="image" className="form-label">Upload Car Image</label>
+                <input
+                  type="file"
+                  className="form-control"
+                  name="image"
+                  accept="image/*"
+                  onChange={(e) => setImageFile(e.target.files[0])}
+                  required={!carId}
+                />
+                <div className="mt-3 d-flex align-items-center gap-3">
+                  {imageFile && (
+                    <>
+                      <img
+                        src={URL.createObjectURL(imageFile)}
+                        alt="Preview"
+                        className="rounded border"
+                        style={{ width: 40, height: 40, objectFit: "cover" }}
+                      />
+                      <small className="text-success">New uploaded image</small>
+                    </>
+                  )}
+                  {!imageFile && carId && formData.image?.url && (
+                    <>
+                      <img
+                        src={formData.image.url}
+                        alt="Current"
+                        className="rounded border"
+                        style={{ width: 40, height: 40, objectFit: "cover" }}
+                      />
+                      <small className="text-muted">Current image</small>
+                    </>
+                  )}
                 </div>
               </div>
-
 
               <div className="col-md-6 mt-4">
                 <div className="form-check">
