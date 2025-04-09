@@ -82,6 +82,7 @@ const CreateCar = (props) => {
   const handleImageChange = (e) => {
     setImageFiles(Array.from(e.target.files));
   };
+  const [removedImageIds, setRemovedImageIds] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -113,6 +114,10 @@ const CreateCar = (props) => {
     });
 
     carId ? props.handleUpdateCar(carId, data) : props.handleAddCar(data);
+
+    if (removedImageIds.length > 0) {
+      removedImageIds.forEach((id) => data.append("removeIds[]", id));
+    }    
   };
 
   useEffect(() => {
@@ -265,12 +270,15 @@ const CreateCar = (props) => {
                       />
                       <button
                         type="button"
-                        onClick={() =>
+                        onClick={() => {
+                          const removedImage = formData.images[idx];
+                          setRemovedImageIds((prev) => [...prev, removedImage.cloudinary_id]);
                           setFormData((prev) => ({
                             ...prev,
                             images: prev.images.filter((_, i) => i !== idx),
-                          }))
-                        }
+                          }));
+                        }}
+                        
                         className="btn btn-sm btn-danger rounded-circle position-absolute top-0 end-0"
                         style={{ transform: "translate(50%, -50%)", fontSize: "0.6rem", lineHeight: 1 }}
                       >
