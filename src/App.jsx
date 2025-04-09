@@ -128,6 +128,7 @@ const App = () => {
                 <Route path="/dealer/cars/:carId/edit" element={<CarCreate handleUpdateCar={handleUpdateCar} />} />
                 <Route path="/dealer/cars/:carId" element={<CarDealerDetails handleDeleteCar={handleDeleteCar} />} />
                 <Route path="/dealer/requests" element={<RentRequest />} />
+                <Route path="/cars/:carId" element={<CarDetails />} />
               </>
             )}
   
