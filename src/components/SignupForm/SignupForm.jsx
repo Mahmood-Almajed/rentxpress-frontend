@@ -16,19 +16,28 @@ const SignupForm = (props) => {
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value.trimStart() });
   };
-
+  
+ 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const trimmedData = {
+      username: formData.username.trim(),
+      password: formData.password.trim(),
+      passwordConf: formData.passwordConf.trim(),
+    };
     try {
-      const newUserResponse = await authService.signup(formData);
+      const newUserResponse = await authService.signup(trimmedData);
       props.setUser(newUserResponse.user);
       navigate('/');
     } catch (err) {
       updateMessage(err.message);
     }
   };
+  
 
   const { username, password, passwordConf } = formData;
 

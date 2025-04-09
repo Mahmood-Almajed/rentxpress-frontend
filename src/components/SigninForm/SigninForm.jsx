@@ -21,14 +21,20 @@ const SigninForm = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const trimmedData = {
+      username: formData.username.trim(),
+      password: formData.password.trim(),
+    };
     try {
-      const user = await authService.signin(formData);
+      const user = await authService.signin(trimmedData);
       props.setUser(user);
       navigate('/');
     } catch (err) {
       updateMessage(err.message);
     }
   };
+
+ 
 
   const { username, password } = formData;
 
@@ -58,7 +64,7 @@ const SigninForm = (props) => {
                     
                     <p className="text-danger text-center">{message}</p>
 
-                    <form autoComplete="off" onSubmit={handleSubmit}>
+                    <form autoComplete="off" onSubmit={handleSubmit} >
                       <div className="mb-3">
                         <label htmlFor="username" className="form-label">Username</label>
                         <input
