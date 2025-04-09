@@ -86,12 +86,12 @@ const CreateCar = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     if (!/^\d{8}$/.test(formData.dealerPhone)) {
       toast.error("Phone number must be exactly 8 digits.");
       return;
     }
-
+  
     const data = new FormData();
     const payload = {
       ...formData,
@@ -101,23 +101,25 @@ const CreateCar = (props) => {
       isSold: formData.listingType === "sale" ? formData.isSold : false,
       buyerId: formData.listingType === "sale" ? formData.buyerId : "",
     };
-
+  
     for (const key in payload) {
       const value = payload[key];
       if (value !== undefined && value !== null && typeof value !== "object") {
         data.append(key, String(value));
       }
     }
-
+  
     imageFiles.forEach((file) => {
       data.append("images", file);
     });
-
-    carId ? props.handleUpdateCar(carId, data) : props.handleAddCar(data);
-
+  
+    // ✅ Append removeIds before the fetch call
     if (removedImageIds.length > 0) {
-      removedImageIds.forEach((id) => data.append("removeIds[]", id));
-    }    
+      removedImageIds.forEach((id) => data.append("removeIds", id)); // no need for [] — Express handles that
+    }
+  
+    // ✅ Then send it!
+    carId ? props.handleUpdateCar(carId, data) : props.handleAddCar(data);
   };
 
   useEffect(() => {
