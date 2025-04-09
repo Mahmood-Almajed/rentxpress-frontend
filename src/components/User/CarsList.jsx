@@ -61,7 +61,6 @@ const CarList = () => {
         );
       }
     } else {
-      // Exclude special needs cars unless filter is explicitly enabled
       result = result.filter(car => !car.isCompatible);
       if (filterType !== 'all') {
         result = result.filter(car =>
@@ -101,7 +100,6 @@ const CarList = () => {
               Browse our cars available for rent and sale. Whether you're traveling or buying, we’ve got you covered.
             </p>
 
-            {/* Main Filters */}
             <div className="d-flex justify-content-center gap-3 mt-2 mb-3 flex-wrap">
               <button
                 className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'all' ? 'active-warning' : 'btn-warning-outline-hover'}`}
@@ -129,7 +127,6 @@ const CarList = () => {
               </button>
             </div>
 
-            {/* Special Needs Subfilter */}
             {specialNeedsOnly && (
               <div className="d-flex justify-content-center gap-2 mb-3 flex-wrap">
                 <span className="fw-semibold mt-2">Showing:</span>
@@ -154,7 +151,6 @@ const CarList = () => {
               </div>
             )}
 
-            {/* Clear All Filters (Conditional) */}
             {filtersActive && (
               <div className="d-flex justify-content-center mt-3">
                 <button
@@ -169,7 +165,6 @@ const CarList = () => {
         </div>
       </div>
 
-      {/* Search and Sort */}
       <div className="container mb-4">
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
           <input
@@ -193,7 +188,6 @@ const CarList = () => {
         </div>
       </div>
 
-      {/* Cars */}
       <div className="container mb-4">
         {loading ? (
           <div className="text-center my-5">
@@ -219,13 +213,34 @@ const CarList = () => {
                       SOLD
                     </span>
                   )}
-                  {car.image?.url ? (
-                    <img
-                      src={car.image.url}
-                      className="card-img-top img-fluid"
-                      style={{ height: '225px', objectFit: 'cover' }}
-                      alt={`${car.brand} ${car.model}`}
-                    />
+
+                  {car.images && car.images.length > 0 ? (
+                    <div id={`carousel-${car._id}`} className="carousel slide" data-bs-ride="carousel">
+                      <div className="carousel-inner">
+                        {car.images.map((img, index) => (
+                          <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                            <img
+                              src={img.url}
+                              className="d-block w-100"
+                              style={{ height: '225px', objectFit: 'cover' }}
+                              alt={`Car image ${index + 1}`}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      {car.images.length > 1 && (
+                        <>
+                          <button className="carousel-control-prev" type="button" data-bs-target={`#carousel-${car._id}`} data-bs-slide="prev">
+                            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span className="visually-hidden">Previous</span>
+                          </button>
+                          <button className="carousel-control-next" type="button" data-bs-target={`#carousel-${car._id}`} data-bs-slide="next">
+                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span className="visually-hidden">Next</span>
+                          </button>
+                        </>
+                      )}
+                    </div>
                   ) : (
                     <div
                       className="card-img-top d-flex align-items-center justify-content-center bg-secondary text-white"
@@ -234,6 +249,7 @@ const CarList = () => {
                       No Image Available
                     </div>
                   )}
+
                   <motion.div className="card-body d-flex flex-column">
                     <h5 className="card-title fw-bold">
                       {car.brand} {car.model}
@@ -250,15 +266,15 @@ const CarList = () => {
                     </p>
                     <small
                       className={`mb-2 ${car.forSale
-                          ? car.isSold
-                            ? 'text-danger'
-                            : 'text-success'
-                          : car.availability === 'available'
-                            ? 'text-success'
-                            : car.availability === 'rented'
-                              ? 'text-secondary'
-                              : 'text-muted'
-                        }`}
+                        ? car.isSold
+                          ? 'text-danger'
+                          : 'text-success'
+                        : car.availability === 'available'
+                          ? 'text-success'
+                          : car.availability === 'rented'
+                            ? 'text-secondary'
+                            : 'text-muted'
+                      }`}
                     >
                       {car.forSale
                         ? car.isSold
@@ -266,13 +282,10 @@ const CarList = () => {
                           : 'available'
                         : car.availability}
                     </small>
-
-
                     {car.dealerId?.username && (
                       <small className="text-muted">Dealer: <strong>{car.dealerId.username}</strong></small>
                     )}
                     <motion.div className="d-flex justify-content-end mt-auto">
-
                       <Link to={`/cars/${car._id}`} className="btn btn-sm btn-secondary">
                         View Details
                       </Link>
@@ -289,3 +302,4 @@ const CarList = () => {
 };
 
 export default CarList;
+ 

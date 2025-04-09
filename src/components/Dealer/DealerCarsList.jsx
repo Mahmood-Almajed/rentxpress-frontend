@@ -93,20 +93,52 @@ function DealerCarsList() {
                 transition={{ duration: 0.5 }}
                 whileHover="hover"
               >
-                {/* ✅ SOLD badge */}
                 {car.isSold && (
                   <span className="badge bg-danger position-absolute top-0 end-0 m-2">
                     SOLD
                   </span>
                 )}
 
-                {car.image?.url ? (
-                  <img
-                    src={car.image.url}
-                    className="card-img-top img-fluid"
-                    style={{ height: '225px', objectFit: 'cover' }}
-                    alt={`${car.brand} ${car.model}`}
-                  />
+                {car.images && car.images.length > 0 ? (
+                  <div id={`carousel-${car._id}`} className="carousel slide" data-bs-ride="carousel">
+                    <div className="carousel-inner">
+                      {car.images.map((img, index) => (
+                        <div
+                          className={`carousel-item ${index === 0 ? 'active' : ''}`}
+                          key={index}
+                        >
+                          <img
+                            src={img.url}
+                            className="d-block w-100"
+                            style={{ height: '225px', objectFit: 'cover' }}
+                            alt={`Car ${index + 1}`}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    {car.images.length > 1 && (
+                      <>
+                        <button
+                          className="carousel-control-prev"
+                          type="button"
+                          data-bs-target={`#carousel-${car._id}`}
+                          data-bs-slide="prev"
+                        >
+                          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span className="visually-hidden">Previous</span>
+                        </button>
+                        <button
+                          className="carousel-control-next"
+                          type="button"
+                          data-bs-target={`#carousel-${car._id}`}
+                          data-bs-slide="next"
+                        >
+                          <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span className="visually-hidden">Next</span>
+                        </button>
+                      </>
+                    )}
+                  </div>
                 ) : (
                   <div
                     className="card-img-top d-flex align-items-center justify-content-center bg-secondary text-white"
@@ -133,7 +165,6 @@ function DealerCarsList() {
                     )}
                   </h5>
 
-
                   <p className="card-text mb-2">
                     {car.forSale ? (
                       <>BHD <strong>{car.salePrice}</strong> <small className="text-muted">(For Sale)</small></>
@@ -141,6 +172,7 @@ function DealerCarsList() {
                       <>BHD <strong>{car.pricePerDay}</strong> / Day</>
                     )}
                   </p>
+
                   <small
                     className={`mb-2 ${car.forSale
                       ? car.isSold
@@ -159,7 +191,6 @@ function DealerCarsList() {
                         : 'available'
                       : car.availability}
                   </small>
-
 
                   <motion.div
                     className="card-text small mb-2"

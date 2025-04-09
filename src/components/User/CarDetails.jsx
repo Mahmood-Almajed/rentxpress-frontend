@@ -122,13 +122,36 @@ const CarDetails = () => {
       <div className="row g-5 align-items-start">
         <div className="col-md-6">
           <div className="card shadow rounded-4 overflow-hidden" style={{ minHeight: "600px" }}>
-            {car.image?.url ? (
-              <img
-                src={car.image.url}
-                className="w-100"
-                style={{ height: "300px", objectFit: "cover" }}
-                alt={`${car.brand} ${car.model}`}
-              />
+            {car.images && car.images.length > 0 ? (
+              <div id="carImagesCarousel" className="carousel slide" data-bs-ride="carousel">
+                <div className="carousel-inner">
+                  {car.images.map((img, index) => (
+                    <div
+                      className={`carousel-item ${index === 0 ? "active" : ""}`}
+                      key={index}
+                    >
+                      <img
+                        src={img.url}
+                        className="d-block w-100"
+                        style={{ height: "300px", objectFit: "cover" }}
+                        alt={`Car image ${index + 1}`}
+                      />
+                    </div>
+                  ))}
+                </div>
+                {car.images.length > 1 && (
+                  <>
+                    <button className="carousel-control-prev" type="button" data-bs-target="#carImagesCarousel" data-bs-slide="prev">
+                      <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span className="visually-hidden">Previous</span>
+                    </button>
+                    <button className="carousel-control-next" type="button" data-bs-target="#carImagesCarousel" data-bs-slide="next">
+                      <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span className="visually-hidden">Next</span>
+                    </button>
+                  </>
+                )}
+              </div>
             ) : (
               <div className="d-flex justify-content-center align-items-center bg-secondary text-white" style={{ height: "300px" }}>
                 No Image Available
@@ -136,8 +159,6 @@ const CarDetails = () => {
             )}
             <div className="card-body">
               <h3 className="fw-bold">{car.brand} {car.model}</h3>
-
-
               {car.isCompatible && (
                 <span className="badge bg-primary me-2 mb-3">♿ Compatible for Special Needs</span>
               )}
@@ -165,7 +186,7 @@ const CarDetails = () => {
               )}
               {car.dealerId?.username && (
                 <p><strong>Dealer Name:</strong> {car.dealerId?.username}</p>
-               )} 
+              )}
               {isForSale && (
                 <div className="mt-4">
                   <div className="card bg-dark text-white text-center py-4">

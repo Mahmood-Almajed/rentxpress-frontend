@@ -38,19 +38,52 @@ const CarDealerDetails = ({ handleDeleteCar }) => {
       >
         <div className="row g-4 align-items-center">
           <div className="col-md-5">
-            {car.image?.url ? (
-              <img
-                src={car.image.url}
-                alt={`${car.brand} ${car.model}`}
-                className="img-fluid rounded-4 shadow-sm"
-                style={{ maxHeight: '300px', objectFit: 'cover', width: '100%' }}
-              />
+            {car.images && car.images.length > 0 ? (
+              <div id={`carousel-${car._id}`} className="carousel slide" data-bs-ride="carousel">
+                <div className="carousel-inner rounded-4 shadow-sm">
+                  {car.images.map((img, index) => (
+                    <div
+                      className={`carousel-item ${index === 0 ? 'active' : ''}`}
+                      key={index}
+                    >
+                      <img
+                        src={img.url}
+                        className="d-block w-100"
+                        style={{ height: '300px', objectFit: 'cover' }}
+                        alt={`Car ${index + 1}`}
+                      />
+                    </div>
+                  ))}
+                </div>
+                {car.images.length > 1 && (
+                  <>
+                    <button
+                      className="carousel-control-prev"
+                      type="button"
+                      data-bs-target={`#carousel-${car._id}`}
+                      data-bs-slide="prev"
+                    >
+                      <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span className="visually-hidden">Previous</span>
+                    </button>
+                    <button
+                      className="carousel-control-next"
+                      type="button"
+                      data-bs-target={`#carousel-${car._id}`}
+                      data-bs-slide="next"
+                    >
+                      <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span className="visually-hidden">Next</span>
+                    </button>
+                  </>
+                )}
+              </div>
             ) : (
               <div
                 className="d-flex justify-content-center align-items-center bg-secondary text-white rounded-4"
                 style={{ height: '300px' }}
               >
-                No Image Available
+                No Images Available
               </div>
             )}
           </div>

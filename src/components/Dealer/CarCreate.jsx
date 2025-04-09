@@ -47,10 +47,10 @@ const CreateCar = (props) => {
     buyerId: "",
     isCompatible: false,
     dealerPhone: "",
-    image: {}
+    images: []
   });
 
-  const [imageFile, setImageFile] = useState(null);
+  const [imageFiles, setImageFiles] = useState([]);
   const [marker, setMarker] = useState(null);
 
   const mapContainerStyle = { width: "100%", height: "300px" };
@@ -79,6 +79,10 @@ const CreateCar = (props) => {
     setFormData({ ...formData, location: `${lat}, ${lng}` });
   };
 
+  const handleImageChange = (e) => {
+    setImageFiles(Array.from(e.target.files));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -99,12 +103,14 @@ const CreateCar = (props) => {
 
     for (const key in payload) {
       const value = payload[key];
-      if (value !== undefined && value !== null) {
+      if (value !== undefined && value !== null && typeof value !== "object") {
         data.append(key, String(value));
       }
     }
 
-    if (imageFile) data.append("image", imageFile);
+    imageFiles.forEach((file) => {
+      data.append("images", file);
+    });
 
     carId ? props.handleUpdateCar(carId, data) : props.handleAddCar(data);
   };
@@ -218,45 +224,67 @@ const CreateCar = (props) => {
               </div>
 
               <div className="col-12">
-                <label htmlFor="image" className="form-label">Upload Car Image</label>
+                <label className="form-label">Upload Car Images</label>
                 <input
                   type="file"
                   className="form-control"
-                  name="image"
+                  name="images"
                   accept="image/*"
-                  onChange={(e) => setImageFile(e.target.files[0])}
+                  multiple
+                  onChange={handleImageChange}
                   required={!carId}
                 />
-                <div className="mt-3 d-flex align-items-center gap-3">
-                  {imageFile && (
-                    <>
+                <div className="mt-3 d-flex flex-wrap gap-3">
+                  {imageFiles.map((file, idx) => (
+                    <div key={`new-${idx}`} className="position-relative">
                       <img
-                        src={URL.createObjectURL(imageFile)}
-                        alt="Preview"
+                        src={URL.createObjectURL(file)}
+                        alt={`new-${idx}`}
                         className="rounded border"
-                        style={{ width: 40, height: 40, objectFit: "cover" }}
+                        style={{ width: 60, height: 60, objectFit: "cover" }}
                       />
-                      <small className="text-success">New uploaded image</small>
-                    </>
-                  )}
-                  {!imageFile && carId && formData.image?.url && (
-                    <>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setImageFiles((prev) => prev.filter((_, i) => i !== idx))
+                        }
+                        className="btn btn-sm btn-danger rounded-circle position-absolute top-0 end-0"
+                        style={{ transform: "translate(50%, -50%)", fontSize: "0.6rem", lineHeight: 1 }}
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+                  {carId && imageFiles.length === 0 && formData.images?.map((img, idx) => (
+                    <div key={`existing-${idx}`} className="position-relative">
                       <img
-                        src={formData.image.url}
-                        alt="Current"
+                        src={img.url}
+                        alt={`existing-${idx}`}
                         className="rounded border"
-                        style={{ width: 40, height: 40, objectFit: "cover" }}
+                        style={{ width: 60, height: 60, objectFit: "cover" }}
                       />
-                      <small className="text-muted">Current image</small>
-                    </>
-                  )}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            images: prev.images.filter((_, i) => i !== idx),
+                          }))
+                        }
+                        className="btn btn-sm btn-danger rounded-circle position-absolute top-0 end-0"
+                        style={{ transform: "translate(50%, -50%)", fontSize: "0.6rem", lineHeight: 1 }}
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-             
+              <div className="col-md-6">
                 <label className="form-label">Dealer Phone</label>
                 <div className="input-group">
-                    <span className="input-group-text"> 🇧🇭 +973</span>
+                  <span className="input-group-text"> 🇧🇭 +973</span>
                   <input
                     type="tel"
                     className="form-control"
@@ -269,7 +297,7 @@ const CreateCar = (props) => {
                     maxLength={8}
                   />
                 </div>
-
+              </div>
 
               <div className="col-md-6 mt-4">
                 <div className="form-check">
