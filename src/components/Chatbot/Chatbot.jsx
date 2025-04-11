@@ -2,13 +2,15 @@ import { useState, useContext } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { AuthedUserContext } from '../../App';
 import { Collapse } from 'react-collapse';
+import { useNavigate } from 'react-router-dom';
 import './Chatbot.css';
 
 const BACKEND_URL = import.meta.env.VITE_EXPRESS_BACKEND_URL;
 
 const Chatbot = () => {
   const user = useContext(AuthedUserContext);
-  
+  const navigate = useNavigate();
+
   const [messages, setMessages] = useState([
     { sender: 'bot', text: `Hi!👋 ${user?.username} I’m your RentXpress assistant. Ask me anything about cars, rentals, or dealer access!` },
   ]);
@@ -17,11 +19,9 @@ const Chatbot = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   
-  // State for expand/collapse and width of chatbox
   const [isOpen, setIsOpen] = useState(false);
   const [boxWidth, setBoxWidth] = useState(400);
 
-  // Resize logic: handle on the left
   const handleMouseDown = (e) => {
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
@@ -29,11 +29,7 @@ const Chatbot = () => {
   };
 
   const handleMouseMove = (e) => {
-    // The chatbox is fixed to the right:20px.
-    // Its left edge is at: window.innerWidth - 20 - boxWidth.
-    // When dragging the left handle, new width = (window.innerWidth - 20) - e.clientX.
     const newWidth = window.innerWidth - 20 - e.clientX;
-    // Clamp the width between 300 and 600px.
     setBoxWidth(Math.max(300, Math.min(newWidth, 600)));
   };
 
@@ -71,14 +67,12 @@ const Chatbot = () => {
 
   return (
     <div className="chatbot-container">
-      {/* Toggle button (circle) to open/close chat */}
       <div className="chatbot-toggle-button" onClick={() => setIsOpen(!isOpen)}>
         {isOpen ? '✕' : '💬'}
       </div>
       
       <Collapse isOpened={isOpen}>
         <div className="chatbot-box shadow-lg" style={{ width: `${boxWidth}px` }}>
-          {/* Draggable handle for resizing on the LEFT side */}
           <div className="resizable-handle" onMouseDown={handleMouseDown}></div>
           
           <div className="chatbot-messages">
@@ -87,7 +81,12 @@ const Chatbot = () => {
                 <ReactMarkdown
                   components={{
                     a: ({ node, ...props }) => (
-                      <a {...props} target="_blank" rel="noopener noreferrer" style={{ color: '#007bff' }} />
+                      <span
+                        onClick={() => navigate(props.href)}
+                        style={{ color: '#007bff', cursor: 'pointer', textDecoration: 'underline' }}
+                      >
+                        {props.children}
+                      </span>
                     )
                   }}
                 >
@@ -97,6 +96,7 @@ const Chatbot = () => {
             ))}
             {loading && <div className="chatbot-message bot">Typing...</div>}
           </div>
+          
           <div className="chatbot-input">
             <input
               type="text"
