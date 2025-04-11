@@ -382,6 +382,54 @@ const CreateCar = (props) => {
                   onChange={handleImageChange}
                   required={!carId}
                 />
+                <div className="mt-3 d-flex flex-wrap gap-3">
+                  {imageFiles.map((file, idx) => (
+                    <div key={`new-${idx}`} className="position-relative">
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt={`new-${idx}`}
+                        className="rounded border"
+                        style={{ width: 60, height: 60, objectFit: "cover" }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setImageFiles((prev) => prev.filter((_, i) => i !== idx))
+                        }
+                        className="btn btn-sm btn-danger rounded-circle position-absolute top-0 end-0"
+                        style={{ transform: "translate(50%, -50%)", fontSize: "0.6rem", lineHeight: 1 }}
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+                  {carId && imageFiles.length === 0 && formData.images?.map((img, idx) => (
+                    <div key={`existing-${idx}`} className="position-relative">
+                      <img
+                        src={img.url}
+                        alt={`existing-${idx}`}
+                        className="rounded border"
+                        style={{ width: 60, height: 60, objectFit: "cover" }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const removedImage = formData.images[idx];
+                          setRemovedImageIds((prev) => [...prev, removedImage.cloudinary_id]);
+                          setFormData((prev) => ({
+                            ...prev,
+                            images: prev.images.filter((_, i) => i !== idx),
+                          }));
+                        }}
+                        
+                        className="btn btn-sm btn-danger rounded-circle position-absolute top-0 end-0"
+                        style={{ transform: "translate(50%, -50%)", fontSize: "0.6rem", lineHeight: 1 }}
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div className="col-md-6">
