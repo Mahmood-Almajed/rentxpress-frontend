@@ -7,7 +7,8 @@ const CarList = () => {
   const [cars, setCars] = useState([]);
   const [filteredCars, setFilteredCars] = useState([]);
   const [search, setSearch] = useState('');
-  const [filterType, setFilterType] = useState('all');
+  const [filterType, setFilterType] = useState('all'); // rent/sale
+  const [filterCarType, setFilterCarType] = useState('all'); // SUV, Sedan, etc.
   const [sorting, setSorting] = useState('all');
   const [specialNeedsOnly, setSpecialNeedsOnly] = useState(false);
   const [specialNeedsListingType, setSpecialNeedsListingType] = useState('all');
@@ -77,6 +78,10 @@ const CarList = () => {
       (car.mileage ?? 0) >= mileageRange[0] && (car.mileage ?? 0) <= mileageRange[1]
     );
 
+    if (filterCarType !== 'all') {
+      result = result.filter(car => car.type?.toLowerCase() === filterCarType.toLowerCase());
+    }
+
     if (sorting === 'lowToHigh') {
       result.sort((a, b) =>
         (a.forSale ? a.salePrice : a.pricePerDay) - (b.forSale ? b.salePrice : b.pricePerDay)
@@ -97,6 +102,7 @@ const CarList = () => {
     setSpecialNeedsOnly(false);
     setSpecialNeedsListingType('all');
     setMileageRange([0, 1000000]);
+    setFilterCarType('all');
   };
 
   return (
@@ -124,6 +130,20 @@ const CarList = () => {
                 <button className={`btn btn-sm rounded-pill ${specialNeedsListingType === 'sale' ? 'btn-secondary' : 'btn-outline-secondary'}`} onClick={() => setSpecialNeedsListingType('sale')}>For Sale</button>
               </div>
             )}
+
+            <div className="d-flex justify-content-center gap-2 mb-3 flex-wrap">
+              <span className="fw-semibold mt-2">Car Type:</span>
+              {["all", "SUV", "Sedan", "Truck", "Off-Road", "Electric", "Luxury", "Convertible", "Sports", "Hatchback", "Van", "Muscle", "Coupe", "Hybrid"].map((type) => (
+                <button
+                  key={type}
+                  className={`btn btn-sm rounded-pill ${filterCarType === type ? 'btn-dark' : 'btn-outline-dark'}`}
+                  onClick={() => setFilterCarType(type)}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+
 
             {/* Mileage Filter UI */}
             <div className="mt-4">
@@ -179,7 +199,7 @@ const CarList = () => {
                   />
                 </div>
               </div>
-             
+
             </div>
 
             {filtersActive && (

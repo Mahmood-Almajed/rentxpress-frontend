@@ -164,6 +164,7 @@ const CarDetails = () => {
               )}
               <p><strong>Year:</strong> {car.year}</p>
               <p><strong>Mileage:</strong> {car.mileage?.toLocaleString()} km</p>
+              <p><strong>Type:</strong> {car.type}</p>
               <p>
                 <strong>Status:</strong>{" "}
                 <span className={`fw-semibold ${isForSale

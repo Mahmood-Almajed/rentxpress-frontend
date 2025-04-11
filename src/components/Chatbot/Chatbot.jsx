@@ -1,23 +1,49 @@
 import { useState, useContext } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { AuthedUserContext } from '../../App';
+import { Collapse } from 'react-collapse';
 import './Chatbot.css';
 
 const BACKEND_URL = import.meta.env.VITE_EXPRESS_BACKEND_URL;
 
 const Chatbot = () => {
   const user = useContext(AuthedUserContext);
+  
   const [messages, setMessages] = useState([
-    { sender: 'bot', text: `Hi!👋 ${user.username} I’m your RentXpress assistant. Ask me anything about cars, rentals, or dealer access!` },
+    { sender: 'bot', text: `Hi!👋 ${user?.username} I’m your RentXpress assistant. Ask me anything about cars, rentals, or dealer access!` },
   ]);
-
-  const [messageHistory, setMessageHistory] = useState([]); // 🧠 for GPT's memory
+  
+  const [messageHistory, setMessageHistory] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  
+  // State for expand/collapse and width of chatbox
+  const [isOpen, setIsOpen] = useState(false);
+  const [boxWidth, setBoxWidth] = useState(400);
+
+  // Resize logic: handle on the left
+  const handleMouseDown = (e) => {
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+    e.preventDefault();
+  };
+
+  const handleMouseMove = (e) => {
+    // The chatbox is fixed to the right:20px.
+    // Its left edge is at: window.innerWidth - 20 - boxWidth.
+    // When dragging the left handle, new width = (window.innerWidth - 20) - e.clientX.
+    const newWidth = window.innerWidth - 20 - e.clientX;
+    // Clamp the width between 300 and 600px.
+    setBoxWidth(Math.max(300, Math.min(newWidth, 600)));
+  };
+
+  const handleMouseUp = () => {
+    document.removeEventListener("mousemove", handleMouseMove);
+    document.removeEventListener("mouseup", handleMouseUp);
+  };
 
   const sendMessage = async () => {
     if (!input.trim()) return;
-
     const userMessage = { sender: 'user', text: input };
     setMessages(prev => [...prev, userMessage]);
     setLoading(true);
@@ -28,16 +54,12 @@ const Chatbot = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: input,
-          history: messageHistory, // 👈 Send memory
+          history: messageHistory,
         }),
       });
-
       const data = await res.json();
-
       const botMessage = { sender: 'bot', text: data.reply || 'Sorry, something went wrong.' };
       setMessages(prev => [...prev, botMessage]);
-
-      // 👇 Store updated memory from backend
       setMessageHistory(data.history || []);
     } catch (err) {
       setMessages(prev => [...prev, { sender: 'bot', text: 'Error connecting to AI. Try again later.' }]);
@@ -48,38 +70,48 @@ const Chatbot = () => {
   };
 
   return (
-    <div className="chatbot-wrapper">
-      <div className="chatbot-box shadow-lg">
-        <div className="chatbot-messages">
-          {messages.map((msg, i) => (
-            <div key={i} className={`chatbot-message ${msg.sender}`}>
-              <ReactMarkdown
-                components={{
-                  a: ({ node, ...props }) => (
-                    <a {...props} target="_blank" rel="noopener noreferrer" style={{ color: '#007bff' }} />
-                  )
-                }}
-              >
-                {msg.text}
-              </ReactMarkdown>
-            </div>
-          ))}
-          {loading && <div className="chatbot-message bot">Typing...</div>}
-        </div>
-        <div className="chatbot-input">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Ask something..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-          />
-          <button className="btn btn-warning" onClick={sendMessage} disabled={loading}>
-            Send
-          </button>
-        </div>
+    <div className="chatbot-container">
+      {/* Toggle button (circle) to open/close chat */}
+      <div className="chatbot-toggle-button" onClick={() => setIsOpen(!isOpen)}>
+        {isOpen ? '✕' : '💬'}
       </div>
+      
+      <Collapse isOpened={isOpen}>
+        <div className="chatbot-box shadow-lg" style={{ width: `${boxWidth}px` }}>
+          {/* Draggable handle for resizing on the LEFT side */}
+          <div className="resizable-handle" onMouseDown={handleMouseDown}></div>
+          
+          <div className="chatbot-messages">
+            {messages.map((msg, i) => (
+              <div key={i} className={`chatbot-message ${msg.sender}`}>
+                <ReactMarkdown
+                  components={{
+                    a: ({ node, ...props }) => (
+                      <a {...props} target="_blank" rel="noopener noreferrer" style={{ color: '#007bff' }} />
+                    )
+                  }}
+                >
+                  {msg.text}
+                </ReactMarkdown>
+              </div>
+            ))}
+            {loading && <div className="chatbot-message bot">Typing...</div>}
+          </div>
+          <div className="chatbot-input">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Ask something..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+            />
+            <button className="btn btn-warning" onClick={sendMessage} disabled={loading}>
+              Send
+            </button>
+          </div>
+        </div>
+      </Collapse>
     </div>
   );
 };
