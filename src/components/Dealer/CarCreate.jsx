@@ -71,7 +71,56 @@ const modelToTypeMap = {
   // Electric / Hybrid / Luxury
   "Model S": "Electric", "Model 3": "Electric", "Model X": "Electric", "Model Y": "Electric", "Roadster": "Electric",
   "Taycan": "Electric", "i3": "Electric", "i8": "Hybrid",
-  "S-Class": "Luxury", "Panamera": "Luxury", "LC": "Luxury"
+  "S-Class": "Luxury", "Panamera": "Luxury", "LC": "Luxury",
+
+  "3 Series": "Sedan",
+  "5 Series": "Sedan",
+  "7 Series": "Luxury",
+  "A-Class": "Sedan",
+  "AMG GT": "Sports",
+  "ASX": "SUV",
+  "C-Class": "Sedan",
+  "CLA": "Sedan",
+  "CX-3": "SUV",
+  "Canyon": "Truck",
+  "Carnival": "Van",
+  "Charger": "Muscle",
+  "Crosstrek": "SUV",
+  "Dart": "Sedan",
+  "Discovery Sport": "SUV",
+  "E-Class": "Luxury",
+  "ES": "Sedan",
+  "Elentra-N": "Sedan",
+  "Envoy": "SUV",
+  "Freelander": "SUV",
+  "G-Class": "SUV",
+  "GS": "Sedan",
+  "Gladiator": "Truck",
+  "Golf": "Hatchback",
+  "IS": "Sedan",
+  "Impreza": "Sedan",
+  "Jetta": "Sedan",
+  "Journey": "SUV",
+  "Juke": "SUV",
+  "LS": "Luxury",
+  "Legacy": "Sedan",
+  "Mazda2": "Hatchback",
+  "Micra": "Hatchback",
+  "Odyssey": "Van",
+  "Passat": "Sedan",
+  "Polo": "Hatchback",
+  "Q3": "SUV",
+  "RC": "Coupe",
+  "Range Rover Sport": "SUV",
+  "Range Rover Velar": "SUV",
+  "Renegade": "SUV",
+  "SL-Class": "Convertible",
+  "Semi": "Truck",
+  "Sequoia": "SUV",
+  "WRX": "Sports",
+  "X1": "SUV",
+  "e-tron": "Electric"
+
 };
 
 
@@ -114,19 +163,19 @@ const CreateCar = (props) => {
       ...formData,
       [name]: type === "checkbox" ? checked : value,
     };
-  
+
     // Auto-fill type based on model
     if (name === "model") {
       const detectedType = modelToTypeMap[value] || "";
       updated.type = detectedType;
     }
-  
+
     setFormData(updated);
   };
-  
 
 
-  
+
+
 
   const handleBrandChange = (e) => {
     setFormData({ ...formData, brand: e.target.value, model: "" });
@@ -186,12 +235,12 @@ const CreateCar = (props) => {
     if (carId) {
       const fetchCar = async () => {
         const carData = await carService.show(carId);
-  
+
         // Auto-detect type if not saved already
         if (!carData.type && carData.model) {
           carData.type = modelToTypeMap[carData.model] || "";
         }
-  
+
         setFormData({
           ...carData,
           listingType: carData.forSale ? "sale" : "rent",
@@ -203,7 +252,7 @@ const CreateCar = (props) => {
           dealerPhone: carData.dealerPhone || "",
           type: carData.type || "", // ✅ ensure type is preserved or set
         });
-  
+
         if (carData.location) {
           const [lat, lng] = carData.location.split(",").map(Number);
           setMarker({ lat, lng });
@@ -212,7 +261,7 @@ const CreateCar = (props) => {
       fetchCar();
     }
   }, [carId]);
-  
+
 
   return (
     <div className="container-fluid py-5" style={{ backgroundColor: "#f5f8fa", minHeight: "100vh" }}>
@@ -233,7 +282,7 @@ const CreateCar = (props) => {
                   ))}
                 </select>
               </div>
-  
+
               <div className="col-md-6">
                 <label className="form-label">Model</label>
                 <select className="form-select" name="model" value={formData.model} onChange={handleChange} required disabled={!formData.brand}>
@@ -243,7 +292,7 @@ const CreateCar = (props) => {
                   ))}
                 </select>
               </div>
-  
+
               <div className="col-md-4">
                 <label className="form-label">Year</label>
                 <select className="form-select" name="year" value={formData.year} onChange={handleChange} required>
@@ -252,7 +301,7 @@ const CreateCar = (props) => {
                   ))}
                 </select>
               </div>
-  
+
               <div className="col-md-4">
                 <label className="form-label">Car Type</label>
                 <select
@@ -278,7 +327,7 @@ const CreateCar = (props) => {
                   <option value="Hybrid">Hybrid</option>
                 </select>
               </div>
-  
+
               <div className="col-md-4">
                 <label className="form-label">Listing Type</label>
                 <select className="form-select" name="listingType" value={formData.listingType} onChange={handleChange} required>
@@ -286,14 +335,14 @@ const CreateCar = (props) => {
                   <option value="sale">For Sale</option>
                 </select>
               </div>
-  
+
               {formData.listingType === "rent" && (
                 <div className="col-md-12">
                   <label className="form-label">Price Per Day (BHD)</label>
                   <input type="number" className="form-control" name="pricePerDay" value={formData.pricePerDay} onChange={handleChange} required />
                 </div>
               )}
-  
+
               {formData.listingType === "sale" && (
                 <>
                   <div className="col-md-6">
@@ -309,7 +358,7 @@ const CreateCar = (props) => {
                   </div>
                 </>
               )}
-  
+
               <div className="col-12">
                 <label className="form-label">Location (click on map)</label>
                 {isLoaded ? (
@@ -321,7 +370,7 @@ const CreateCar = (props) => {
                 )}
                 <input type="text" className="form-control mt-2" name="location" value={formData.location} readOnly required />
               </div>
-  
+
               <div className="col-12">
                 <label className="form-label">Upload Car Images</label>
                 <input
@@ -334,7 +383,7 @@ const CreateCar = (props) => {
                   required={!carId}
                 />
               </div>
-  
+
               <div className="col-md-6">
                 <label className="form-label">Dealer Phone</label>
                 <div className="input-group">
@@ -352,7 +401,7 @@ const CreateCar = (props) => {
                   />
                 </div>
               </div>
-  
+
               <div className="mb-3">
                 <label htmlFor="mileage" className="form-label">Mileage (km)</label>
                 <input
@@ -365,16 +414,16 @@ const CreateCar = (props) => {
                   min="0"
                 />
               </div>
-  
+
               <div className="col-md-6 mt-4">
                 <div className="form-check">
                   <input className="form-check-input" type="checkbox" name="isCompatible" checked={formData.isCompatible} onChange={handleChange} id="compatibleCheck" />
                   <label className="form-check-label" htmlFor="compatibleCheck">Compatible for Special Needs</label>
                 </div>
               </div>
-  
+
             </div>
-  
+
             <div className="d-flex flex-column flex-md-row gap-3 mt-4">
               <button type="submit" className="btn btn-primary px-4 py-2 w-100 w-md-auto">
                 {carId ? "Update Car" : "Add Car"}
@@ -389,7 +438,7 @@ const CreateCar = (props) => {
       <ToastContainer position="top-right" autoClose={4000} hideProgressBar />
     </div>
   );
-  
+
 };
 
 export default CreateCar;
