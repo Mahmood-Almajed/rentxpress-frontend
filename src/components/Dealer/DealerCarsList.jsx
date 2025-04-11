@@ -174,9 +174,10 @@ function DealerCarsList() {
                   <motion.div className="card-text small mb-2" variants={{ hover: { opacity: 1, height: 'auto' }, rest: { opacity: 0, height: 0 } }} transition={{ duration: 0.3 }}>
                     <strong>Dealer:</strong> {car.dealerId?.username || 'You'}
                   </motion.div>
-                  <motion.div className="d-flex justify-content-end mt-auto" variants={{ hover: { opacity: 1, height: 'auto' }, rest: { opacity: 0, height: 0 } }} transition={{ duration: 0.3 }}>
+                  <div className="d-flex justify-content-end mt-auto">
                     <Link to={`/dealer/cars/${car._id}`} className="btn btn-sm btn-secondary">View Details</Link>
-                  </motion.div>
+                  </div>
+
                 </motion.div>
               </motion.div>
             </div>
