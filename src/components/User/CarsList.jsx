@@ -11,6 +11,9 @@ const CarList = () => {
   const [sorting, setSorting] = useState('all');
   const [specialNeedsOnly, setSpecialNeedsOnly] = useState(false);
   const [specialNeedsListingType, setSpecialNeedsListingType] = useState('all');
+  const [minMileage, setMinMileage] = useState(0);
+  const [maxMileage, setMaxMileage] = useState(1000000);
+  const [mileageRange, setMileageRange] = useState([0, 1000000]);
   const [loading, setLoading] = useState(true);
 
   const filtersActive =
@@ -18,7 +21,8 @@ const CarList = () => {
     filterType !== 'all' ||
     sorting !== 'all' ||
     specialNeedsOnly ||
-    (specialNeedsOnly && specialNeedsListingType !== 'all');
+    (specialNeedsOnly && specialNeedsListingType !== 'all') ||
+    mileageRange[0] > 0 || mileageRange[1] < 1000000;
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -69,6 +73,10 @@ const CarList = () => {
       }
     }
 
+    result = result.filter(car =>
+      (car.mileage ?? 0) >= mileageRange[0] && (car.mileage ?? 0) <= mileageRange[1]
+    );
+
     if (sorting === 'lowToHigh') {
       result.sort((a, b) =>
         (a.forSale ? a.salePrice : a.pricePerDay) - (b.forSale ? b.salePrice : b.pricePerDay)
@@ -80,7 +88,7 @@ const CarList = () => {
     }
 
     setFilteredCars(result);
-  }, [cars, search, filterType, sorting, specialNeedsOnly, specialNeedsListingType]);
+  }, [cars, search, filterType, sorting, specialNeedsOnly, specialNeedsListingType, mileageRange]);
 
   const handleClearFilters = () => {
     setSearch('');
@@ -88,6 +96,7 @@ const CarList = () => {
     setSorting('all');
     setSpecialNeedsOnly(false);
     setSpecialNeedsListingType('all');
+    setMileageRange([0, 1000000]);
   };
 
   return (
@@ -101,64 +110,81 @@ const CarList = () => {
             </p>
 
             <div className="d-flex justify-content-center gap-3 mt-2 mb-3 flex-wrap">
-              <button
-                className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'all' ? 'active-warning' : 'btn-warning-outline-hover'}`}
-                onClick={() => setFilterType('all')}
-              >
-                All
-              </button>
-              <button
-                className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'rent' ? 'active-warning' : 'btn-warning-outline-hover'}`}
-                onClick={() => setFilterType('rent')}
-              >
-                Cars for Rent
-              </button>
-              <button
-                className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'sale' ? 'active-warning' : 'btn-warning-outline-hover'}`}
-                onClick={() => setFilterType('sale')}
-              >
-                Cars For Sale
-              </button>
-              <button
-                className={`btn px-4 py-2 rounded-pill shadow-sm ${specialNeedsOnly ? 'btn-primary' : 'btn-outline-primary'}`}
-                onClick={() => setSpecialNeedsOnly(prev => !prev)}
-              >
-                ♿ Special Needs
-              </button>
+              <button className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'all' ? 'active-warning' : 'btn-warning-outline-hover'}`} onClick={() => setFilterType('all')}>All</button>
+              <button className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'rent' ? 'active-warning' : 'btn-warning-outline-hover'}`} onClick={() => setFilterType('rent')}>Cars for Rent</button>
+              <button className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'sale' ? 'active-warning' : 'btn-warning-outline-hover'}`} onClick={() => setFilterType('sale')}>Cars For Sale</button>
+              <button className={`btn px-4 py-2 rounded-pill shadow-sm ${specialNeedsOnly ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setSpecialNeedsOnly(prev => !prev)}>♿ Special Needs</button>
             </div>
 
             {specialNeedsOnly && (
               <div className="d-flex justify-content-center gap-2 mb-3 flex-wrap">
                 <span className="fw-semibold mt-2">Showing:</span>
-                <button
-                  className={`btn btn-sm rounded-pill ${specialNeedsListingType === 'all' ? 'btn-secondary' : 'btn-outline-secondary'}`}
-                  onClick={() => setSpecialNeedsListingType('all')}
-                >
-                  All
-                </button>
-                <button
-                  className={`btn btn-sm rounded-pill ${specialNeedsListingType === 'rent' ? 'btn-secondary' : 'btn-outline-secondary'}`}
-                  onClick={() => setSpecialNeedsListingType('rent')}
-                >
-                  For Rent
-                </button>
-                <button
-                  className={`btn btn-sm rounded-pill ${specialNeedsListingType === 'sale' ? 'btn-secondary' : 'btn-outline-secondary'}`}
-                  onClick={() => setSpecialNeedsListingType('sale')}
-                >
-                  For Sale
-                </button>
+                <button className={`btn btn-sm rounded-pill ${specialNeedsListingType === 'all' ? 'btn-secondary' : 'btn-outline-secondary'}`} onClick={() => setSpecialNeedsListingType('all')}>All</button>
+                <button className={`btn btn-sm rounded-pill ${specialNeedsListingType === 'rent' ? 'btn-secondary' : 'btn-outline-secondary'}`} onClick={() => setSpecialNeedsListingType('rent')}>For Rent</button>
+                <button className={`btn btn-sm rounded-pill ${specialNeedsListingType === 'sale' ? 'btn-secondary' : 'btn-outline-secondary'}`} onClick={() => setSpecialNeedsListingType('sale')}>For Sale</button>
               </div>
             )}
 
+            {/* Mileage Filter UI */}
+            <div className="mt-4">
+              <p className="mb-1 mt-4">Filter by Mileage (km)</p>
+              <div className="d-flex flex-column align-items-center">
+                <div className="d-flex gap-3 mb-2">
+                  <input
+                    type="number"
+                    value={mileageRange[0]}
+                    min="0"
+                    onChange={(e) =>
+                      setMileageRange([+e.target.value, mileageRange[1]])
+                    }
+                    className="form-control"
+                    style={{ width: '120px' }}
+                  />
+                  <span>to</span>
+                  <input
+                    type="number"
+                    value={mileageRange[1]}
+                    min={mileageRange[0]}
+                    onChange={(e) =>
+                      setMileageRange([mileageRange[0], +e.target.value])
+                    }
+                    className="form-control"
+                    style={{ width: '120px' }}
+                  />
+                </div>
+
+                {/* Range Sliders */}
+                <div className="w-100" style={{ maxWidth: '400px' }}>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1000000"
+                    step="1000"
+                    value={mileageRange[0]}
+                    onChange={(e) =>
+                      setMileageRange([+e.target.value, mileageRange[1]])
+                    }
+                    className="form-range mb-2"
+                  />
+                  <input
+                    type="range"
+                    min="0"
+                    max="1000000"
+                    step="1000"
+                    value={mileageRange[1]}
+                    onChange={(e) =>
+                      setMileageRange([mileageRange[0], +e.target.value])
+                    }
+                    className="form-range"
+                  />
+                </div>
+              </div>
+             
+            </div>
+
             {filtersActive && (
-              <div className="d-flex justify-content-center mt-3">
-                <button
-                  className="btn btn-outline-dark btn-sm rounded-pill px-4"
-                  onClick={handleClearFilters}
-                >
-                  Clear All Filters
-                </button>
+              <div className="d-flex justify-content-center mt-4">
+                <button className="btn btn-outline-dark btn-sm rounded-pill px-4" onClick={handleClearFilters}>Clear All Filters</button>
               </div>
             )}
           </div>
@@ -209,9 +235,7 @@ const CarList = () => {
                   whileHover={{ scale: 1.03 }}
                 >
                   {car.isSold && (
-                    <span className="badge bg-danger position-absolute top-0 end-0 m-2">
-                      SOLD
-                    </span>
+                    <span className="badge bg-danger position-absolute top-0 end-0 m-2">SOLD</span>
                   )}
 
                   {car.images && car.images.length > 0 ? (
@@ -242,10 +266,7 @@ const CarList = () => {
                       )}
                     </div>
                   ) : (
-                    <div
-                      className="card-img-top d-flex align-items-center justify-content-center bg-secondary text-white"
-                      style={{ height: '225px' }}
-                    >
+                    <div className="card-img-top d-flex align-items-center justify-content-center bg-secondary text-white" style={{ height: '225px' }}>
                       No Image Available
                     </div>
                   )}
@@ -264,6 +285,7 @@ const CarList = () => {
                         <>BHD <strong>{car.pricePerDay || 'N/A'}</strong> / Day</>
                       )}
                     </p>
+                    <p className="mb-1"><small>Mileage: {car.mileage?.toLocaleString()} km</small></p>
                     <small
                       className={`mb-2 ${car.forSale
                         ? car.isSold
@@ -274,7 +296,7 @@ const CarList = () => {
                           : car.availability === 'rented'
                             ? 'text-secondary'
                             : 'text-muted'
-                      }`}
+                        }`}
                     >
                       {car.forSale
                         ? car.isSold
@@ -302,4 +324,3 @@ const CarList = () => {
 };
 
 export default CarList;
- 

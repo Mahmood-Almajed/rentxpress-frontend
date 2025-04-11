@@ -9,6 +9,7 @@ import { AuthedUserContext } from "../../App";
 import { useLoadScript } from "@react-google-maps/api";
 import { motion } from "framer-motion";
 
+// ...imports stay unchanged
 const CarDetails = () => {
   const { carId } = useParams();
   const nav = useNavigate();
@@ -19,7 +20,6 @@ const CarDetails = () => {
   const [rentalData, setRentalData] = useState({ startDate: "", endDate: "" });
   const [totalPrice, setTotalPrice] = useState(null);
   const today = new Date().toISOString().split("T")[0];
-
   const { isLoaded } = useLoadScript({ googleMapsApiKey: GAPI });
 
   const fetchCar = async () => {
@@ -163,6 +163,7 @@ const CarDetails = () => {
                 <span className="badge bg-primary me-2 mb-3">♿ Compatible for Special Needs</span>
               )}
               <p><strong>Year:</strong> {car.year}</p>
+              <p><strong>Mileage:</strong> {car.mileage?.toLocaleString()} km</p>
               <p>
                 <strong>Status:</strong>{" "}
                 <span className={`fw-semibold ${isForSale
