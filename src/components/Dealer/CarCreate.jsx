@@ -86,12 +86,12 @@ const CreateCar = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     if (!/^\d{8}$/.test(formData.dealerPhone)) {
       toast.error("Phone number must be exactly 8 digits.");
       return;
     }
-  
+
     const data = new FormData();
     const payload = {
       ...formData,
@@ -101,23 +101,23 @@ const CreateCar = (props) => {
       isSold: formData.listingType === "sale" ? formData.isSold : false,
       buyerId: formData.listingType === "sale" ? formData.buyerId : "",
     };
-  
+
     for (const key in payload) {
       const value = payload[key];
       if (value !== undefined && value !== null && typeof value !== "object") {
         data.append(key, String(value));
       }
     }
-  
+
     imageFiles.forEach((file) => {
       data.append("images", file);
     });
-  
+
     // ✅ Append removeIds before the fetch call
     if (removedImageIds.length > 0) {
       removedImageIds.forEach((id) => data.append("removeIds", id)); // no need for [] — Express handles that
     }
-  
+
     // ✅ Then send it!
     carId ? props.handleUpdateCar(carId, data) : props.handleAddCar(data);
   };
@@ -280,7 +280,7 @@ const CreateCar = (props) => {
                             images: prev.images.filter((_, i) => i !== idx),
                           }));
                         }}
-                        
+
                         className="btn btn-sm btn-danger rounded-circle position-absolute top-0 end-0"
                         style={{ transform: "translate(50%, -50%)", fontSize: "0.6rem", lineHeight: 1 }}
                       >
@@ -308,6 +308,20 @@ const CreateCar = (props) => {
                   />
                 </div>
               </div>
+
+              <div className="mb-3">
+                <label htmlFor="mileage" className="form-label">Mileage (km)</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  id="mileage"
+                  name="mileage"
+                  value={formData.mileage}
+                  onChange={handleChange}
+                  min="0"
+                />
+              </div>
+
 
               <div className="col-md-6 mt-4">
                 <div className="form-check">

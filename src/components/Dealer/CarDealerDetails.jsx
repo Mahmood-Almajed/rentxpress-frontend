@@ -98,6 +98,7 @@ const CarDealerDetails = ({ handleDeleteCar }) => {
             )}
 
             <p><strong>Year:</strong> {car.year}</p>
+            <p><strong>Mileage:</strong> {car.mileage?.toLocaleString()} km</p>
 
             {car.forSale ? (
               <>
