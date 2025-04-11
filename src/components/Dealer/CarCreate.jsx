@@ -94,6 +94,7 @@ const CreateCar = (props) => {
     buyerId: "",
     isCompatible: false,
     dealerPhone: "",
+    mileage: "",
     images: []
   });
 
