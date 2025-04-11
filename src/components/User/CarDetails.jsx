@@ -173,7 +173,7 @@ const CarDetails = () => {
                       : car.availability === "unavailable" ? "text-danger"
                         : "text-muted"
                   }`}>
-                  {isForSale ? (car.isSold ? "SOLD" : "Available") : car.availability}
+                  {isForSale ? (car.isSold ? "SOLD" : "available") : car.availability}
                 </span>
               </p>
               {isForSale ? (

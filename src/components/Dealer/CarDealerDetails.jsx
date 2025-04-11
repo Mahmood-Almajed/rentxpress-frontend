@@ -113,7 +113,7 @@ const CarDealerDetails = ({ handleDeleteCar }) => {
                   {car.isSold ? (
                     <span className="badge bg-danger">SOLD</span>
                   ) : (
-                    <span className="badge bg-success">Available</span>
+                    <span className="badge bg-success">available</span>
                   )}
                 </p>
                 {car.isSold && car.buyerId && (
