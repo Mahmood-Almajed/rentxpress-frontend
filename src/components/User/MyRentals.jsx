@@ -127,7 +127,7 @@ const MyRentals = () => {
                       <strong>Total Price:</strong> BHD {rental.totalPrice}
                     </p>
 
-                    <motion.div
+                    <div
                       className="card-text small mb-2"
                       variants={{
                         hover: { opacity: 1, height: 'auto' },
@@ -137,7 +137,7 @@ const MyRentals = () => {
                     >
                       <strong>From:</strong> {new Date(rental.startDate).toLocaleDateString()}<br />
                       <strong>To:</strong> {new Date(rental.endDate).toLocaleDateString()}
-                    </motion.div>
+                    </div>
 
                     {(rental.status === 'pending' || rental.status === 'approved') && (
                       <motion.div

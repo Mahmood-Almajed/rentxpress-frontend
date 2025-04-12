@@ -171,9 +171,9 @@ function DealerCarsList() {
                   <small className={`mb-2 ${car.forSale ? car.isSold ? 'text-danger' : 'text-success' : car.availability === 'available' ? 'text-success' : car.availability === 'rented' ? 'text-secondary' : 'text-muted'}`}>
                     {car.forSale ? car.isSold ? 'SOLD' : 'available' : car.availability}
                   </small>
-                  <motion.div className="card-text small mb-2" variants={{ hover: { opacity: 1, height: 'auto' }, rest: { opacity: 0, height: 0 } }} transition={{ duration: 0.3 }}>
+                  <div className="card-text small mb-2" >
                     <strong>Dealer:</strong> {car.dealerId?.username || 'You'}
-                  </motion.div>
+                  </div>
                   <div className="d-flex justify-content-end mt-auto">
                     <Link to={`/dealer/cars/${car._id}`} className="btn btn-sm btn-secondary">View Details</Link>
                   </div>
