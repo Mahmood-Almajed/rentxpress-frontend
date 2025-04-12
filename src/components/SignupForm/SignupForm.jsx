@@ -108,7 +108,7 @@ const SignupForm = (props) => {
                         />
                       </div>
 
-                      <button type="submit" className="btn btn-warning w-100 mb-2" disabled={isFormInvalid()}>
+                      <button type="submit" className="btn w-100 mb-2" style={{backgroundColor:"#06b4d8"}} disabled={isFormInvalid()}>
                         Sign Up
                       </button>
 

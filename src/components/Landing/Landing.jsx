@@ -133,7 +133,8 @@ const Dashboard = () => {
   transition={{ duration: 0.6, ease: 'easeOut' }}
   style={{fontSize: 80}}
 >
-  Rent<span className="text-warning">X</span>press
+ 
+  Car<span style={{color:"#06b4d8"}}>X</span>press
 </motion.h1>
   <p className="lead text-white">Find Your Perfect Car</p>
   </div>
@@ -153,7 +154,7 @@ const Dashboard = () => {
     <div className="d-flex justify-content-between align-items-center mb-4">
       <h2 className="fw-bold">Explore Our Premium Brands</h2>
       <span className="text-primary" style={{ cursor: "pointer" }}>
-      <a href="/signin" className="btn btn-warning" style={{textDecoration: "none"}}>Show All Brands  ↗</a> 
+      <a href="/signin" className="btn" style={{textDecoration: "none", backgroundColor:"#06b4d8"}}>Show All Brands  ↗</a> 
       </span>
     </div>
     <div className="row g-4">
@@ -201,11 +202,11 @@ const Dashboard = () => {
             borderTopRightRadius: "20px",
               borderBottomRightRadius: "20px",}}>
             <div className="p-md-5 px-4 py-5">
-              <span className="text-uppercase text-warning fw-semibold">About us</span>
-              <h2 className="mb-4 mt-2">Welcome to Rent<span className="text-warning fw-bold">X</span>press</h2>
+              <span className="text-uppercase  fw-semibold" style={{color:"#06b4d8"}}>About us</span>
+              <h2 className="mb-4 mt-2">Welcome to Car<span className=" fw-bold">X</span>press</h2>
 
               <p>
-              RentXpress is created by a team of four passionate developers committed to revolutionizing car rentals.
+               is created by a team of four passionate developers committed to revolutionizing car rentals.
               </p>
               <p >
               
@@ -213,7 +214,7 @@ const Dashboard = () => {
                   With a focus on convenience, trust, and accessibility, we make finding and listing cars easier than ever. 
                   Your perfect ride is just a few clicks away!
               </p>
-              <a href="/signin" className="btn btn-warning py-2 px-4 mt-2">
+              <a href="/signin" className="btn py-2 px-4 mt-2" style={{backgroundColor:"#06b4d8"}}>
                 Search Vehicle
               </a>
             </div>
@@ -272,7 +273,8 @@ const Dashboard = () => {
                     <div className="d-flex justify-content-center gap-2 mt-auto">
                       <Link
                         to={`/signin`}
-                        className="btn btn-sm btn-warning"
+                        className="btn btn-sm"
+                        style={{backgroundColor:"#06b4d8"}}
                       >
                         Details
                       </Link>
@@ -293,7 +295,7 @@ const Dashboard = () => {
       <div className="container" >
         <div className="row justify-content-center mb-5">
           <div className="col-md-7 text-center">
-          <span className="text-uppercase text-warning">Testimonial</span>
+          <span className="text-uppercase " style={{color:"#06b4d8"}}>Testimonial</span>
           <h2 className="fw-bold">Happy Clients</h2>
           </div>
         </div>

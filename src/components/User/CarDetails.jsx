@@ -255,7 +255,7 @@ const CarDetails = () => {
                 required
               />
             </div>
-            <button className="btn btn-warning w-100 fw-semibold" type="submit">
+            <button className="btn w-100 fw-semibold" style={{backgroundColor:"#06b4d8"}} type="submit">
               Rent Now
             </button>
           </form>

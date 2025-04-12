@@ -12,7 +12,7 @@ const Chatbot = () => {
   const navigate = useNavigate();
 
   const [messages, setMessages] = useState([
-    { sender: 'bot', text: `Hi!👋 ${user?.username} I’m your RentXpress assistant. Ask me anything about cars, rentals, or dealer access!` },
+    { sender: 'bot', text: `Hi!👋 ${user?.username} I’m your CarXpress assistant. Ask me anything about cars, rentals, or dealer access!` },
   ]);
   
   const [messageHistory, setMessageHistory] = useState([]);
@@ -106,7 +106,7 @@ const Chatbot = () => {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
             />
-            <button className="btn btn-warning" onClick={sendMessage} disabled={loading}>
+            <button className="btn" style={{backgroundColor:"#06b4d8"}} onClick={sendMessage} disabled={loading}>
               Send
             </button>
           </div>

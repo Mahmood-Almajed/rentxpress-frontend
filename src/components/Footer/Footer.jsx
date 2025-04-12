@@ -7,16 +7,16 @@ const Footer = () => {
         <div className="row">
 
           <div className="col-md-4 mb-4">
-            <h5 className="mb-3 text-warning">About RentXpress</h5>
+            <h5 className="mb-3" style={{color:"#06b4d8"}}>About CarXpress</h5>
             <p>
-            RentXpress is created by a team of four passionate developers committed to revolutionizing car rentals. 
+            CarXpress is created by a team of four passionate developers committed to revolutionizing car rentals. 
             We aim to provide a seamless, secure, and user-friendly platform that connects car owners with renters effortlessly. 
             With a focus on convenience, trust, and accessibility, we make finding and listing cars easier than ever. 
             Your perfect ride is just a few clicks away!            </p>
           </div>
 
           <div className="col-md-4 mb-4">
-            <h5 className="mb-3 text-warning">Quick Links</h5>
+            <h5 className="mb-3" style={{color:"#06b4d8"}}>Quick Links</h5>
             <ul className="list-unstyled">
               <li className="mb-2">
                 <strong>Important:</strong>{' '}
@@ -40,7 +40,7 @@ const Footer = () => {
           </div>
 
           <div className="col-md-4 mb-4">
-            <h5 className="mb-3 text-warning">Get in Touch</h5>
+            <h5 className="mb-3" style={{color:"#06b4d8"}}>Get in Touch</h5>
             <div className="mb-3">
               <a href="#" className="text-white me-3">
                 <i className="fab fa-facebook fa-lg"></i>
@@ -62,8 +62,8 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="text-center pt-4 border-top mt-4 pb-3 text-warning" style={{ fontSize: '0.9rem' }}>
-          &copy; {new Date().getFullYear()} RentXpress. All rights reserved.
+        <div className="text-center pt-4 border-top mt-4 pb-3" style={{ fontSize: '0.9rem' , color:"#06b4d8"}}>
+          &copy; {new Date().getFullYear()} CarXpress. All rights reserved.
         </div>
       </div>
     </footer>
