@@ -1,3 +1,148 @@
+/* Navbar base styles */
+.navbar {
+  background-color: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 0.8rem 0;
+  transition: all 0.3s ease;
+  min-height: 70px;
+  z-index: 1000;
+}
+
+.navbar.scrolled {
+  padding: 0.5rem 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Container adjustment */
+.navbar > .container-fluid {
+  padding-right: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+/* Brand styling */
+.navbar-brand {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white !important;
+  margin-right: 2rem;
+  white-space: nowrap;
+}
+
+.brand-highlight {
+  color: #06b4d8;
+  font-weight: 800;
+}
+
+/* Nav items */
+.nav-item {
+  margin: 0 0.5rem;
+}
+
+.nav-link {
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9) !important;
+  padding: 0.5rem 1rem !important;
+  position: relative;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.nav-link:hover {
+  color: #06b4d8 !important;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: #06b4d8;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 70%;
+}
+
+/* Unified Button Style */
+.navbar-button {
+  background: transparent;
+  border: 1px solid #06b4d8;
+  color: #06b4d8;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none !important;
+  min-width: 120px;
+}
+
+.navbar-button:hover {
+  background: #06b4d8;
+  color: white !important;
+  border-color: #06b4d8;
+}
+
+/* Mobile menu */
+.navbar-toggler {
+  border: none;
+  padding: 0.5rem;
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 2px rgba(6, 180, 216, 0.5);
+}
+
+.navbar-collapse {
+  background-color: rgba(0, 0, 0, 0.95);
+  margin-top: 0.5rem;
+  border-radius: 0 0 8px 8px;
+  text-align: center;
+}
+[type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
+  cursor: pointer;
+  border: 1px solid #06b4d8;
+  background-color: #06b4d8 ;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    padding: 1rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .nav-item {
+    margin: 0.5rem 0;
+    width: 100%;
+  }
+
+  .nav-link {
+    display: inline-block;
+    padding: 0.75rem 1rem !important;
+  }
+
+  .navbar-nav.ms-lg-auto {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .navbar-button {
+    margin: 0.25rem auto !important;
+  }
+}
+
+/* Optional transparency override */
 .navbar-transparent {
   background-color: transparent !important;
 }
@@ -10,5 +155,5 @@
 }
 
 .navbar-dark.bg-dark {
-  transition: none !important; 
+  transition: none !important;
 }
