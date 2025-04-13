@@ -116,9 +116,9 @@ const CarList = () => {
             </p>
 
             <div className="d-flex justify-content-center gap-3 mt-2 mb-3 flex-wrap">
-              <button className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'all' ? 'active-warning' : 'btn-warning-outline-hover'}`} onClick={() => setFilterType('all')}>All</button>
-              <button className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'rent' ? 'active-warning' : 'btn-warning-outline-hover'}`} onClick={() => setFilterType('rent')}>Cars for Rent</button>
-              <button className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'sale' ? 'active-warning' : 'btn-warning-outline-hover'}`} onClick={() => setFilterType('sale')}>Cars For Sale</button>
+              <button className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'all' ? 'active-warning' : 'btn-warning-outline-hover'}`} onClick={() => setFilterType('all')} style={{backgroundColor:"#06b4d8" ,border:"1px solid #06b4d8"}}>All</button>
+              <button className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'rent' ? 'active-warning' : 'btn-warning-outline-hover'}`} onClick={() => setFilterType('rent')} style={{backgroundColor:"#06b4d8" ,border:"1px solid #06b4d8"}} >Cars for Rent</button>
+              <button className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'sale' ? 'active-warning' : 'btn-warning-outline-hover'}`} onClick={() => setFilterType('sale')} style={{backgroundColor:"#06b4d8" ,border:"1px solid #06b4d8"}} >Cars For Sale</button>
               <button className={`btn px-4 py-2 rounded-pill shadow-sm ${specialNeedsOnly ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setSpecialNeedsOnly(prev => !prev)}>♿ Special Needs</button>
             </div>
 
