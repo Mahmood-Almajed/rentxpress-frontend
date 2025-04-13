@@ -169,7 +169,7 @@ const Dashboard = () => {
               >
                 Explore Our Premium Brands
               </h2>
-              <span style={{ color: "#06b4d8", cursor: "pointer" }}>
+              <span style={{ color: "black", cursor: "pointer" }}>
                 <a 
                   href="/signin" 
                   className="btn" 

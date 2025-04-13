@@ -146,7 +146,7 @@ const Dashboard = () => {
               <h2 className="fw-bold" style={{ fontSize: isMobile ? '1.5rem' : '2rem' }}>
                 Explore Our Premium Brands
               </h2>
-              <span style={{ color: "#06b4d8", cursor: "pointer" }}>
+              <span style={{ color: "black", cursor: "pointer" }}>
                 <a href="/cars" className="btn" style={{
                   textDecoration: "none",
                   backgroundColor: "#06b4d8",
