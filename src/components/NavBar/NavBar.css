@@ -11,7 +11,7 @@
 
 .navbar.scrolled {
   padding: 0.5rem 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px  rgba(0, 0, 0, 0.95);
 }
 
 /* Container adjustment */
@@ -120,7 +120,7 @@
 @media (max-width: 991.98px) {
   .navbar-collapse {
     padding: 1rem;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 20px  rgba(0, 0, 0, 0.95);
   }
 
   .nav-item {
