@@ -133,7 +133,7 @@ const CreateCar = (props) => {
     brand: "",
     model: "",
     year: currentYear,
-    type: "", // ✅ add this line
+    type: "", 
     location: "",
     listingType: "rent",
     pricePerDay: "",
@@ -222,12 +222,12 @@ const CreateCar = (props) => {
       data.append("images", file);
     });
 
-    // ✅ Append removeIds before the fetch call
+    // Append removeIds before the fetch call
     if (removedImageIds.length > 0) {
-      removedImageIds.forEach((id) => data.append("removeIds", id)); // no need for [] — Express handles that
+      removedImageIds.forEach((id) => data.append("removeIds", id)); 
     }
 
-    // ✅ Then send it!
+    
     carId ? props.handleUpdateCar(carId, data) : props.handleAddCar(data);
   };
 
@@ -250,7 +250,7 @@ const CreateCar = (props) => {
           isSold: carData.isSold || false,
           buyerId: carData.buyerId || "",
           dealerPhone: carData.dealerPhone || "",
-          type: carData.type || "", // ✅ ensure type is preserved or set
+          type: carData.type || "", 
         });
 
         if (carData.location) {

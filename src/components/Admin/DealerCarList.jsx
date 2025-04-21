@@ -94,7 +94,6 @@ const CarList = () => {
         <p className="text-muted">Manage all cars listed by dealers on the platform.</p>
       </div>
 
-      {/* Summary Cards */}
       <div className="row justify-content-center g-4 mb-4">
         <div className="col-md-3">
           <div className="card text-white bg-success shadow-sm rounded-4">
@@ -120,7 +119,6 @@ const CarList = () => {
         </div>
       </div>
 
-      {/* Filters */}
       <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
         <div className="d-flex align-items-center gap-2">
           <label htmlFor="dealerFilter" className="fw-medium text-dark">Dealer:</label>
@@ -152,7 +150,6 @@ const CarList = () => {
         </div>
       </div>
 
-      {/* Car cards */}
       {loading ? (
         <div className="text-center my-5">
           <div className="spinner-border text-primary" role="status" />

@@ -7,8 +7,8 @@ const CarList = () => {
   const [cars, setCars] = useState([]);
   const [filteredCars, setFilteredCars] = useState([]);
   const [search, setSearch] = useState('');
-  const [filterType, setFilterType] = useState('all'); // rent/sale
-  const [filterCarType, setFilterCarType] = useState('all'); // SUV, Sedan, etc.
+  const [filterType, setFilterType] = useState('all'); 
+  const [filterCarType, setFilterCarType] = useState('all'); 
   const [sorting, setSorting] = useState('all');
   const [specialNeedsOnly, setSpecialNeedsOnly] = useState(false);
   const [specialNeedsListingType, setSpecialNeedsListingType] = useState('all');
@@ -145,7 +145,6 @@ const CarList = () => {
             </div>
 
 
-            {/* Mileage Filter UI */}
             <div className="mt-4">
               <p className="mb-1 mt-4">Filter by Mileage (km)</p>
               <div className="d-flex flex-column align-items-center">
@@ -173,7 +172,6 @@ const CarList = () => {
                   />
                 </div>
 
-                {/* Range Sliders */}
                 <div className="w-100" style={{ maxWidth: '400px' }}>
                   <input
                     type="range"

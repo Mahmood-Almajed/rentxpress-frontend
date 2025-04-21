@@ -2,7 +2,6 @@ import React from 'react';
 import { useMediaQuery } from 'react-responsive';
 
 const Footer = () => {
-  // Media queries
   const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
   const isTablet = useMediaQuery({ query: '(min-width: 768px) and (max-width: 1023px)' });
   const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
@@ -11,7 +10,6 @@ const Footer = () => {
     <footer className="bg-dark text-white pt-5 border-top">
       <div className="container">
         <div className="row">
-          {/* About Column */}
           <div className={`${isMobile ? 'col-12' : 'col-md-4'} mb-4`}>
             <h5 className="mb-3" style={{ color: "#06b4d8", fontSize: isMobile ? '1.1rem' : '1.25rem' }}>
               About CarXpress
@@ -28,7 +26,6 @@ const Footer = () => {
             )}
           </div>
 
-          {/* Quick Links Column */}
           <div className={`${isMobile ? 'col-12' : 'col-md-4'} mb-4`}>
             <h5 className="mb-3" style={{ color: "#06b4d8", fontSize: isMobile ? '1.1rem' : '1.25rem' }}>
               Quick Links
@@ -77,14 +74,12 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact Column */}
           <div className={`${isMobile ? 'col-12' : 'col-md-4'} mb-4`}>
             <h5 className="mb-3" style={{ color: "#06b4d8", fontSize: isMobile ? '1.1rem' : '1.25rem' }}>
               Get in Touch
             </h5>
             <p className="mb-0" style={{ fontSize: isMobile ? '0.9rem' : '1rem' }}>
               We'd love to hear from you<br />
-              {/* <a href="mailto:ga.rent.project@gmail.com" className="text-white fw-semibold">ga.rent.project@gmail.com</a> */}
             </p>
             <div className="mb-3 mt-2">
               <a href="#" className="text-white me-3" style={{ fontSize: isMobile ? '1rem' : '1.25rem' }}>

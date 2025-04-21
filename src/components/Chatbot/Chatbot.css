@@ -156,13 +156,11 @@
   cursor: not-allowed;
 }
 
-/* Typing Indicator */
 .chatbot-message.bot.typing {
   color: #666;
   font-style: italic;
 }
 
-/* Link Styling */
 .chatbot-message a {
   color: #06b4d8;
   text-decoration: none;
@@ -173,7 +171,6 @@
   text-decoration: underline;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .chatbot-container {
     bottom: 15px;

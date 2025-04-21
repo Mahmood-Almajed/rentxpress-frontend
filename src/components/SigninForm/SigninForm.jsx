@@ -46,7 +46,6 @@ const SigninForm = (props) => {
             <div className="card shadow border-0 rounded-4 overflow-hidden">
               <div className="row g-0">
 
-                {/* Image Side */}
                 <div className="col-lg-5 d-none d-lg-block">
                   <div className="h-100 w-100 bg-dark">
                     <img 

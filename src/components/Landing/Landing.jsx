@@ -52,7 +52,6 @@ const Dashboard = () => {
   const user = useContext(AuthedUserContext);
   const [cars, setCars] = useState([]);
 
-  // Media queries
   const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
   const isTablet = useMediaQuery({ query: '(min-width: 768px) and (max-width: 1023px)' });
   const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
@@ -69,20 +68,7 @@ const Dashboard = () => {
     fetchCars();
   }, []);
 
-  const teamMembers = [
-    {
-      name: "Mahmood Almajed",
-      role: "Software Developer",
-      image: "./mahmood-Photoroom-removebg-preview.png",
-      linkedin: "https://www.linkedin.com/in/mahmood-almajed"
-    },
-    {
-      name: "Abbas Hussain",
-      role: "Software Developer",
-      image: "./abbas.png",
-      linkedin: "https://www.linkedin.com/in/abbashussainj"
-    },
-  ];
+ 
 
   const brands = [
     {
@@ -297,7 +283,6 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {/* Featured Vehicles */}
         <div className="text-center mb-4" style={{ marginTop: isMobile ? 30 : 50 }}>
           <h3 className="fw-bold" style={{ fontSize: isMobile ? '1.5rem' : '1.75rem' }}>
             Featured Vehicles

@@ -9,7 +9,6 @@ import { AuthedUserContext } from "../../App";
 import { useLoadScript } from "@react-google-maps/api";
 import { motion } from "framer-motion";
 
-// ...imports stay unchanged
 const CarDetails = () => {
   const { carId } = useParams();
   const nav = useNavigate();

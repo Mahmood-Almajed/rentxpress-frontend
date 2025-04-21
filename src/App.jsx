@@ -6,7 +6,7 @@ import SignupForm from './components/SignupForm/SignupForm';
 import SigninForm from './components/SigninForm/SigninForm';
 import About from './components/About/About';
 // ==========================
-import * as authService from '../src/services/authService'; // import the authservice
+import * as authService from '../src/services/authService'; 
 import * as carService from  '../src/services/carService';
 import * as approvalService from  '../src/services/approvalService';
 import * as rentalService from  '../src/services/rentalService';
@@ -40,7 +40,7 @@ import Chatbot from './components/Chatbot/Chatbot';
 export const AuthedUserContext = createContext(null);
 
 const App = () => {
-  const [user, setUser] = useState(authService.getUser()); // using the method from authservice
+  const [user, setUser] = useState(authService.getUser()); 
   const [cars, setCars] = useState([]);
   const nav=useNavigate();
 

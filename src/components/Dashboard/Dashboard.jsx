@@ -15,7 +15,6 @@ const Dashboard = () => {
   const user = useContext(AuthedUserContext);
   const [cars, setCars] = useState([]);
 
-  // Media queries
   const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
   const isTablet = useMediaQuery({ query: '(min-width: 768px) and (max-width: 1023px)' });
   const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
@@ -32,20 +31,7 @@ const Dashboard = () => {
     fetchCars();
   }, []);
 
-  const teamMembers = [
-    {
-      name: "Mahmood Almajed",
-      role: "Software Developer",
-      image: "./mahmood-Photoroom-removebg-preview.png",
-      linkedin: "https://www.linkedin.com/in/mahmood-almajed"
-    },
-    {
-      name: "Abbas Hussain",
-      role: "Software Developer",
-      image: "./abbas.png",
-      linkedin: "https://www.linkedin.com/in/abbashussainj"
-    },
-  ];
+  
 
   const brands = [
     {
@@ -139,7 +125,6 @@ const Dashboard = () => {
       </motion.div>
 
       <main className="container" style={{ marginTop: isMobile ? 50 : 100, marginBottom: 50 }}>
-        {/* Brands Section */}
         <section className="py-5">
           <div className="container">
             <div className="d-flex justify-content-between align-items-center mb-4">
@@ -265,7 +250,6 @@ const Dashboard = () => {
           </div>
         </section>
         
-        {/* Featured Vehicles */}
         <div className="text-center mb-4">
           <h3 style={{ marginTop: 50 }} className="fw-bold">
             Featured Vehicles
@@ -302,7 +286,6 @@ const Dashboard = () => {
                       {car.brand} {car.model}
                     </h5>
 
-                    {/* Price logic */}
                     <p className="fw-bold" style={{ fontSize: isMobile ? '0.9rem' : '1rem' }}>
                       {car.forSale ? (
                         <>BHD {car.salePrice}</>
@@ -313,7 +296,6 @@ const Dashboard = () => {
                       )}
                     </p>
 
-                    {/* Optional: SOLD Badge */}
                     {car.isSold && (
                       <span className="badge bg-danger mb-2">SOLD</span>
                     )}
@@ -337,7 +319,6 @@ const Dashboard = () => {
         )}
 
 
-        {/* Testimonials Section */}
         <section className="py-5">
           <div className="container">
             <div className="row justify-content-center mb-5">
