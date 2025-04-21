@@ -57,7 +57,7 @@ const ReviewForm = ({ handleAddReview }) => {
           </select>
         </div>
 
-        <button type="submit" className="btn btn-warning w-100 rounded-pill">
+        <button type="submit" className="btn w-100 rounded-pill" style={{ backgroundColor: "#06b4d8" }}>
           Submit Review
         </button>
       </form>

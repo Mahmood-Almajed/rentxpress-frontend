@@ -86,27 +86,32 @@ const MyRentals = () => {
                   transition={{ duration: 0.4, delay: index * 0.1 }}
                   whileHover={{ scale: 1.02 }}
                 >
-                  {rental.carId?.image?.url ? (
+                  {rental.carId?.images?.length > 0 ? (
                     <img
-                      src={rental.carId.image.url}
+                      src={rental.carId.images[0].url}
                       alt={`${rental.carId.brand} ${rental.carId.model}`}
                       className="card-img-top"
                       style={{ objectFit: 'cover', height: '200px', flex: '0 0 auto' }}
                     />
                   ) : (
-                    <div className="card-img-top d-flex align-items-center justify-content-center bg-light" style={{ height: '200px' }}>
+                    <div
+                      className="card-img-top d-flex align-items-center justify-content-center bg-light"
+                      style={{ height: '200px' }}
+                    >
                       <span className="text-muted">No image available</span>
                     </div>
                   )}
 
                   <motion.div
                     className="card-body d-flex flex-column"
-                    variants={{ hover: {}, rest: {} }}
                     initial="rest"
                     whileHover="hover"
                     animate="rest"
+                    variants={{ rest: {}, hover: {} }}
                   >
-                    <h5 className="card-title">{rental.carId?.brand} {rental.carId?.model}</h5>
+                    <h5 className="card-title">
+                      {rental.carId?.brand} {rental.carId?.model}
+                    </h5>
 
                     <p className="card-text mb-2">
                       <strong>Status:</strong>{' '}
@@ -127,24 +132,31 @@ const MyRentals = () => {
                       <strong>Total Price:</strong> BHD {rental.totalPrice}
                     </p>
 
-                    <motion.div
+                    <div
                       className="card-text small mb-2"
+                      initial="rest"
+                      whileHover="hover"
+                      animate="rest"
                       variants={{
-                        hover: { opacity: 1, height: 'auto' },
-                        rest: { opacity: 0, height: 0 }
+                        rest: { opacity: 0, height: 0 },
+                        hover: { opacity: 1, height: 'auto' }
                       }}
                       transition={{ duration: 0.3 }}
                     >
-                      <strong>From:</strong> {new Date(rental.startDate).toLocaleDateString()}<br />
+                      <strong>From:</strong> {new Date(rental.startDate).toLocaleDateString()}
+                      <br />
                       <strong>To:</strong> {new Date(rental.endDate).toLocaleDateString()}
-                    </motion.div>
+                    </div>
 
                     {(rental.status === 'pending' || rental.status === 'approved') && (
-                      <motion.div
+                      <div
                         className="mt-auto"
+                        initial="rest"
+                        whileHover="hover"
+                        animate="rest"
                         variants={{
-                          hover: { opacity: 1, height: 'auto' },
-                          rest: { opacity: 0, height: 0 }
+                          rest: { opacity: 0, height: 0 },
+                          hover: { opacity: 1, height: 'auto' }
                         }}
                         transition={{ duration: 0.3 }}
                       >
@@ -154,14 +166,16 @@ const MyRentals = () => {
                         >
                           Cancel Rental
                         </button>
-                      </motion.div>
+                      </div>
                     )}
                   </motion.div>
                 </motion.div>
               </div>
             ))
           ) : (
-            <div className="alert alert-info text-center">No rentals match the selected status.</div>
+            <div className="alert alert-info text-center">
+              No rentals match the selected status.
+            </div>
           )}
         </div>
       )}

@@ -5,17 +5,33 @@ import { motion } from 'framer-motion';
 
 const CarList = () => {
   const [cars, setCars] = useState([]);
-  const [sorting, setSorting] = useState('all');
+  const [filteredCars, setFilteredCars] = useState([]);
   const [search, setSearch] = useState('');
+  const [filterType, setFilterType] = useState('all'); 
+  const [filterCarType, setFilterCarType] = useState('all'); 
+  const [sorting, setSorting] = useState('all');
+  const [specialNeedsOnly, setSpecialNeedsOnly] = useState(false);
+  const [specialNeedsListingType, setSpecialNeedsListingType] = useState('all');
+  const [minMileage, setMinMileage] = useState(0);
+  const [maxMileage, setMaxMileage] = useState(1000000);
+  const [mileageRange, setMileageRange] = useState([0, 1000000]);
   const [loading, setLoading] = useState(true);
+
+  const filtersActive =
+    search ||
+    filterType !== 'all' ||
+    sorting !== 'all' ||
+    specialNeedsOnly ||
+    (specialNeedsOnly && specialNeedsListingType !== 'all') ||
+    mileageRange[0] > 0 || mileageRange[1] < 1000000;
 
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const allCars = await carService.index();
-        setCars(allCars);
-      } catch (error) {
-        console.error('Error fetching cars:', error);
+        const data = await carService.index();
+        setCars(data);
+      } catch (err) {
+        console.error('Error fetching cars:', err);
       } finally {
         setLoading(false);
       }
@@ -26,20 +42,68 @@ const CarList = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const filteredCars = cars.filter((car) => {
-    const toLower = search.toLowerCase();
-    return (
-      car.brand.toLowerCase().includes(toLower) ||
-      car.model.toLowerCase().includes(toLower)
-    );
-  });
+  useEffect(() => {
+    if (!specialNeedsOnly) {
+      setSpecialNeedsListingType('all');
+    }
+  }, [specialNeedsOnly]);
 
-  const sortedCars = [...filteredCars];
-  if (sorting === 'lowToHigh') {
-    sortedCars.sort((a, b) => a.pricePerDay - b.pricePerDay);
-  } else if (sorting === 'highToLow') {
-    sortedCars.sort((a, b) => b.pricePerDay - a.pricePerDay);
-  }
+  useEffect(() => {
+    let result = [...cars];
+
+    if (search) {
+      const q = search.toLowerCase();
+      result = result.filter(car =>
+        car.brand.toLowerCase().includes(q) || car.model.toLowerCase().includes(q)
+      );
+    }
+
+    if (specialNeedsOnly) {
+      result = result.filter(car => car.isCompatible);
+      if (specialNeedsListingType !== 'all') {
+        result = result.filter(car =>
+          specialNeedsListingType === 'rent' ? !car.forSale : car.forSale
+        );
+      }
+    } else {
+      result = result.filter(car => !car.isCompatible);
+      if (filterType !== 'all') {
+        result = result.filter(car =>
+          filterType === 'rent' ? !car.forSale : car.forSale
+        );
+      }
+    }
+
+    result = result.filter(car =>
+      (car.mileage ?? 0) >= mileageRange[0] && (car.mileage ?? 0) <= mileageRange[1]
+    );
+
+    if (filterCarType !== 'all') {
+      result = result.filter(car => car.type?.toLowerCase() === filterCarType.toLowerCase());
+    }
+
+    if (sorting === 'lowToHigh') {
+      result.sort((a, b) =>
+        (a.forSale ? a.salePrice : a.pricePerDay) - (b.forSale ? b.salePrice : b.pricePerDay)
+      );
+    } else if (sorting === 'highToLow') {
+      result.sort((a, b) =>
+        (b.forSale ? b.salePrice : b.pricePerDay) - (a.forSale ? a.salePrice : a.pricePerDay)
+      );
+    }
+
+    setFilteredCars(result);
+  }, [cars, search, filterType, sorting, specialNeedsOnly, specialNeedsListingType, mileageRange]);
+
+  const handleClearFilters = () => {
+    setSearch('');
+    setFilterType('all');
+    setSorting('all');
+    setSpecialNeedsOnly(false);
+    setSpecialNeedsListingType('all');
+    setMileageRange([0, 1000000]);
+    setFilterCarType('all');
+  };
 
   return (
     <div>
@@ -48,17 +112,99 @@ const CarList = () => {
           <div className="col-lg-8 col-md-10">
             <h1 className="fw-bold">Find Your Perfect Ride</h1>
             <p className="lead text-body-secondary">
-              Explore a wide selection of high-quality cars available for rent. Whether you're planning a road trip or need a temporary ride, we've got a vehicle to fit your style and budget.
+              Browse our cars available for rent and sale. Whether you're traveling or buying, we’ve got you covered.
             </p>
 
             <div className="d-flex justify-content-center gap-3 mt-2 mb-3 flex-wrap">
-              <Link to="/my-rentals" className="btn btn-warning px-4 py-2 rounded-pill shadow-sm">
-                Your Rentals
-              </Link>
-              <a href="mailto:ga.rent.project@gmail.com" className="btn btn-outline-secondary px-4 py-2 rounded-pill shadow-sm">
-                Contact
-              </a>
+              <button className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'all' ? 'active-warning' : 'btn-warning-outline-hover'}`} onClick={() => setFilterType('all')} style={{backgroundColor:"#06b4d8" ,border:"1px solid #06b4d8"}}>All</button>
+              <button className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'rent' ? 'active-warning' : 'btn-warning-outline-hover'}`} onClick={() => setFilterType('rent')} style={{backgroundColor:"#06b4d8" ,border:"1px solid #06b4d8"}} >Cars for Rent</button>
+              <button className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'sale' ? 'active-warning' : 'btn-warning-outline-hover'}`} onClick={() => setFilterType('sale')} style={{backgroundColor:"#06b4d8" ,border:"1px solid #06b4d8"}} >Cars For Sale</button>
+              <button className={`btn px-4 py-2 rounded-pill shadow-sm ${specialNeedsOnly ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setSpecialNeedsOnly(prev => !prev)}>♿ Special Needs</button>
             </div>
+
+            {specialNeedsOnly && (
+              <div className="d-flex justify-content-center gap-2 mb-3 flex-wrap">
+                <span className="fw-semibold mt-2">Showing:</span>
+                <button className={`btn btn-sm rounded-pill ${specialNeedsListingType === 'all' ? 'btn-secondary' : 'btn-outline-secondary'}`} onClick={() => setSpecialNeedsListingType('all')}>All</button>
+                <button className={`btn btn-sm rounded-pill ${specialNeedsListingType === 'rent' ? 'btn-secondary' : 'btn-outline-secondary'}`} onClick={() => setSpecialNeedsListingType('rent')}>For Rent</button>
+                <button className={`btn btn-sm rounded-pill ${specialNeedsListingType === 'sale' ? 'btn-secondary' : 'btn-outline-secondary'}`} onClick={() => setSpecialNeedsListingType('sale')}>For Sale</button>
+              </div>
+            )}
+
+            <div className="d-flex justify-content-center gap-2 mb-3 flex-wrap">
+              <span className="fw-semibold mt-2">Car Type:</span>
+              {["all", "SUV", "Sedan", "Truck", "Off-Road", "Electric", "Luxury", "Convertible", "Sports", "Hatchback", "Van", "Muscle", "Coupe", "Hybrid"].map((type) => (
+                <button
+                  key={type}
+                  className={`btn btn-sm rounded-pill ${filterCarType === type ? 'btn-dark' : 'btn-outline-dark'}`}
+                  onClick={() => setFilterCarType(type)}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+
+
+            <div className="mt-4">
+              <p className="mb-1 mt-4">Filter by Mileage (km)</p>
+              <div className="d-flex flex-column align-items-center">
+                <div className="d-flex gap-3 mb-2">
+                  <input
+                    type="number"
+                    value={mileageRange[0]}
+                    min="0"
+                    onChange={(e) =>
+                      setMileageRange([+e.target.value, mileageRange[1]])
+                    }
+                    className="form-control"
+                    style={{ width: '120px' }}
+                  />
+                  <span>to</span>
+                  <input
+                    type="number"
+                    value={mileageRange[1]}
+                    min={mileageRange[0]}
+                    onChange={(e) =>
+                      setMileageRange([mileageRange[0], +e.target.value])
+                    }
+                    className="form-control"
+                    style={{ width: '120px' }}
+                  />
+                </div>
+
+                <div className="w-100" style={{ maxWidth: '400px' }}>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1000000"
+                    step="1000"
+                    value={mileageRange[0]}
+                    onChange={(e) =>
+                      setMileageRange([+e.target.value, mileageRange[1]])
+                    }
+                    className="form-range mb-2"
+                  />
+                  <input
+                    type="range"
+                    min="0"
+                    max="1000000"
+                    step="1000"
+                    value={mileageRange[1]}
+                    onChange={(e) =>
+                      setMileageRange([mileageRange[0], +e.target.value])
+                    }
+                    className="form-range"
+                  />
+                </div>
+              </div>
+
+            </div>
+
+            {filtersActive && (
+              <div className="d-flex justify-content-center mt-4">
+                <button className="btn btn-outline-dark btn-sm rounded-pill px-4" onClick={handleClearFilters}>Clear All Filters</button>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -69,7 +215,7 @@ const CarList = () => {
             type="text"
             className="form-control shadow-sm rounded-pill px-4 py-2"
             style={{ maxWidth: '400px' }}
-            placeholder="🔍 Search for car brand or model"
+            placeholder="🔍 Search by brand or model"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -93,86 +239,93 @@ const CarList = () => {
               <span className="visually-hidden">Loading...</span>
             </div>
           </div>
-        ) : sortedCars.length === 0 ? (
-          <div className="alert alert-warning">No cars match your search.</div>
+        ) : filteredCars.length === 0 ? (
+          <div className="alert alert-warning text-center">No cars match your filters.</div>
         ) : (
           <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-            {sortedCars.map((car) => (
+            {filteredCars.map((car) => (
               <div className="col" key={car._id}>
                 <motion.div
-                  className="card h-100 shadow-sm"
+                  className="card h-100 shadow-sm position-relative"
                   initial={{ opacity: 0, y: 40 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
                   whileHover={{ scale: 1.03 }}
                 >
-                  {car.image?.url ? (
-                    <img
-                      src={car.image.url}
-                      className="card-img-top img-fluid"
-                      style={{ height: '225px', objectFit: 'cover' }}
-                      alt={`${car.brand} ${car.model}`}
-                    />
+                  {car.isSold && (
+                    <span className="badge bg-danger position-absolute top-0 end-0 m-2">SOLD</span>
+                  )}
+
+                  {car.images && car.images.length > 0 ? (
+                    <div id={`carousel-${car._id}`} className="carousel slide" data-bs-ride="carousel">
+                      <div className="carousel-inner">
+                        {car.images.map((img, index) => (
+                          <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                            <img
+                              src={img.url}
+                              className="d-block w-100"
+                              style={{ height: '225px', objectFit: 'cover' }}
+                              alt={`Car image ${index + 1}`}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      {car.images.length > 1 && (
+                        <>
+                          <button className="carousel-control-prev" type="button" data-bs-target={`#carousel-${car._id}`} data-bs-slide="prev">
+                            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span className="visually-hidden">Previous</span>
+                          </button>
+                          <button className="carousel-control-next" type="button" data-bs-target={`#carousel-${car._id}`} data-bs-slide="next">
+                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span className="visually-hidden">Next</span>
+                          </button>
+                        </>
+                      )}
+                    </div>
                   ) : (
-                    <div
-                      className="card-img-top d-flex align-items-center justify-content-center bg-secondary text-white"
-                      style={{ height: '225px' }}
-                    >
+                    <div className="card-img-top d-flex align-items-center justify-content-center bg-secondary text-white" style={{ height: '225px' }}>
                       No Image Available
                     </div>
                   )}
 
-                  <motion.div
-                    className="card-body d-flex flex-column"
-                    variants={{
-                      hover: { y: -5 },
-                      rest: { y: 0 }
-                    }}
-                    initial="rest"
-                    whileHover="hover"
-                    animate="rest"
-                  >
-                    <h5 className="card-title">
-                      <strong>{car.brand} {car.model}</strong>
+                  <motion.div className="card-body d-flex flex-column">
+                    <h5 className="card-title fw-bold">
+                      {car.brand} {car.model}
+                      {car.isCompatible && (
+                        <span className="badge bg-primary ms-2">♿</span>
+                      )}
                     </h5>
-
                     <p className="card-text mb-2">
-                      BHD<strong> {car.pricePerDay} </strong> / Day
+                      {car.forSale ? (
+                        <>BHD <strong>{car.salePrice || 'N/A'}</strong> <small className="text-muted">(For Sale)</small></>
+                      ) : (
+                        <>BHD <strong>{car.pricePerDay || 'N/A'}</strong> / Day</>
+                      )}
                     </p>
-
+                    <p className="mb-1"><small>Mileage: {car.mileage?.toLocaleString()} km</small></p>
                     <small
-                      className={`mb-2 ${
-                        car.availability === 'available'
-                          ? 'text-success'
-                          : car.availability === 'unavailable'
+                      className={`mb-2 ${car.forSale
+                        ? car.isSold
                           ? 'text-danger'
+                          : 'text-success'
+                        : car.availability === 'available'
+                          ? 'text-success'
                           : car.availability === 'rented'
-                          ? 'text-secondary'
-                          : 'text-muted'
-                      }`}
+                            ? 'text-secondary'
+                            : 'text-muted'
+                        }`}
                     >
-                      {car.availability}
+                      {car.forSale
+                        ? car.isSold
+                          ? 'SOLD'
+                          : 'available'
+                        : car.availability}
                     </small>
-
-                    <motion.div
-                      className="card-text small mb-2"
-                      variants={{
-                        hover: { opacity: 1, height: "auto" },
-                        rest: { opacity: 0, height: 0 }
-                      }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <strong>Dealer:</strong> {car.dealerId?.username || 'Unknown'}
-                    </motion.div>
-
-                    <motion.div
-                      className="d-flex justify-content-end mt-auto"
-                      variants={{
-                        hover: { opacity: 1, height: "auto" },
-                        rest: { opacity: 0, height: 0 }
-                      }}
-                      transition={{ duration: 0.3 }}
-                    >
+                    {car.dealerId?.username && (
+                      <small className="text-muted">Dealer: <strong>{car.dealerId.username}</strong></small>
+                    )}
+                    <motion.div className="d-flex justify-content-end mt-auto">
                       <Link to={`/cars/${car._id}`} className="btn btn-sm btn-secondary">
                         View Details
                       </Link>

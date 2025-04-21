@@ -6,7 +6,7 @@ import SignupForm from './components/SignupForm/SignupForm';
 import SigninForm from './components/SigninForm/SigninForm';
 import About from './components/About/About';
 // ==========================
-import * as authService from '../src/services/authService'; // import the authservice
+import * as authService from '../src/services/authService'; 
 import * as carService from  '../src/services/carService';
 import * as approvalService from  '../src/services/approvalService';
 import * as rentalService from  '../src/services/rentalService';
@@ -32,6 +32,7 @@ import RentRequest from './components/Dealer/RentRequest';
 //admin
 import RentalList from './components/Admin/RentalList';
 import DealerCarList from './components/Admin/DealerCarList';
+import Chatbot from './components/Chatbot/Chatbot';
 
 
 
@@ -39,7 +40,7 @@ import DealerCarList from './components/Admin/DealerCarList';
 export const AuthedUserContext = createContext(null);
 
 const App = () => {
-  const [user, setUser] = useState(authService.getUser()); // using the method from authservice
+  const [user, setUser] = useState(authService.getUser()); 
   const [cars, setCars] = useState([]);
   const nav=useNavigate();
 
@@ -127,6 +128,7 @@ const App = () => {
                 <Route path="/dealer/cars/:carId/edit" element={<CarCreate handleUpdateCar={handleUpdateCar} />} />
                 <Route path="/dealer/cars/:carId" element={<CarDealerDetails handleDeleteCar={handleDeleteCar} />} />
                 <Route path="/dealer/requests" element={<RentRequest />} />
+                <Route path="/cars/:carId" element={<CarDetails />} />
               </>
             )}
   
@@ -143,6 +145,11 @@ const App = () => {
         </main>
   
         <Footer />
+        {user &&  (
+        <div className="chatbot-container">
+          <Chatbot />
+          </div>
+        )}
       </div>
     </AuthedUserContext.Provider>
   );

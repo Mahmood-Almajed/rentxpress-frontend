@@ -16,19 +16,28 @@ const SignupForm = (props) => {
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value.trimStart() });
   };
-
+  
+ 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const trimmedData = {
+      username: formData.username.trim(),
+      password: formData.password.trim(),
+      passwordConf: formData.passwordConf.trim(),
+    };
     try {
-      const newUserResponse = await authService.signup(formData);
+      const newUserResponse = await authService.signup(trimmedData);
       props.setUser(newUserResponse.user);
       navigate('/');
     } catch (err) {
       updateMessage(err.message);
     }
   };
+  
 
   const { username, password, passwordConf } = formData;
 
@@ -99,7 +108,7 @@ const SignupForm = (props) => {
                         />
                       </div>
 
-                      <button type="submit" className="btn btn-warning w-100 mb-2" disabled={isFormInvalid()}>
+                      <button type="submit" className="btn w-100 mb-2" style={{backgroundColor:"#06b4d8"}} disabled={isFormInvalid()}>
                         Sign Up
                       </button>
 

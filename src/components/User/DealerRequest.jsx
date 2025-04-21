@@ -48,25 +48,25 @@ const DealerRequest = () => {
       <div className="container">
         <div className="row align-items-center g-5">
           <div className="col-md-6">
-            <h2 className="fw-bold text-dark mb-3">Become a Dealer with Rent<span className='text-warning'>X</span>press</h2>
-            <hr className="mb-4" style={{ width: '60px', border: '2px solid rgb(203, 193, 0)' }} />
+            <h2 className="fw-bold text-dark mb-3">Become a Dealer with Car<span style={{color:"#06b4d8"}}>X</span>press</h2>
+            <hr className="mb-4" style={{ width: '60px', border: '2px solid rgb(0, 139, 203)' }} />
             <p className="text-muted fs-5" style={{ textAlign: "justify" }}>
-              Join the <strong>Rent<span className='text-warning'>X</span>press </strong>dealer network and grow your business with powerful tools, priority support, and seamless platform integration. We’re here to help you reach more customers and manage your fleet with ease.            </p>
+              Join the <strong>Car<span  style={{color:"#06b4d8"}}>X</span>press </strong>dealer network and grow your business with powerful tools, priority support, and seamless platform integration. We’re here to help you reach more customers and manage your fleet with ease.            </p>
             <ul className="list-unstyled mt-4">
               <li className="d-flex mb-3">
-                <i className="fas fa-check-circle text-warning me-3 mt-1"></i>
+                <i className="fas fa-check-circle  me-3 mt-1" style={{color:"#06b4d8"}}></i>
                 <div style={{ textAlign: "justify" }}>
                   <strong>Tailored Solutions:</strong> Get access to a custom dashboard built to simplify your operations and help you scale faster.
                 </div>
               </li>
               <li className="d-flex mb-3">
-                <i className="fas fa-check-circle text-warning me-3 mt-1"></i>
+                <i className="fas fa-check-circle  me-3 mt-1" style={{color:"#06b4d8"}}></i>
                 <div style={{ textAlign: "justify" }}>
                   <strong>Dedicated Support:</strong> Enjoy dedicated support with faster response times and personalized assistance whenever you need it.
                 </div>
               </li>
               <li className="d-flex">
-                <i className="fas fa-check-circle text-warning me-3 mt-1"></i>
+                <i className="fas fa-check-circle  me-3 mt-1" style={{color:"#06b4d8"}}></i>
                 <div style={{ textAlign: "justify" }}>
                   <strong>Seamless Integration:</strong> Easily connect your existing systems with our platform — no complex setup required.
                 </div>
@@ -121,7 +121,8 @@ const DealerRequest = () => {
                   <div className="d-grid">
                     <button
                       type="button"
-                      className="btn btn-warning btn-lg"
+                      className="btn btn-lg"
+                      style={{backgroundColor:"#06b4d8"}}
                       onClick={handleRequest}
                       disabled={loading}
                     >

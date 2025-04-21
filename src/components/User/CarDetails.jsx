@@ -19,19 +19,21 @@ const CarDetails = () => {
   const [rentalData, setRentalData] = useState({ startDate: "", endDate: "" });
   const [totalPrice, setTotalPrice] = useState(null);
   const today = new Date().toISOString().split("T")[0];
-
   const { isLoaded } = useLoadScript({ googleMapsApiKey: GAPI });
 
+  const fetchCar = async () => {
+    try {
+      const data = await carService.show(carId);
+      setCar(data);
+    } catch (err) {
+      console.error("Error loading car details:", err);
+    }
+  };
+
   useEffect(() => {
-    const fetchCar = async () => {
-      try {
-        const data = await carService.show(carId);
-        setCar(data);
-      } catch (err) {
-        console.error("Error loading car details:", err);
-      }
-    };
     fetchCar();
+    const interval = setInterval(fetchCar, 2000);
+    return () => clearInterval(interval);
   }, [carId]);
 
   useEffect(() => {
@@ -68,8 +70,7 @@ const CarDetails = () => {
       toast.success("Rental request submitted!");
       setRentalData({ startDate: "", endDate: "" });
       setTotalPrice(null);
-      const updatedCar = await carService.show(carId);
-      setCar(updatedCar);
+      await fetchCar();
       setTimeout(() => nav("/my-rentals"), 1500);
     } catch (err) {
       toast.error("Error submitting rental request.");
@@ -78,12 +79,19 @@ const CarDetails = () => {
 
   const handleAddReview = async (reviewData) => {
     try {
-      const updatedCar = await carService.createReview(carId, reviewData);
-      if (!updatedCar || updatedCar.error)
-        throw new Error("Failed to post review");
-      setCar(updatedCar);
+      await carService.createReview(carId, reviewData);
+      toast.success("Review submitted!");
     } catch (err) {
       toast.error("Failed to submit review");
+    }
+  };
+
+  const handleDeleteReview = async (reviewId) => {
+    try {
+      await carService.deleteReview(carId, reviewId);
+      toast.success("Review deleted.");
+    } catch (err) {
+      toast.error("Error deleting review.");
     }
   };
 
@@ -99,114 +107,100 @@ const CarDetails = () => {
 
   if (!isLoaded || !car)
     return (
-      <div className="d-flex justify-content-center align-items-center mt-5" style={{ minHeight: '200px' }}>
+      <div className="d-flex justify-content-center align-items-center mt-5" style={{ minHeight: "200px" }}>
         <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
       </div>
     );
-    
-  return (
-    <motion.div
-      className="container my-5"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
-    >
-      <div className="row g-5">
 
+  const isForSale = car.forSale;
+
+  return (
+    <motion.div className="container my-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+      <div className="row g-5 align-items-start">
         <div className="col-md-6">
-          <div className="card shadow rounded-4 overflow-hidden">
-            {car.image?.url ? (
-              <img
-                src={car.image.url}
-                className="w-100"
-                style={{ height: "300px", objectFit: "cover" }}
-                alt={`${car.brand} ${car.model}`}
-              />
+          <div className="card shadow rounded-4 overflow-hidden" style={{ minHeight: "600px" }}>
+            {car.images && car.images.length > 0 ? (
+              <div id="carImagesCarousel" className="carousel slide" data-bs-ride="carousel">
+                <div className="carousel-inner">
+                  {car.images.map((img, index) => (
+                    <div
+                      className={`carousel-item ${index === 0 ? "active" : ""}`}
+                      key={index}
+                    >
+                      <img
+                        src={img.url}
+                        className="d-block w-100"
+                        style={{ height: "300px", objectFit: "cover" }}
+                        alt={`Car image ${index + 1}`}
+                      />
+                    </div>
+                  ))}
+                </div>
+                {car.images.length > 1 && (
+                  <>
+                    <button className="carousel-control-prev" type="button" data-bs-target="#carImagesCarousel" data-bs-slide="prev">
+                      <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span className="visually-hidden">Previous</span>
+                    </button>
+                    <button className="carousel-control-next" type="button" data-bs-target="#carImagesCarousel" data-bs-slide="next">
+                      <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span className="visually-hidden">Next</span>
+                    </button>
+                  </>
+                )}
+              </div>
             ) : (
-              <div
-                className="d-flex justify-content-center align-items-center bg-secondary text-white"
-                style={{ height: "300px" }}
-              >
+              <div className="d-flex justify-content-center align-items-center bg-secondary text-white" style={{ height: "300px" }}>
                 No Image Available
               </div>
             )}
             <div className="card-body">
-              <h3 className="fw-bold">
-                {car.brand} {car.model}
-              </h3>
-              <p>
-                <strong>Year:</strong> {car.year}
-              </p>
+              <h3 className="fw-bold">{car.brand} {car.model}</h3>
+              {car.isCompatible && (
+                <span className="badge bg-primary me-2 mb-3">♿ Compatible for Special Needs</span>
+              )}
+              <p><strong>Year:</strong> {car.year}</p>
+              <p><strong>Mileage:</strong> {car.mileage?.toLocaleString()} km</p>
+              <p><strong>Type:</strong> {car.type}</p>
               <p>
                 <strong>Status:</strong>{" "}
-                <span className={`fw-semibold ${
-    car.availability === 'available'
-      ? 'text-success'
-      : car.availability === 'unavailable'
-      ? 'text-danger'
-      : car.availability === 'rented'
-      ? 'text-secondary'
-      : 'text-muted'
-  }`}>
-                {car.availability}
-              </span>
+                <span className={`fw-semibold ${isForSale
+                    ? car.isSold ? "text-danger" : "text-success"
+                    : car.availability === "available" ? "text-success"
+                      : car.availability === "unavailable" ? "text-danger"
+                        : "text-muted"
+                  }`}>
+                  {isForSale ? (car.isSold ? "SOLD" : "available") : car.availability}
+                </span>
               </p>
-              <p>
-                <strong>Price per day:</strong> BHD {car.pricePerDay}
-              </p>
-              {totalPrice !== null && (
-                <p className="mt-2">
-                  <strong>Total Price:</strong> BHD {totalPrice}
-                </p>
+              {isForSale ? (
+                <p><strong>Sale Price:</strong> BHD {car.salePrice}</p>
+              ) : (
+                <>
+                  <p><strong>Price per day:</strong> BHD {car.pricePerDay}</p>
+                  {totalPrice !== null && (
+                    <p className="mt-2"><strong>Total Price:</strong> BHD {totalPrice}</p>
+                  )}
+                </>
+              )}
+              {car.dealerId?.username && (
+                <p><strong>Dealer Name:</strong> {car.dealerId?.username}</p>
+              )}
+              {isForSale && (
+                <div className="mt-4">
+                  <div className="card bg-dark text-white text-center py-4">
+                    <h5 className="fw-bold mb-2">📞 Dealer Contact</h5>
+                    <p className="fs-4 m-0">+973 {car.dealerPhone || "N/A"}</p>
+                  </div>
+                </div>
               )}
             </div>
           </div>
         </div>
 
         <div className="col-md-6">
-          <motion.div
-            className="card shadow p-4 mb-4 rounded-4"
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.1 }}
-          >
-            <h5 className="fw-bold mb-3">Rent this Car</h5>
-            <form onSubmit={handleRent}>
-              <div className="mb-3">
-                <label className="form-label">Start Date</label>
-                <input
-                  type="date"
-                  className="form-control"
-                  name="startDate"
-                  value={rentalData.startDate}
-                  min={today}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <label className="form-label">End Date</label>
-                <input
-                  type="date"
-                  className="form-control"
-                  name="endDate"
-                  value={rentalData.endDate}
-                  min={rentalData.startDate || today}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <button
-                className="btn btn-warning w-100 fw-semibold"
-                type="submit"
-              >
-                Rent Now
-              </button>
-            </form>
-          </motion.div>
-
           <motion.div
             className="rounded overflow-hidden shadow"
             initial={{ opacity: 0 }}
@@ -217,7 +211,7 @@ const CarDetails = () => {
               title="Car Location"
               src={`https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}&z=15&output=embed`}
               width="100%"
-              height="250"
+              height="600"
               style={{ border: 0 }}
               loading="lazy"
               allowFullScreen
@@ -226,52 +220,70 @@ const CarDetails = () => {
         </div>
       </div>
 
-      <motion.div
-        className="mt-5"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 }}
-      >
+      {!isForSale && (
+        <motion.div
+          className="card shadow p-4 mt-5 rounded-4"
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.1 }}
+          style={{ backgroundColor: "#181616", color: "white" }}
+        >
+          <h5 className="fw-bold mb-3">Rent this Car</h5>
+          <form onSubmit={handleRent}>
+            <div className="mb-3">
+              <label className="form-label">Start Date</label>
+              <input
+                type="date"
+                className="form-control"
+                name="startDate"
+                value={rentalData.startDate}
+                min={today}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">End Date</label>
+              <input
+                type="date"
+                className="form-control"
+                name="endDate"
+                value={rentalData.endDate}
+                min={rentalData.startDate || today}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <button className="btn w-100 fw-semibold" style={{backgroundColor:"#06b4d8"}} type="submit">
+              Rent Now
+            </button>
+          </form>
+        </motion.div>
+      )}
+
+      <motion.div className="mt-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
         <ReviewForm handleAddReview={handleAddReview} />
         {car.reviews && car.reviews.length > 0 && (
           <div className="mt-4">
             <h4 className="mb-3">Customer Reviews</h4>
-            <div
-              className="list-group border rounded"
-              style={{ maxHeight: "400px", overflowY: "auto" }}
-            >
+            <div className="list-group border rounded" style={{ maxHeight: "400px", overflowY: "auto" }}>
               {car.reviews.map((review) => (
                 <div key={review._id} className="list-group-item">
                   <div className="d-flex justify-content-between align-items-center">
                     <div>
                       <strong>{review.userId?.username || "Anonymous"}</strong>
-                      <small className="d-block">
-                        {new Date(review.createdAt).toLocaleDateString()}
-                      </small>
+                      <small className="d-block">{new Date(review.createdAt).toLocaleDateString()}</small>
                     </div>
-
                     {user?._id === review.userId?._id && (
                       <button
                         className="btn btn-sm btn-outline-danger"
-                        onClick={async () => {
-                          try {
-                            await carService.deleteReview(carId, review._id);
-                            const updated = await carService.show(carId);
-                            setCar(updated);
-                            toast.success("Review deleted.");
-                          } catch (err) {
-                            toast.error("Error deleting review.");
-                          }
-                        }}
+                        onClick={() => handleDeleteReview(review._id)}
                       >
                         Delete
                       </button>
                     )}
                   </div>
-
-                  <p className="mb-1">
-                    <strong>Rating:</strong> {review.rating}/5
-                  </p>
+                  <p className="mb-1"><strong>Rating:</strong> {review.rating}/5</p>
                   <p>{review.comment}</p>
                 </div>
               ))}
