@@ -79,19 +79,40 @@ const Chatbot = () => {
             {messages.map((msg, i) => (
               <div key={i} className={`chatbot-message ${msg.sender}`}>
                 <ReactMarkdown
-                  components={{
-                    a: ({ node, ...props }) => (
-                      <span
-                        onClick={() => navigate(props.href)}
-                        style={{ color: '#007bff', cursor: 'pointer', textDecoration: 'underline' }}
-                      >
-                        {props.children}
-                      </span>
-                    )
-                  }}
-                >
-                  {msg.text}
-                </ReactMarkdown>
+  components={{
+    a: ({ node, ...props }) => {
+      const href = props.href;
+      const isFullLink = href.startsWith('http');
+      const isInternalDomain = href.includes('carxpress-frontend.vercel.app') || href.includes('localhost:5173');
+      const carPathMatch = href.match(/\/cars\/[a-z0-9]+/i); 
+
+      if (isFullLink && isInternalDomain && carPathMatch) {
+        return (
+          <span
+            onClick={() => navigate(carPathMatch[0])}
+            style={{ color: '#007bff', cursor: 'pointer', textDecoration: 'underline' }}
+          >
+            {props.children}
+          </span>
+        );
+      }
+
+      return (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: '#007bff', textDecoration: 'underline' }}
+        >
+          {props.children}
+        </a>
+      );
+    }
+  }}
+>
+  {msg.text}
+</ReactMarkdown>
+
               </div>
             ))}
             {loading && <div className="chatbot-message bot">Typing...</div>}
