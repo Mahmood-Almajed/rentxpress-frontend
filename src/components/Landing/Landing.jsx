@@ -9,6 +9,7 @@ import { AuthedUserContext } from "../../App";
 import * as carService from "../../services/carService";
 import { motion } from 'framer-motion';
 import { useMediaQuery } from 'react-responsive';
+import "./Landing.css";
 
 const testimonials = [
   {

@@ -81,4 +81,22 @@
     text-align: center;
     padding: 10px;
   }
-  
+
+  @media (max-width: 991.98px) {
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+   
+
+    .brand-logo {
+      width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+      
+    }
+    
+  }
