@@ -274,7 +274,7 @@ const Dashboard = () => {
                     className="card-img-top"
                     style={{
                       height: isMobile ? 150 : 200,
-                      backgroundImage: `url(${car.image?.url || "/placeholder.jpg"})`,
+                      backgroundImage: `url(${car.images?.[0]?.url || "/placeholder.jpg"})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                       borderTopLeftRadius: "8px",
