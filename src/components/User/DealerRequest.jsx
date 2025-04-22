@@ -48,32 +48,45 @@ const DealerRequest = () => {
       <div className="container">
         <div className="row align-items-center g-5">
           <div className="col-md-6">
-            <h2 className="fw-bold text-dark mb-3">Become a Dealer with Car<span style={{color:"#06b4d8"}}>X</span>press</h2>
-            <hr className="mb-4" style={{ width: '60px', border: '2px solid rgb(0, 139, 203)' }} />
-            <p className="text-muted fs-5" style={{ textAlign: "justify" }}>
-              Join the <strong>Car<span  style={{color:"#06b4d8"}}>X</span>press </strong>dealer network and grow your business with powerful tools, priority support, and seamless platform integration. We’re here to help you reach more customers and manage your fleet with ease.            </p>
-            <ul className="list-unstyled mt-4">
-              <li className="d-flex mb-3">
-                <i className="fas fa-check-circle  me-3 mt-1" style={{color:"#06b4d8"}}></i>
-                <div style={{ textAlign: "justify" }}>
-                  <strong>Tailored Solutions:</strong> Get access to a custom dashboard built to simplify your operations and help you scale faster.
-                </div>
-              </li>
-              <li className="d-flex mb-3">
-                <i className="fas fa-check-circle  me-3 mt-1" style={{color:"#06b4d8"}}></i>
-                <div style={{ textAlign: "justify" }}>
-                  <strong>Dedicated Support:</strong> Enjoy dedicated support with faster response times and personalized assistance whenever you need it.
-                </div>
-              </li>
-              <li className="d-flex">
-                <i className="fas fa-check-circle  me-3 mt-1" style={{color:"#06b4d8"}}></i>
-                <div style={{ textAlign: "justify" }}>
-                  <strong>Seamless Integration:</strong> Easily connect your existing systems with our platform — no complex setup required.
-                </div>
-              </li>
-            </ul>
-          </div>
-
+  <h2 className="fw-bold text-dark mb-3">Become a Dealer with Car<span style={{color:"#06b4d8"}}>X</span>press</h2>
+  <hr className="mb-4" style={{ width: '60px', border: '2px solid rgb(0, 139, 203)' }} />
+  <p className="text-muted fs-5" style={{ textAlign: "justify" }}>
+    Turn your car into income. Whether you're a car enthusiast, an individual owner, or a dealership — 
+    <strong> Car<span style={{color:"#06b4d8"}}>X</span>press </strong> gives you the tools to rent or sell cars easily across Bahrain.
+  </p>
+  <ul className="list-unstyled mt-4">
+    <li className="d-flex mb-3">
+      <i className="fas fa-check-circle me-3 mt-1" style={{color:"#06b4d8"}}></i>
+      <div style={{ textAlign: "justify" }}>
+        <strong>List for Rent or Sale:</strong> Choose whether to rent your car by day or sell it outright — you’re in control.
+      </div>
+    </li>
+    <li className="d-flex mb-3">
+      <i className="fas fa-check-circle me-3 mt-1" style={{color:"#06b4d8"}}></i>
+      <div style={{ textAlign: "justify" }}>
+        <strong>Easy Uploads:</strong> Add multiple images, pricing, mileage, and even ♿ accessibility options in seconds.
+      </div>
+    </li>
+    <li className="d-flex mb-3">
+      <i className="fas fa-check-circle me-3 mt-1" style={{color:"#06b4d8"}}></i>
+      <div style={{ textAlign: "justify" }}>
+        <strong>Manage Everything in One Place:</strong> Approve rental requests, mark cars as sold, and chat with users via your personalized dashboard.
+      </div>
+    </li>
+    <li className="d-flex mb-3">
+      <i className="fas fa-check-circle me-3 mt-1" style={{color:"#06b4d8"}}></i>
+      <div style={{ textAlign: "justify" }}>
+        <strong>Get Discovered:</strong> Reach users across Bahrain with our smart filters, AI chatbot, and location-based visibility.
+      </div>
+    </li>
+    <li className="d-flex">
+      <i className="fas fa-check-circle me-3 mt-1" style={{color:"#06b4d8"}}></i>
+      <div style={{ textAlign: "justify" }}>
+        <strong>No Showroom Needed:</strong> All you need is a car — whether it’s one or twenty. CarXpress works for everyone.
+      </div>
+    </li>
+  </ul>
+</div>
 
           <div className="col-md-6">
             <div className="card bg-dark text-light shadow-lg border-0 rounded-4 p-4">
