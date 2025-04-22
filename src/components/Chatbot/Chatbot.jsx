@@ -21,7 +21,6 @@ const Chatbot = () => {
   const [messageHistory, setMessageHistory] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-
   const [isOpen, setIsOpen] = useState(false);
   const [boxWidth, setBoxWidth] = useState(400);
 
@@ -43,6 +42,7 @@ const Chatbot = () => {
 
   const sendMessage = async () => {
     if (!input.trim()) return;
+
     const userMessage = { sender: "user", text: input };
     setMessages((prev) => [...prev, userMessage]);
     setLoading(true);
@@ -54,8 +54,10 @@ const Chatbot = () => {
         body: JSON.stringify({
           message: input,
           history: messageHistory,
+          user, 
         }),
       });
+
       const data = await res.json();
       const botMessage = {
         sender: "bot",
@@ -98,7 +100,8 @@ const Chatbot = () => {
                       const isInternalDomain =
                         href.includes("carxpress-frontend.vercel.app") ||
                         href.includes("localhost:5173");
-                      const carPathMatch = href.match(/\/cars\/[a-z0-9]+/i);
+
+                      const carPathMatch = href.match(/\/(dealer\/)?cars\/[a-z0-9]+/i);
 
                       if (isFullLink && isInternalDomain && carPathMatch) {
                         return (
