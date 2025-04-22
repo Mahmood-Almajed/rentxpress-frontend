@@ -129,7 +129,7 @@ const MyRentals = () => {
                         {rental.status}
                       </span>
                       <br />
-                      <strong>Total Price:</strong> BHD {rental.totalPrice}
+                      <strong>Total Price:</strong> BHD {rental.totalPrice.toFixed(1)}
                     </p>
 
                     <div

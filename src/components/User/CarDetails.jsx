@@ -241,7 +241,7 @@ const CarDetails = () => {
                   </p>
                   {totalPrice !== null && (
                     <p className="mt-2">
-                      <strong>Total Price:</strong> BHD {totalPrice}
+                      <strong>Total Price:</strong> BHD {totalPrice.toFixed(1)}
                     </p>
                   )}
                 </>
