@@ -16,7 +16,7 @@ const CarDetails = () => {
   const GAPI = import.meta.env.VITE_REACT_APP_GOOGLE_MAPS_API_KEY;
 
   const [car, setCar] = useState(null);
-  const [rentalData, setRentalData] = useState({ startDate: "", endDate: "" });
+  const [rentalData, setRentalData] = useState({ startDate: "", endDate: "" , userPhone: "" });
   const [totalPrice, setTotalPrice] = useState(null);
   const today = new Date().toISOString().split("T")[0];
   const { isLoaded } = useLoadScript({ googleMapsApiKey: GAPI });
@@ -107,7 +107,10 @@ const CarDetails = () => {
 
   if (!isLoaded || !car)
     return (
-      <div className="d-flex justify-content-center align-items-center mt-5" style={{ minHeight: "200px" }}>
+      <div
+        className="d-flex justify-content-center align-items-center mt-5"
+        style={{ minHeight: "200px" }}
+      >
         <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
@@ -117,12 +120,24 @@ const CarDetails = () => {
   const isForSale = car.forSale;
 
   return (
-    <motion.div className="container my-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+    <motion.div
+      className="container my-5"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
+    >
       <div className="row g-5 align-items-start">
         <div className="col-md-6">
-          <div className="card shadow rounded-4 overflow-hidden" style={{ minHeight: "600px" }}>
+          <div
+            className="card shadow rounded-4 overflow-hidden"
+            style={{ minHeight: "600px" }}
+          >
             {car.images && car.images.length > 0 ? (
-              <div id="carImagesCarousel" className="carousel slide" data-bs-ride="carousel">
+              <div
+                id="carImagesCarousel"
+                className="carousel slide"
+                data-bs-ride="carousel"
+              >
                 <div className="carousel-inner">
                   {car.images.map((img, index) => (
                     <div
@@ -140,53 +155,106 @@ const CarDetails = () => {
                 </div>
                 {car.images.length > 1 && (
                   <>
-                    <button className="carousel-control-prev" type="button" data-bs-target="#carImagesCarousel" data-bs-slide="prev">
-                      <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <button
+                      className="carousel-control-prev"
+                      type="button"
+                      data-bs-target="#carImagesCarousel"
+                      data-bs-slide="prev"
+                    >
+                      <span
+                        className="carousel-control-prev-icon"
+                        aria-hidden="true"
+                      ></span>
                       <span className="visually-hidden">Previous</span>
                     </button>
-                    <button className="carousel-control-next" type="button" data-bs-target="#carImagesCarousel" data-bs-slide="next">
-                      <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                    <button
+                      className="carousel-control-next"
+                      type="button"
+                      data-bs-target="#carImagesCarousel"
+                      data-bs-slide="next"
+                    >
+                      <span
+                        className="carousel-control-next-icon"
+                        aria-hidden="true"
+                      ></span>
                       <span className="visually-hidden">Next</span>
                     </button>
                   </>
                 )}
               </div>
             ) : (
-              <div className="d-flex justify-content-center align-items-center bg-secondary text-white" style={{ height: "300px" }}>
+              <div
+                className="d-flex justify-content-center align-items-center bg-secondary text-white"
+                style={{ height: "300px" }}
+              >
                 No Image Available
               </div>
             )}
             <div className="card-body">
-              <h3 className="fw-bold">{car.brand} {car.model}</h3>
+              <h3 className="fw-bold">
+                {car.brand} {car.model}
+              </h3>
               {car.isCompatible && (
-                <span className="badge bg-primary me-2 mb-3">♿ Compatible for Special Needs</span>
+                <span className="badge bg-primary me-2 mb-3">
+                  ♿ Compatible for Special Needs
+                </span>
               )}
-              <p><strong>Year:</strong> {car.year}</p>
-              <p><strong>Mileage:</strong> {car.mileage?.toLocaleString()} km</p>
-              <p><strong>Type:</strong> {car.type}</p>
+              <p>
+                <strong>Year:</strong> {car.year}
+              </p>
+              <p>
+                <strong>Mileage:</strong> {car.mileage?.toLocaleString()} km
+              </p>
+              <p>
+                <strong>Type:</strong> {car.type}
+              </p>
               <p>
                 <strong>Status:</strong>{" "}
-                <span className={`fw-semibold ${isForSale
-                    ? car.isSold ? "text-danger" : "text-success"
-                    : car.availability === "available" ? "text-success"
-                      : car.availability === "unavailable" ? "text-danger"
-                        : "text-muted"
-                  }`}>
-                  {isForSale ? (car.isSold ? "SOLD" : "available") : car.availability}
+                <span
+                  className={`fw-semibold ${
+                    isForSale
+                      ? car.isSold
+                        ? "text-danger"
+                        : "text-success"
+                      : car.availability === "available"
+                      ? "text-success"
+                      : car.availability === "unavailable"
+                      ? "text-danger"
+                      : "text-muted"
+                  }`}
+                >
+                  {isForSale
+                    ? car.isSold
+                      ? "SOLD"
+                      : "available"
+                    : car.availability}
                 </span>
               </p>
               {isForSale ? (
-                <p><strong>Sale Price:</strong> BHD {car.salePrice}</p>
+                <p>
+                  <strong>Sale Price:</strong> BHD {car.salePrice}
+                </p>
               ) : (
                 <>
-                  <p><strong>Price per day:</strong> BHD {car.pricePerDay}</p>
+                  <p>
+                    <strong>Price per day:</strong> BHD {car.pricePerDay}
+                  </p>
                   {totalPrice !== null && (
-                    <p className="mt-2"><strong>Total Price:</strong> BHD {totalPrice}</p>
+                    <p className="mt-2">
+                      <strong>Total Price:</strong> BHD {totalPrice}
+                    </p>
                   )}
                 </>
               )}
               {car.dealerId?.username && (
-                <p><strong>Dealer Name:</strong> {car.dealerId?.username}</p>
+                <>
+                  <p>
+                    <strong>Dealer Name:</strong> {car.dealerId?.username}
+                  </p>
+                  <p>
+                    <strong>Contact Number:</strong> +973 {car.dealerPhone}
+                  </p>
+                </>
               )}
               {isForSale && (
                 <div className="mt-4">
@@ -254,25 +322,53 @@ const CarDetails = () => {
                 required
               />
             </div>
-            <button className="btn w-100 fw-semibold" style={{backgroundColor:"#06b4d8"}} type="submit">
+            <div className="mb-3">
+              <label className="form-label">Phone Number</label>
+              <input
+                type="text"
+                className="form-control"
+                name="userPhone"
+                value={rentalData.userPhone}
+                onChange={handleChange}
+                required
+                placeholder="Enter your Phone number"
+                pattern="\d{8}"
+                maxLength={8}
+              />
+            </div>
+            <button
+              className="btn w-100 fw-semibold"
+              style={{ backgroundColor: "#06b4d8" }}
+              type="submit"
+            >
               Rent Now
             </button>
           </form>
         </motion.div>
       )}
 
-      <motion.div className="mt-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
+      <motion.div
+        className="mt-5"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6 }}
+      >
         <ReviewForm handleAddReview={handleAddReview} />
         {car.reviews && car.reviews.length > 0 && (
           <div className="mt-4">
             <h4 className="mb-3">Customer Reviews</h4>
-            <div className="list-group border rounded" style={{ maxHeight: "400px", overflowY: "auto" }}>
+            <div
+              className="list-group border rounded"
+              style={{ maxHeight: "400px", overflowY: "auto" }}
+            >
               {car.reviews.map((review) => (
                 <div key={review._id} className="list-group-item">
                   <div className="d-flex justify-content-between align-items-center">
                     <div>
                       <strong>{review.userId?.username || "Anonymous"}</strong>
-                      <small className="d-block">{new Date(review.createdAt).toLocaleDateString()}</small>
+                      <small className="d-block">
+                        {new Date(review.createdAt).toLocaleDateString()}
+                      </small>
                     </div>
                     {user?._id === review.userId?._id && (
                       <button
@@ -283,7 +379,9 @@ const CarDetails = () => {
                       </button>
                     )}
                   </div>
-                  <p className="mb-1"><strong>Rating:</strong> {review.rating}/5</p>
+                  <p className="mb-1">
+                    <strong>Rating:</strong> {review.rating}/5
+                  </p>
                   <p>{review.comment}</p>
                 </div>
               ))}
