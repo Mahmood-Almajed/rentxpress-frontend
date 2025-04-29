@@ -1,17 +1,17 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import * as carService from '../../services/carService';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import * as carService from "../../services/carService";
+import { motion } from "framer-motion";
 
 const CarList = () => {
   const [cars, setCars] = useState([]);
   const [filteredCars, setFilteredCars] = useState([]);
-  const [search, setSearch] = useState('');
-  const [filterType, setFilterType] = useState('all'); 
-  const [filterCarType, setFilterCarType] = useState('all'); 
-  const [sorting, setSorting] = useState('all');
+  const [search, setSearch] = useState("");
+  const [filterType, setFilterType] = useState("all");
+  const [filterCarType, setFilterCarType] = useState("all");
+  const [sorting, setSorting] = useState("all");
   const [specialNeedsOnly, setSpecialNeedsOnly] = useState(false);
-  const [specialNeedsListingType, setSpecialNeedsListingType] = useState('all');
+  const [specialNeedsListingType, setSpecialNeedsListingType] = useState("all");
   const [minMileage, setMinMileage] = useState(0);
   const [maxMileage, setMaxMileage] = useState(1000000);
   const [mileageRange, setMileageRange] = useState([0, 1000000]);
@@ -19,11 +19,12 @@ const CarList = () => {
 
   const filtersActive =
     search ||
-    filterType !== 'all' ||
-    sorting !== 'all' ||
+    filterType !== "all" ||
+    sorting !== "all" ||
     specialNeedsOnly ||
-    (specialNeedsOnly && specialNeedsListingType !== 'all') ||
-    mileageRange[0] > 0 || mileageRange[1] < 1000000;
+    (specialNeedsOnly && specialNeedsListingType !== "all") ||
+    mileageRange[0] > 0 ||
+    mileageRange[1] < 1000000;
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -31,7 +32,7 @@ const CarList = () => {
         const data = await carService.index();
         setCars(data);
       } catch (err) {
-        console.error('Error fetching cars:', err);
+        console.error("Error fetching cars:", err);
       } finally {
         setLoading(false);
       }
@@ -44,7 +45,7 @@ const CarList = () => {
 
   useEffect(() => {
     if (!specialNeedsOnly) {
-      setSpecialNeedsListingType('all');
+      setSpecialNeedsListingType("all");
     }
   }, [specialNeedsOnly]);
 
@@ -53,56 +54,74 @@ const CarList = () => {
 
     if (search) {
       const q = search.toLowerCase();
-      result = result.filter(car =>
-        car.brand.toLowerCase().includes(q) || car.model.toLowerCase().includes(q)
+      result = result.filter(
+        (car) =>
+          car.brand.toLowerCase().includes(q) ||
+          car.model.toLowerCase().includes(q)
       );
     }
 
     if (specialNeedsOnly) {
-      result = result.filter(car => car.isCompatible);
-      if (specialNeedsListingType !== 'all') {
-        result = result.filter(car =>
-          specialNeedsListingType === 'rent' ? !car.forSale : car.forSale
+      result = result.filter((car) => car.isCompatible);
+      if (specialNeedsListingType !== "all") {
+        result = result.filter((car) =>
+          specialNeedsListingType === "rent" ? !car.forSale : car.forSale
         );
       }
     } else {
-      result = result.filter(car => !car.isCompatible);
-      if (filterType !== 'all') {
-        result = result.filter(car =>
-          filterType === 'rent' ? !car.forSale : car.forSale
+      result = result.filter((car) => !car.isCompatible);
+      if (filterType !== "all") {
+        result = result.filter((car) =>
+          filterType === "rent" ? !car.forSale : car.forSale
         );
       }
     }
 
-    result = result.filter(car =>
-      (car.mileage ?? 0) >= mileageRange[0] && (car.mileage ?? 0) <= mileageRange[1]
+    result = result.filter(
+      (car) =>
+        (car.mileage ?? 0) >= mileageRange[0] &&
+        (car.mileage ?? 0) <= mileageRange[1]
     );
 
-    if (filterCarType !== 'all') {
-      result = result.filter(car => car.type?.toLowerCase() === filterCarType.toLowerCase());
+    if (filterCarType !== "all") {
+      result = result.filter(
+        (car) => car.type?.toLowerCase() === filterCarType.toLowerCase()
+      );
     }
 
-    if (sorting === 'lowToHigh') {
-      result.sort((a, b) =>
-        (a.forSale ? a.salePrice : a.pricePerDay) - (b.forSale ? b.salePrice : b.pricePerDay)
+    if (sorting === "lowToHigh") {
+      result.sort(
+        (a, b) =>
+          (a.forSale ? a.salePrice : a.pricePerDay) -
+          (b.forSale ? b.salePrice : b.pricePerDay)
       );
-    } else if (sorting === 'highToLow') {
-      result.sort((a, b) =>
-        (b.forSale ? b.salePrice : b.pricePerDay) - (a.forSale ? a.salePrice : a.pricePerDay)
+    } else if (sorting === "highToLow") {
+      result.sort(
+        (a, b) =>
+          (b.forSale ? b.salePrice : b.pricePerDay) -
+          (a.forSale ? a.salePrice : a.pricePerDay)
       );
     }
 
     setFilteredCars(result);
-  }, [cars, search, filterType, sorting, specialNeedsOnly, specialNeedsListingType, mileageRange]);
+  }, [
+    cars,
+    search,
+    filterType,
+    sorting,
+    specialNeedsOnly,
+    specialNeedsListingType,
+    mileageRange,
+  ]);
 
   const handleClearFilters = () => {
-    setSearch('');
-    setFilterType('all');
-    setSorting('all');
+    setSearch("");
+    setFilterType("all");
+    setSorting("all");
     setSpecialNeedsOnly(false);
-    setSpecialNeedsListingType('all');
+    setSpecialNeedsListingType("all");
     setMileageRange([0, 1000000]);
-    setFilterCarType('all');
+    setFilterCarType("all");
   };
 
   return (
@@ -112,38 +131,128 @@ const CarList = () => {
           <div className="col-lg-8 col-md-10">
             <h1 className="fw-bold">Find Your Perfect Ride</h1>
             <p className="lead text-body-secondary">
-              Browse our cars available for rent and sale. Whether you're traveling or buying, we’ve got you covered.
+              Browse our cars available for rent and sale. Whether you're
+              traveling or buying, we’ve got you covered.
             </p>
 
             <div className="d-flex justify-content-center gap-3 mt-2 mb-3 flex-wrap">
-              <button className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'all' ? 'active-warning' : 'btn-warning-outline-hover'}`} onClick={() => setFilterType('all')} style={{backgroundColor:"#06b4d8" ,border:"1px solid #06b4d8"}}>All</button>
-              <button className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'rent' ? 'active-warning' : 'btn-warning-outline-hover'}`} onClick={() => setFilterType('rent')} style={{backgroundColor:"#06b4d8" ,border:"1px solid #06b4d8"}} >Cars for Rent</button>
-              <button className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${filterType === 'sale' ? 'active-warning' : 'btn-warning-outline-hover'}`} onClick={() => setFilterType('sale')} style={{backgroundColor:"#06b4d8" ,border:"1px solid #06b4d8"}} >Cars For Sale</button>
-              <button className={`btn px-4 py-2 rounded-pill shadow-sm ${specialNeedsOnly ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setSpecialNeedsOnly(prev => !prev)}>♿ Special Needs</button>
+              <button
+                className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${
+                  filterType === "all"
+                    ? "active-warning"
+                    : "btn-warning-outline-hover"
+                }`}
+                onClick={() => setFilterType("all")}
+                style={{
+                  backgroundColor: "#06b4d8",
+                  border: "1px solid #06b4d8",
+                }}
+              >
+                All
+              </button>
+              <button
+                className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${
+                  filterType === "rent"
+                    ? "active-warning"
+                    : "btn-warning-outline-hover"
+                }`}
+                onClick={() => setFilterType("rent")}
+                style={{
+                  backgroundColor: "#06b4d8",
+                  border: "1px solid #06b4d8",
+                }}
+              >
+                Cars for Rent
+              </button>
+              <button
+                className={`btn px-4 py-2 rounded-pill shadow-sm btn-warning ${
+                  filterType === "sale"
+                    ? "active-warning"
+                    : "btn-warning-outline-hover"
+                }`}
+                onClick={() => setFilterType("sale")}
+                style={{
+                  backgroundColor: "#06b4d8",
+                  border: "1px solid #06b4d8",
+                }}
+              >
+                Cars For Sale
+              </button>
+              <button
+                className={`btn px-4 py-2 rounded-pill shadow-sm ${
+                  specialNeedsOnly ? "btn-primary" : "btn-outline-primary"
+                }`}
+                onClick={() => setSpecialNeedsOnly((prev) => !prev)}
+              >
+                ♿ Special Needs
+              </button>
             </div>
 
             {specialNeedsOnly && (
               <div className="d-flex justify-content-center gap-2 mb-3 flex-wrap">
                 <span className="fw-semibold mt-2">Showing:</span>
-                <button className={`btn btn-sm rounded-pill ${specialNeedsListingType === 'all' ? 'btn-secondary' : 'btn-outline-secondary'}`} onClick={() => setSpecialNeedsListingType('all')}>All</button>
-                <button className={`btn btn-sm rounded-pill ${specialNeedsListingType === 'rent' ? 'btn-secondary' : 'btn-outline-secondary'}`} onClick={() => setSpecialNeedsListingType('rent')}>For Rent</button>
-                <button className={`btn btn-sm rounded-pill ${specialNeedsListingType === 'sale' ? 'btn-secondary' : 'btn-outline-secondary'}`} onClick={() => setSpecialNeedsListingType('sale')}>For Sale</button>
+                <button
+                  className={`btn btn-sm rounded-pill ${
+                    specialNeedsListingType === "all"
+                      ? "btn-secondary"
+                      : "btn-outline-secondary"
+                  }`}
+                  onClick={() => setSpecialNeedsListingType("all")}
+                >
+                  All
+                </button>
+                <button
+                  className={`btn btn-sm rounded-pill ${
+                    specialNeedsListingType === "rent"
+                      ? "btn-secondary"
+                      : "btn-outline-secondary"
+                  }`}
+                  onClick={() => setSpecialNeedsListingType("rent")}
+                >
+                  For Rent
+                </button>
+                <button
+                  className={`btn btn-sm rounded-pill ${
+                    specialNeedsListingType === "sale"
+                      ? "btn-secondary"
+                      : "btn-outline-secondary"
+                  }`}
+                  onClick={() => setSpecialNeedsListingType("sale")}
+                >
+                  For Sale
+                </button>
               </div>
             )}
 
             <div className="d-flex justify-content-center gap-2 mb-3 flex-wrap">
               <span className="fw-semibold mt-2">Car Type:</span>
-              {["all", "SUV", "Sedan", "Truck", "Off-Road", "Electric", "Luxury", "Convertible", "Sports", "Hatchback", "Van", "Muscle", "Coupe", "Hybrid"].map((type) => (
+              {[
+                "all",
+                "SUV",
+                "Sedan",
+                "Truck",
+                "Off-Road",
+                "Electric",
+                "Luxury",
+                "Convertible",
+                "Sports",
+                "Hatchback",
+                "Van",
+                "Muscle",
+                "Coupe",
+                "Hybrid",
+              ].map((type) => (
                 <button
                   key={type}
-                  className={`btn btn-sm rounded-pill ${filterCarType === type ? 'btn-dark' : 'btn-outline-dark'}`}
+                  className={`btn btn-sm rounded-pill ${
+                    filterCarType === type ? "btn-dark" : "btn-outline-dark"
+                  }`}
                   onClick={() => setFilterCarType(type)}
                 >
                   {type}
                 </button>
               ))}
             </div>
-
 
             <div className="mt-4">
               <p className="mb-1 mt-4">Filter by Mileage (km)</p>
@@ -157,7 +266,7 @@ const CarList = () => {
                       setMileageRange([+e.target.value, mileageRange[1]])
                     }
                     className="form-control"
-                    style={{ width: '120px' }}
+                    style={{ width: "120px" }}
                   />
                   <span>to</span>
                   <input
@@ -168,11 +277,11 @@ const CarList = () => {
                       setMileageRange([mileageRange[0], +e.target.value])
                     }
                     className="form-control"
-                    style={{ width: '120px' }}
+                    style={{ width: "120px" }}
                   />
                 </div>
 
-                <div className="w-100" style={{ maxWidth: '400px' }}>
+                <div className="w-100" style={{ maxWidth: "400px" }}>
                   <input
                     type="range"
                     min="0"
@@ -197,12 +306,16 @@ const CarList = () => {
                   />
                 </div>
               </div>
-
             </div>
 
             {filtersActive && (
               <div className="d-flex justify-content-center mt-4">
-                <button className="btn btn-outline-dark btn-sm rounded-pill px-4" onClick={handleClearFilters}>Clear All Filters</button>
+                <button
+                  className="btn btn-outline-dark btn-sm rounded-pill px-4"
+                  onClick={handleClearFilters}
+                >
+                  Clear All Filters
+                </button>
               </div>
             )}
           </div>
@@ -214,14 +327,14 @@ const CarList = () => {
           <input
             type="text"
             className="form-control shadow-sm rounded-pill px-4 py-2"
-            style={{ maxWidth: '400px' }}
+            style={{ maxWidth: "400px" }}
             placeholder="🔍 Search by brand or model"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
           <select
             className="form-select shadow-sm rounded-pill px-4 py-2"
-            style={{ width: '200px' }}
+            style={{ width: "200px" }}
             value={sorting}
             onChange={(e) => setSorting(e.target.value)}
           >
@@ -240,7 +353,9 @@ const CarList = () => {
             </div>
           </div>
         ) : filteredCars.length === 0 ? (
-          <div className="alert alert-warning text-center">No cars match your filters.</div>
+          <div className="alert alert-warning text-center">
+            No cars match your filters.
+          </div>
         ) : (
           <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
             {filteredCars.map((car) => (
@@ -253,18 +368,29 @@ const CarList = () => {
                   whileHover={{ scale: 1.03 }}
                 >
                   {car.isSold && (
-                    <span className="badge bg-danger position-absolute top-0 end-0 m-2">SOLD</span>
+                    <span className="badge bg-danger position-absolute top-0 end-0 m-2">
+                      SOLD
+                    </span>
                   )}
 
                   {car.images && car.images.length > 0 ? (
-                    <div id={`carousel-${car._id}`} className="carousel slide" data-bs-ride="carousel">
+                    <div
+                      id={`carousel-${car._id}`}
+                      className="carousel slide"
+                      data-bs-ride="carousel"
+                    >
                       <div className="carousel-inner">
                         {car.images.map((img, index) => (
-                          <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                          <div
+                            key={index}
+                            className={`carousel-item ${
+                              index === 0 ? "active" : ""
+                            }`}
+                          >
                             <img
                               src={img.url}
                               className="d-block w-100"
-                              style={{ height: '225px', objectFit: 'cover' }}
+                              style={{ height: "225px", objectFit: "cover" }}
                               alt={`Car image ${index + 1}`}
                             />
                           </div>
@@ -272,19 +398,38 @@ const CarList = () => {
                       </div>
                       {car.images.length > 1 && (
                         <>
-                          <button className="carousel-control-prev" type="button" data-bs-target={`#carousel-${car._id}`} data-bs-slide="prev">
-                            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <button
+                            className="carousel-control-prev"
+                            type="button"
+                            data-bs-target={`#carousel-${car._id}`}
+                            data-bs-slide="prev"
+                          >
+                            <span
+                              className="carousel-control-prev-icon"
+                              aria-hidden="true"
+                            ></span>
                             <span className="visually-hidden">Previous</span>
                           </button>
-                          <button className="carousel-control-next" type="button" data-bs-target={`#carousel-${car._id}`} data-bs-slide="next">
-                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                          <button
+                            className="carousel-control-next"
+                            type="button"
+                            data-bs-target={`#carousel-${car._id}`}
+                            data-bs-slide="next"
+                          >
+                            <span
+                              className="carousel-control-next-icon"
+                              aria-hidden="true"
+                            ></span>
                             <span className="visually-hidden">Next</span>
                           </button>
                         </>
                       )}
                     </div>
                   ) : (
-                    <div className="card-img-top d-flex align-items-center justify-content-center bg-secondary text-white" style={{ height: '225px' }}>
+                    <div
+                      className="card-img-top d-flex align-items-center justify-content-center bg-secondary text-white"
+                      style={{ height: "225px" }}
+                    >
                       No Image Available
                     </div>
                   )}
@@ -298,35 +443,52 @@ const CarList = () => {
                     </h5>
                     <p className="card-text mb-2">
                       {car.forSale ? (
-                        <>BHD <strong>{car.salePrice || 'N/A'}</strong> <small className="text-muted">(For Sale)</small></>
+                        <>
+                          BHD <strong>{car.salePrice || "N/A"}</strong>{" "}
+                          <small className="text-muted">(For Sale)</small>
+                        </>
                       ) : (
-                        <>BHD <strong>{car.pricePerDay || 'N/A'}</strong> / Day</>
+                        <>
+                          BHD <strong>{car.pricePerDay || "N/A"}</strong> / Day
+                        </>
                       )}
                     </p>
-                    <p className="mb-1"><small>Mileage: {car.mileage?.toLocaleString()} km</small></p>
+                    <p className="mb-1">
+                      <small>Mileage: {car.mileage?.toLocaleString()} km</small>
+                    </p>
                     <small
-                      className={`mb-2 ${car.forSale
-                        ? car.isSold
-                          ? 'text-danger'
-                          : 'text-success'
-                        : car.availability === 'available'
-                          ? 'text-success'
-                          : car.availability === 'rented'
-                            ? 'text-secondary'
-                            : 'text-muted'
-                        }`}
+                      className={`mb-2 ${
+                        car.forSale
+                          ? car.isSold
+                            ? "text-danger"
+                            : "text-success"
+                          : car.availability === "available"
+                          ? "text-success"
+                          : car.availability === "rented"
+                          ? "text-secondary"
+                          : "text-muted"
+                      }`}
                     >
                       {car.forSale
                         ? car.isSold
-                          ? 'SOLD'
-                          : 'available'
-                        : car.availability}
+                          ? "SOLD"
+                          : "available"
+                        : car.availability === "rented"
+                        ? "RENTED"
+                        : car.availability === "unavailable"
+                        ? "PENDING REQUESTS"
+                        : "available"}
                     </small>
                     {car.dealerId?.username && (
-                      <small className="text-muted">Dealer: <strong>{car.dealerId.username}</strong></small>
+                      <small className="text-muted">
+                        Dealer: <strong>{car.dealerId.username}</strong>
+                      </small>
                     )}
                     <motion.div className="d-flex justify-content-end mt-auto">
-                      <Link to={`/cars/${car._id}`} className="btn btn-sm btn-secondary">
+                      <Link
+                        to={`/cars/${car._id}`}
+                        className="btn btn-sm btn-secondary"
+                      >
                         View Details
                       </Link>
                     </motion.div>

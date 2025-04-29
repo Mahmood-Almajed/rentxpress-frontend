@@ -31,27 +31,28 @@ function RentRequests() {
         rentalId,
         newStatus
       );
-
+  
       if (newStatus === "approved" && carId) {
         await carService.update(carId, { availability: "rented" });
       }
-
+  
       if (newStatus === "rejected" && carId) {
         await carService.update(carId, { availability: "available" });
       }
-
+  
       if (newStatus === "completed") {
         setRentals((prev) => prev.filter((r) => r._id !== rentalId));
         return;
       }
-
-      setRentals((prevRentals) =>
-        prevRentals.map((r) => (r._id === rentalId ? updatedRental.rental : r))
-      );
+  
+      // After status update, refresh all rentals to reflect rejections of others
+      const freshRentals = await rentalService.getDealerRentals();
+      setRentals(freshRentals);
     } catch (error) {
       console.error("Error updating rental status:", error);
     }
   };
+  
 
   const filteredRentals =
     statusFilter === "all"

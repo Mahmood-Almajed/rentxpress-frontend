@@ -86,13 +86,13 @@ const Footer = () => {
                 <i className="fab fa-facebook"></i>
               </a>
               <a href="#" className="text-white me-3" style={{ fontSize: isMobile ? '1rem' : '1.25rem' }}>
-                <i className="fab fa-twitter"></i>
+                <i className="fab fa-discord"></i>
               </a>
               <a href="#" className="text-white me-3" style={{ fontSize: isMobile ? '1rem' : '1.25rem' }}>
                 <i className="fab fa-instagram"></i>
               </a>
               <a href="#" className="text-white me-3" style={{ fontSize: isMobile ? '1rem' : '1.25rem' }}>
-                <i className="fab fa-pinterest"></i>
+                <i className="fab fa-whatsapp"></i>
               </a>
             </div>
           </div>

@@ -61,10 +61,11 @@ const CarDetails = () => {
 
   const handleRent = async (e) => {
     e.preventDefault();
-    if (car.availability !== "available") {
-      toast.error("This car is not available for rental.");
-      return;
-    }
+   if (car.availability === "rented") {
+  toast.error("This car is already rented.");
+  return;
+}
+
     try {
       await rentalService.createRentalRequest(carId, rentalData);
       toast.success("Rental request submitted!");
