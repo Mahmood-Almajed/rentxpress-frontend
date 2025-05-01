@@ -31,20 +31,20 @@ function RentRequests() {
         rentalId,
         newStatus
       );
-  
+
       if (newStatus === "approved" && carId) {
         await carService.update(carId, { availability: "rented" });
       }
-  
+
       if (newStatus === "rejected" && carId) {
         await carService.update(carId, { availability: "available" });
       }
-  
+
       if (newStatus === "completed") {
         setRentals((prev) => prev.filter((r) => r._id !== rentalId));
         return;
       }
-  
+
       // After status update, refresh all rentals to reflect rejections of others
       const freshRentals = await rentalService.getDealerRentals();
       setRentals(freshRentals);
@@ -52,7 +52,7 @@ function RentRequests() {
       console.error("Error updating rental status:", error);
     }
   };
-  
+
 
   const filteredRentals =
     statusFilter === "all"
@@ -105,12 +105,14 @@ function RentRequests() {
                 <th>Car</th>
                 <th>Start Date</th>
                 <th>End Date</th>
+                <th>Days</th>
                 <th>Phone Number</th>
                 <th>Total Price</th>
                 <th>Status</th>
                 <th className="text-center">Actions</th>
               </tr>
             </thead>
+
             <tbody>
               {filteredRentals.map((rental) => (
                 <tr key={rental._id}>
@@ -130,6 +132,15 @@ function RentRequests() {
                       ? new Date(rental.endDate).toLocaleDateString()
                       : "N/A"}
                   </td>
+                  <td>
+                    {rental.startDate && rental.endDate
+                      ? Math.ceil(
+                        (new Date(rental.endDate) - new Date(rental.startDate)) /
+                        (1000 * 60 * 60 * 24)
+                      )
+                      : "N/A"}
+                  </td>
+
                   <td>{rental.userPhone || "N/A"}</td>
                   <td>
                     {rental.totalPrice ? `BHD${rental.totalPrice.toFixed(1)}` : "N/A"}
@@ -137,17 +148,16 @@ function RentRequests() {
 
                   <td>
                     <span
-                      className={`badge text-bg-${
-                        rental.status === "approved"
-                          ? "success"
-                          : rental.status === "pending"
+                      className={`badge text-bg-${rental.status === "approved"
+                        ? "success"
+                        : rental.status === "pending"
                           ? "warning"
                           : rental.status === "rejected"
-                          ? "danger"
-                          : rental.status === "completed"
-                          ? "secondary"
-                          : "light"
-                      } text-capitalize`}
+                            ? "danger"
+                            : rental.status === "completed"
+                              ? "secondary"
+                              : "light"
+                        } text-capitalize`}
                     >
                       {rental.status}
                     </span>

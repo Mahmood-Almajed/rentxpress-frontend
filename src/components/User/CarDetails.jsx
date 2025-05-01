@@ -16,7 +16,7 @@ const CarDetails = () => {
   const GAPI = import.meta.env.VITE_REACT_APP_GOOGLE_MAPS_API_KEY;
 
   const [car, setCar] = useState(null);
-  const [rentalData, setRentalData] = useState({ startDate: "", endDate: "" , userPhone: "" });
+  const [rentalData, setRentalData] = useState({ startDate: "", endDate: "", userPhone: "" });
   const [totalPrice, setTotalPrice] = useState(null);
   const today = new Date().toISOString().split("T")[0];
   const { isLoaded } = useLoadScript({ googleMapsApiKey: GAPI });
@@ -61,10 +61,10 @@ const CarDetails = () => {
 
   const handleRent = async (e) => {
     e.preventDefault();
-   if (car.availability === "rented") {
-  toast.error("This car is already rented.");
-  return;
-}
+    if (car.availability === "rented") {
+      toast.error("This car is already rented.");
+      return;
+    }
 
     try {
       await rentalService.createRentalRequest(carId, rentalData);
@@ -212,17 +212,16 @@ const CarDetails = () => {
               <p>
                 <strong>Status:</strong>{" "}
                 <span
-                  className={`fw-semibold ${
-                    isForSale
+                  className={`fw-semibold ${isForSale
                       ? car.isSold
                         ? "text-danger"
                         : "text-success"
                       : car.availability === "available"
-                      ? "text-success"
-                      : car.availability === "unavailable"
-                      ? "text-danger"
-                      : "text-muted"
-                  }`}
+                        ? "text-success"
+                        : car.availability === "unavailable"
+                          ? "text-danger"
+                          : "text-muted"
+                    }`}
                 >
                   {isForSale
                     ? car.isSold
@@ -241,12 +240,25 @@ const CarDetails = () => {
                     <strong>Price per day:</strong> BHD {car.pricePerDay}
                   </p>
                   {totalPrice !== null && (
-                    <p className="mt-2">
-                      <strong>Total Price:</strong> BHD {totalPrice.toFixed(1)}
-                    </p>
+                    <>
+                      <p className="mt-2">
+                        <strong>Total Price:</strong> BHD {totalPrice.toFixed(1)}
+                      </p>
+                      <p className="mt-1">
+                        <strong>Number of Days:</strong>{" "}
+                        {Math.ceil(
+                          (new Date(rentalData.endDate) - new Date(rentalData.startDate)) /
+                          (1000 * 60 * 60 * 24)
+                        )}
+                      </p>
+                    </>
                   )}
+
                 </>
               )}
+              <p>
+
+              </p>
               {car.dealerId?.username && (
                 <>
                   <p>
