@@ -23,7 +23,7 @@ const brandModelMap = {
   Subaru: ["Impreza", "Outback", "Forester", "Crosstrek", "Legacy", "BRZ", "Ascent", "WRX"],
   Jeep: ["Wrangler", "Cherokee", "Compass", "Grand Cherokee", "Renegade", "Gladiator"],
   Dodge: ["Charger", "Challenger", "Durango", "Journey", "Dart", "Ram 1500"],
-  GMC: ["Sierra", "Yukon", "Terrain", "Acadia", "Canyon", "Envoy"],
+  GMC: ["Sierra", "Yukon", "Terrain", "Acadia", "Canyon", "Envoy","Savana"],
   Porsche: ["911", "Cayenne", "Macan", "Panamera", "Taycan", "Boxster"],
   LandRover: ["Range Rover", "Range Rover Sport", "Range Rover Velar", "Discovery", "Discovery Sport", "Defender", "Freelander"],
   Mitsubishi: ["Lancer", "Outlander", "Pajero", "Mirage", "ASX", "Eclipse Cross"]
@@ -119,8 +119,8 @@ const modelToTypeMap = {
   "Sequoia": "SUV",
   "WRX": "Sports",
   "X1": "SUV",
-  "e-tron": "Electric"
-
+  "e-tron": "Electric" ,
+ "Savana": "Van",
 };
 
 
