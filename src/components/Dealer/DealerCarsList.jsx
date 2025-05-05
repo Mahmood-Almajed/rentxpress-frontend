@@ -183,17 +183,18 @@ function DealerCarsList() {
                     </div>
                     {car.images.length > 1 && (
                       <>
-                        <button
+                        <button 
                           className="carousel-control-prev"
                           type="button"
                           data-bs-target={`#carousel-${car._id}`}
                           data-bs-slide="prev"
                         >
                           <span
+                            style={{backgroundColor: "gray",borderRadius: "50%"}}
                             className="carousel-control-prev-icon"
                             aria-hidden="true"
                           ></span>
-                          <span className="visually-hidden">Previous</span>
+                          <span className="visually-hidden">Previous </span>
                         </button>
                         <button
                           className="carousel-control-next"
@@ -204,6 +205,7 @@ function DealerCarsList() {
                           <span
                             className="carousel-control-next-icon"
                             aria-hidden="true"
+                            style={{backgroundColor: "gray", borderRadius: "50%"}}
                           ></span>
                           <span className="visually-hidden">Next</span>
                         </button>

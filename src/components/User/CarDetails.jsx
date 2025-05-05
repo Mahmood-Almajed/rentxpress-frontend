@@ -163,6 +163,7 @@ const CarDetails = () => {
                       data-bs-slide="prev"
                     >
                       <span
+                        style={{backgroundColor: "gray",borderRadius: "50%"}}
                         className="carousel-control-prev-icon"
                         aria-hidden="true"
                       ></span>
@@ -175,6 +176,7 @@ const CarDetails = () => {
                       data-bs-slide="next"
                     >
                       <span
+                        style={{backgroundColor: "gray",borderRadius: "50%"}}
                         className="carousel-control-next-icon"
                         aria-hidden="true"
                       ></span>
