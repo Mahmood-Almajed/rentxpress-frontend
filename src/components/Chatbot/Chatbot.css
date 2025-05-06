@@ -37,11 +37,19 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  max-height: 500px;
+  width: 400px;
+  min-width: 300px;
+  min-height: 300px;
+  height: 600px;
+  resize: both;              
+  overflow: auto;            
   border: none;
   position: relative;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  padding: 16px;
+  box-sizing: border-box;
 }
+
 
 .resizable-handle {
   position: absolute;
@@ -61,9 +69,8 @@
 }
 
 .chatbot-messages {
-  padding: 16px;
   overflow-y: auto;
-  max-height: 350px;
+  flex-grow: 1;
   scrollbar-width: thin;
   scrollbar-color: #06b4d8 transparent;
 }
@@ -83,6 +90,8 @@
   border-radius: 18px;
   max-width: 85%;
   word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
   line-height: 1.5;
   font-size: 15px;
   animation: fadeIn 0.3s ease;
@@ -111,23 +120,29 @@
 .chatbot-input {
   display: flex;
   gap: 8px;
-  padding: 16px;
+  padding-top: 16px;
   border-top: 1px solid rgba(0, 0, 0, 0.05);
   background: #f8f9fa;
+  flex-shrink: 0;
 }
 
-.chatbot-input input {
+.chatbot-input textarea {
   flex: 1;
   border: 1px solid #ddd;
   border-radius: 24px;
   padding: 12px 18px;
   font-size: 15px;
+  resize: none;
   outline: none;
   transition: all 0.3s ease;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  line-height: 1.4;
+  min-height: 40px;
+  overflow-y: hidden;
+  background-color: white;
 }
 
-.chatbot-input input:focus {
+.chatbot-input textarea:focus {
   border-color: #06b4d8;
   box-shadow: 0 0 0 3px rgba(6, 180, 216, 0.2);
 }
@@ -138,6 +153,8 @@
   border: none;
   border-radius: 24px;
   padding: 0 20px;
+  height: 45px;            
+  align-self: center;      
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -171,6 +188,7 @@
   text-decoration: underline;
 }
 
+/* =================== Responsive =================== */
 @media (max-width: 768px) {
   .chatbot-container {
     bottom: 15px;

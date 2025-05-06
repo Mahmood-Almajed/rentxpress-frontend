@@ -54,7 +54,7 @@ const Chatbot = () => {
         body: JSON.stringify({
           message: input,
           history: messageHistory,
-          user, 
+          user,
         }),
       });
 
@@ -101,7 +101,9 @@ const Chatbot = () => {
                         href.includes("carxpress-frontend.vercel.app") ||
                         href.includes("localhost:5173");
 
-                      const carPathMatch = href.match(/\/(dealer\/)?cars\/[a-z0-9]+/i);
+                      const carPathMatch = href.match(
+                        /\/(dealer\/)?cars\/[a-z0-9]+/i
+                      );
 
                       if (isFullLink && isInternalDomain && carPathMatch) {
                         return (
@@ -142,14 +144,24 @@ const Chatbot = () => {
           </div>
 
           <div className="chatbot-input">
-            <input
-              type="text"
+            <textarea
               className="form-control"
               placeholder="Ask something..."
               value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+              onChange={(e) => {
+                setInput(e.target.value);
+                e.target.style.height = "auto";
+                e.target.style.height = `${e.target.scrollHeight}px`;
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  sendMessage();
+                }
+              }}
+              rows={1}
             />
+
             <button
               className="btn"
               style={{ backgroundColor: "#06b4d8" }}
