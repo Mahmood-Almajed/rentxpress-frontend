@@ -160,7 +160,8 @@ const Dashboard = () => {
                       className="brand-logo mb-2"
                       style={{
                         height: isMobile ? 40 : 50,
-                        objectFit: "contain"
+                        objectFit: "contain",
+                        maxWidth:"100px"
                       }}
                     />
                     <p className="mb-0 fw-medium" style={{ fontSize: isMobile ? '0.8rem' : '1rem' }}>

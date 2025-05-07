@@ -191,7 +191,8 @@ const Dashboard = () => {
                       className="brand-logo mb-2"
                       style={{ 
                         height: isMobile ? 40 : 50,
-                        objectFit: "contain" 
+                        objectFit: "contain" ,
+                        maxWidth:"100px",
                       }}
                     />
                     <p 
