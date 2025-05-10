@@ -85,9 +85,12 @@
   border-color: #06b4d8;
 }
 
+
+
 .navbar-toggler {
   border: none;
   padding: 0.5rem;
+  
 }
 
 .navbar-toggler:focus {
@@ -106,6 +109,8 @@
   background-color: black;
 
 }
+
+
 
 .navbar>.container, .navbar>.container-fluid, .navbar>.container-lg, .navbar>.container-md, .navbar>.container-sm, .navbar>.container-xl, .navbar>.container-xxl {
   display: flex;
@@ -141,6 +146,18 @@
   .navbar-button {
     margin: 0.25rem auto !important;
   }
+
+  .burger-menu{
+    background-color: white;
+
+  }
+  .burger-menu:hover{
+    background-color: #06b4d8;
+  }
+
+  
+ 
+
 }
 
 .navbar-transparent {

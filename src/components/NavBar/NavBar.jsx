@@ -36,7 +36,7 @@ const NavBar = ({ user, handleSignout }) => {
           aria-controls="navbarNav"
           aria-expanded={!isCollapsed}
         >
-          <span className="navbar-toggler-icon"></span>
+          <span className="navbar-toggler-icon burger-menu"></span>
         </button>
 
         <div className={`collapse navbar-collapse ${!isCollapsed ? "show" : ""}`}>
