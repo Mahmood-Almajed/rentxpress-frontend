@@ -48,7 +48,8 @@ const CarDetails = () => {
     if (rentalData.startDate && rentalData.endDate && car) {
       const start = new Date(rentalData.startDate);
       const end = new Date(rentalData.endDate);
-      const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+      const diff = Math.floor((end - start) / (1000 * 60 * 60 * 24));
+      const days = diff + 1;
       setTotalPrice(days > 0 ? days * car.pricePerDay : null);
     } else {
       setTotalPrice(null);
@@ -247,12 +248,15 @@ const CarDetails = () => {
                         <strong>Total Price:</strong> BHD {totalPrice.toFixed(1)}
                       </p>
                       <p className="mt-1">
-                        <strong>Number of Days:</strong>{" "}
-                        {Math.ceil(
-                          (new Date(rentalData.endDate) - new Date(rentalData.startDate)) /
-                          (1000 * 60 * 60 * 24)
-                        )}
-                      </p>
+          <strong>Number of Days:</strong>{" "}
+              {(() => {
+                const start = new Date(rentalData.startDate);
+                const end = new Date(rentalData.endDate);
+                const diff = Math.floor((end - start) / (1000 * 60 * 60 * 24));
+                return diff + 1;
+              })()}
+            </p>
+
                     </>
                   )}
 
