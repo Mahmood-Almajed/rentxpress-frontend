@@ -100,7 +100,7 @@ const Footer = () => {
               <small>☎️ 17580142 </small>
               </p>
              <p   style={{ fontSize: isMobile ? '1rem' : '1.25rem'  ,textDecoration: 'none', color: 'white'}}>
-              <small>📩 carXpress.support@gmail.com</small>
+              <small>📩 carxpressbh@gmail.com</small>
               </p>
           </div>
            
