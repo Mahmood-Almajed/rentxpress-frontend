@@ -61,23 +61,32 @@ const CarDetails = () => {
   };
 
   const handleRent = async (e) => {
-    e.preventDefault();
-    if (car.availability === "rented") {
-      toast.error("This car is already rented.");
+  e.preventDefault();
+
+  if (car.availability === "rented") {
+    toast.error("This car is already rented.");
+    return;
+  }
+
+  try {
+    const res = await rentalService.createRentalRequest(carId, rentalData);
+
+    if (res.error) {
+      toast.error(res.error); // Show backend message like "You already have a pending rental request..."
       return;
     }
 
-    try {
-      await rentalService.createRentalRequest(carId, rentalData);
-      toast.success("Rental request submitted!");
-      setRentalData({ startDate: "", endDate: "" });
-      setTotalPrice(null);
-      await fetchCar();
-      setTimeout(() => nav("/my-rentals"), 1500);
-    } catch (err) {
-      toast.error("Error submitting rental request.");
-    }
-  };
+    toast.success("Rental request submitted!");
+    setRentalData({ startDate: "", endDate: "", userPhone: "" });
+    setTotalPrice(null);
+    await fetchCar();
+    setTimeout(() => nav("/my-rentals"), 1500);
+  } catch (err) {
+    toast.error("You already have a pending rental request for this car.")
+    console.error(err);
+  }
+};
+
 
   const handleAddReview = async (reviewData) => {
     try {
