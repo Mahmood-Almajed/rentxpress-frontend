@@ -1,4 +1,5 @@
 import React from 'react';
+import { BiBold } from 'react-icons/bi';
 import { useMediaQuery } from 'react-responsive';
 
 const Footer = () => {
@@ -95,7 +96,14 @@ const Footer = () => {
                 <i className="fab fa-whatsapp"></i>
               </a>
             </div>
+           <p   style={{ fontSize: isMobile ? '1rem' : '1.25rem'  ,textDecoration: 'none', color: 'white'}}>
+              <small>☎️ 17580142 </small>
+              </p>
+             <p   style={{ fontSize: isMobile ? '1rem' : '1.25rem'  ,textDecoration: 'none', color: 'white'}}>
+              <small>📩 carXpress.support@gmail.com</small>
+              </p>
           </div>
+           
         </div>
 
         <div 
