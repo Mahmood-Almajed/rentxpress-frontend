@@ -16,10 +16,19 @@ const DealerRequest = () => {
   };
 
   const handleRequest = async () => {
-    if (!/^\d{8}$/.test(formData.phone)) {
-      toast.error('Phone number must be exactly 8 digits.');
+
+    if (!formData.phone || !formData.description.trim()) {
+    toast.error("All fields are required.");
+    return;
+  }
+   const bahrainPhoneRegex = /^(\+973)?(3(20|21|22|23|80|81|82|83|84|87|88|89|9)\d{5}|33\d{6}|34[0-6]\d{5}|35(0|1|3|4|5)\d{5}|36\d{6}|37\d{6}|31\d{6}|66(3|6|9)\d{5}|6500\d{4}|1\d{7})$/;
+
+
+    if (!bahrainPhoneRegex.test(formData.phone)) {
+      toast.error("Invalid Bahrain phone number. Allowed prefixes: 3xx (Batelco), 33/34x/35x (STC), 36/37 (Zain), 31 (Royal Court), 1xxxxxxx (Landline).");
       return;
     }
+
 
 
     setLoading(true);
@@ -97,7 +106,7 @@ const DealerRequest = () => {
                 </div>
               ) : (<>
                 <h4 className="mb-3">Request Dealer Access</h4>
-                <form>
+                <form noValidate>
                   <div className="mb-3">
                     <label className="form-label">Phone Number</label>
                     <div className="input-group">
@@ -112,7 +121,7 @@ const DealerRequest = () => {
                         onChange={handleChange}
                         placeholder="Enter your number"
                         required
-                        pattern="\d{8}"
+                        pattern="(\+973)?(3(20|21|22|23|80|81|82|83|84|87|88|89|9)[0-9]{5}|33[0-9]{6}|34[0-6][0-9]{5}|35(0|1|3|4|5)[0-9]{5}|36[0-9]{6}|37[0-9]{6}|31[0-9]{6}|66(3|6|9)[0-9]{5}|6500[0-9]{4}|1[0-9]{7})"
                         maxLength={8}
                       />
 

@@ -68,11 +68,25 @@ const CarDetails = () => {
     return;
   }
 
+    if (!rentalData.startDate || !rentalData.endDate || !rentalData.userPhone) {
+    toast.error("Please fill in all fields.");
+    return;
+  }
+
+    const bahrainPhoneRegex = /^(\+973)?(3(20|21|22|23|80|81|82|83|84|87|88|89|9)\d{5}|33\d{6}|34[0-6]\d{5}|35(0|1|3|4|5)\d{5}|36\d{6}|37\d{6}|31\d{6}|66(3|6|9)\d{5}|6500\d{4}|1\d{7})$/;
+
+
+    if (!bahrainPhoneRegex.test(rentalData.userPhone)) {
+      toast.error("Invalid Bahrain phone number. Must start with 3xx, 33, 34x, 35x, 36, 37, 31, or 1 and be 8 digits.");
+      return;
+    }
+
+
   try {
     const res = await rentalService.createRentalRequest(carId, rentalData);
 
     if (res.error) {
-      toast.error(res.error); // Show backend message like "You already have a pending rental request..."
+      toast.error(res.error); 
       return;
     }
 
@@ -325,7 +339,7 @@ const CarDetails = () => {
           style={{ backgroundColor: "#181616", color: "white" }}
         >
           <h5 className="fw-bold mb-3">Rent this Car</h5>
-          <form onSubmit={handleRent}>
+          <form onSubmit={handleRent} noValidate>
             <div className="mb-3">
               <label className="form-label">Start Date</label>
               <input
@@ -360,7 +374,7 @@ const CarDetails = () => {
                 onChange={handleChange}
                 required
                 placeholder="Enter your Phone number"
-                pattern="\d{8}"
+                pattern="(\+973)?(3(20|21|22|23|80|81|82|83|84|87|88|89|9)[0-9]{5}|33[0-9]{6}|34[0-6][0-9]{5}|35(0|1|3|4|5)[0-9]{5}|36[0-9]{6}|37[0-9]{6}|31[0-9]{6}|66(3|6|9)[0-9]{5}|6500[0-9]{4}|1[0-9]{7})"
                 maxLength={8}
               />
             </div>
