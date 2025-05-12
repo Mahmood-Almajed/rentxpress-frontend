@@ -16,7 +16,11 @@ const CarDetails = () => {
   const GAPI = import.meta.env.VITE_REACT_APP_GOOGLE_MAPS_API_KEY;
 
   const [car, setCar] = useState(null);
-  const [rentalData, setRentalData] = useState({ startDate: "", endDate: "", userPhone: "" });
+  const [rentalData, setRentalData] = useState({
+    startDate: "",
+    endDate: "",
+    userPhone: "",
+  });
   const [totalPrice, setTotalPrice] = useState(null);
   const today = new Date().toISOString().split("T")[0];
   const { isLoaded } = useLoadScript({ googleMapsApiKey: GAPI });
@@ -61,47 +65,46 @@ const CarDetails = () => {
   };
 
   const handleRent = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (car.availability === "rented") {
-    toast.error("This car is already rented.");
-    return;
-  }
+    if (car.availability === "rented") {
+      toast.error("This car is already rented.");
+      return;
+    }
 
     if (!rentalData.startDate || !rentalData.endDate || !rentalData.userPhone) {
-    toast.error("Please fill in all fields.");
-    return;
-  }
+      toast.error("Please fill in all fields.");
+      return;
+    }
 
-       const bahrainPhoneRegex = /^(\+973)?(3(20|21|22|23|80|81|82|83|84|87|88|89|39)\d{5}|33\d{6}|34[0-6]\d{5}|35(0|1|3|4|5)\d{5}|36\d{6}|37\d{6}|31\d{6}|66(3|6|7|8|9)\d{5}|6500\d{4}|1\d{7})$/;
-
-
+    const bahrainPhoneRegex =
+      /^(\+973)?(3(20|21|22|23|80|81|82|83|84|87|88|89|39)\d{5}|33\d{6}|34[0-6]\d{5}|35(0|1|3|4|5)\d{5}|36\d{6}|37\d{6}|31\d{6}|66(3|6|7|8|9)\d{5}|6500\d{4}|1\d{7})$/;
 
     if (!bahrainPhoneRegex.test(rentalData.userPhone)) {
-      toast.error("Invalid Bahrain phone number. Must start with 3xx, 33, 34x, 35x, 36, 37, 31, or 1 and be 8 digits.");
+      toast.error(
+        "Invalid Bahrain phone number. Must start with 3xx, 33, 34x, 35x, 36, 37, 31, or 1 and be 8 digits."
+      );
       return;
     }
 
+    try {
+      const res = await rentalService.createRentalRequest(carId, rentalData);
 
-  try {
-    const res = await rentalService.createRentalRequest(carId, rentalData);
+      if (res.error) {
+        toast.error(res.error);
+        return;
+      }
 
-    if (res.error) {
-      toast.error(res.error); 
-      return;
+      toast.success("Rental request submitted!");
+      setRentalData({ startDate: "", endDate: "", userPhone: "" });
+      setTotalPrice(null);
+      await fetchCar();
+      setTimeout(() => nav("/my-rentals"), 1500);
+    } catch (err) {
+      toast.error("You already have a pending rental request for this car.");
+      console.error(err);
     }
-
-    toast.success("Rental request submitted!");
-    setRentalData({ startDate: "", endDate: "", userPhone: "" });
-    setTotalPrice(null);
-    await fetchCar();
-    setTimeout(() => nav("/my-rentals"), 1500);
-  } catch (err) {
-    toast.error("You already have a pending rental request for this car.")
-    console.error(err);
-  }
-};
-
+  };
 
   const handleAddReview = async (reviewData) => {
     try {
@@ -188,7 +191,7 @@ const CarDetails = () => {
                       data-bs-slide="prev"
                     >
                       <span
-                        style={{backgroundColor: "gray",borderRadius: "50%"}}
+                        style={{ backgroundColor: "gray", borderRadius: "50%" }}
                         className="carousel-control-prev-icon"
                         aria-hidden="true"
                       ></span>
@@ -201,7 +204,7 @@ const CarDetails = () => {
                       data-bs-slide="next"
                     >
                       <span
-                        style={{backgroundColor: "gray",borderRadius: "50%"}}
+                        style={{ backgroundColor: "gray", borderRadius: "50%" }}
                         className="carousel-control-next-icon"
                         aria-hidden="true"
                       ></span>
@@ -239,16 +242,17 @@ const CarDetails = () => {
               <p>
                 <strong>Status:</strong>{" "}
                 <span
-                  className={`fw-semibold ${isForSale
+                  className={`fw-semibold ${
+                    isForSale
                       ? car.isSold
                         ? "text-danger"
                         : "text-success"
                       : car.availability === "available"
-                        ? "text-success"
-                        : car.availability === "unavailable"
-                          ? "text-danger"
-                          : "text-muted"
-                    }`}
+                      ? "text-success"
+                      : car.availability === "unavailable"
+                      ? "text-danger"
+                      : "text-muted"
+                  }`}
                 >
                   {isForSale
                     ? car.isSold
@@ -269,26 +273,25 @@ const CarDetails = () => {
                   {totalPrice !== null && (
                     <>
                       <p className="mt-2">
-                        <strong>Total Price:</strong> BHD {totalPrice.toFixed(1)}
+                        <strong>Total Price:</strong> BHD{" "}
+                        {totalPrice.toFixed(1)}
                       </p>
                       <p className="mt-1">
-          <strong>Number of Days:</strong>{" "}
-              {(() => {
-                const start = new Date(rentalData.startDate);
-                const end = new Date(rentalData.endDate);
-                const diff = Math.floor((end - start) / (1000 * 60 * 60 * 24));
-                return diff + 1;
-              })()}
-            </p>
-
+                        <strong>Number of Days:</strong>{" "}
+                        {(() => {
+                          const start = new Date(rentalData.startDate);
+                          const end = new Date(rentalData.endDate);
+                          const diff = Math.floor(
+                            (end - start) / (1000 * 60 * 60 * 24)
+                          );
+                          return diff + 1;
+                        })()}
+                      </p>
                     </>
                   )}
-
                 </>
               )}
-              <p>
-
-              </p>
+              <p></p>
               {car.dealerId?.username && (
                 <>
                   <p>

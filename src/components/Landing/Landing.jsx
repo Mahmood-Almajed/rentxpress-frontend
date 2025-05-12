@@ -7,8 +7,8 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { AuthedUserContext } from "../../App";
 import * as carService from "../../services/carService";
-import { motion } from 'framer-motion';
-import { useMediaQuery } from 'react-responsive';
+import { motion } from "framer-motion";
+import { useMediaQuery } from "react-responsive";
 import "./Landing.css";
 
 const testimonials = [
@@ -53,9 +53,11 @@ const Dashboard = () => {
   const user = useContext(AuthedUserContext);
   const [cars, setCars] = useState([]);
 
-  const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
-  const isTablet = useMediaQuery({ query: '(min-width: 768px) and (max-width: 1023px)' });
-  const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
+  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
+  const isTablet = useMediaQuery({
+    query: "(min-width: 768px) and (max-width: 1023px)",
+  });
+  const isDesktop = useMediaQuery({ query: "(min-width: 1024px)" });
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -68,8 +70,6 @@ const Dashboard = () => {
     };
     fetchCars();
   }, []);
-
- 
 
   const brands = [
     {
@@ -106,42 +106,38 @@ const Dashboard = () => {
         animate={{ opacity: 3 }}
         transition={{ duration: 2 }}
       >
-        <video
-          className="hero-video"
-          autoPlay
-          muted
-          loop
-          playsInline
-        >
+        <video className="hero-video" autoPlay muted loop playsInline>
           <source src="./CINEMATIC.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         <div className="hero-overlay-content">
           <motion.h1
             className="display-4 fw-bold text-light"
-            initial={{ scale: 0.8, letterSpacing: '-1px' }}
-            animate={{ scale: 1, letterSpacing: '2px' }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
+            initial={{ scale: 0.8, letterSpacing: "-1px" }}
+            animate={{ scale: 1, letterSpacing: "2px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             style={{ fontSize: isMobile ? 40 : isTablet ? 60 : 80 }}
           >
             Car<span style={{ color: "#06b4d8" }}>X</span>press
           </motion.h1>
-          <p 
-            className="lead text-white" 
-            style={{ fontSize: isMobile ? '1rem' : '1.25rem' }}
+          <p
+            className="lead text-white"
+            style={{ fontSize: isMobile ? "1rem" : "1.25rem" }}
           >
             Find Your Perfect Car
           </p>
         </div>
       </motion.div>
 
-      <main className="container" style={{ 
-        marginTop: isMobile ? 50 : 100, 
-        marginBottom: 50,
-        paddingLeft: isMobile ? 15 : 0,
-        paddingRight: isMobile ? 15 : 0
-      }}>
-
+      <main
+        className="container"
+        style={{
+          marginTop: isMobile ? 50 : 100,
+          marginBottom: 50,
+          paddingLeft: isMobile ? 15 : 0,
+          paddingRight: isMobile ? 15 : 0,
+        }}
+      >
         <motion.section
           className="py-5"
           initial={{ opacity: 0 }}
@@ -150,24 +146,24 @@ const Dashboard = () => {
         >
           <div className="container">
             <div className="d-flex justify-content-between align-items-center mb-4">
-              <h2 
+              <h2
                 className="fw-bold"
-                style={{ fontSize: isMobile ? '1.5rem' : '2rem' }}
+                style={{ fontSize: isMobile ? "1.5rem" : "2rem" }}
               >
                 Explore Our Premium Brands
               </h2>
               <span style={{ color: "black", cursor: "pointer" }}>
-                <a 
-                  href="/signin" 
-                  className="btn" 
-                  style={{ 
-                    textDecoration: "none", 
+                <a
+                  href="/signin"
+                  className="btn"
+                  style={{
+                    textDecoration: "none",
                     backgroundColor: "#06b4d8",
-                    fontSize: isMobile ? '0.875rem' : '1rem',
-                    padding: isMobile ? '0.375rem 0.75rem' : '0.5rem 1rem'
+                    fontSize: isMobile ? "0.875rem" : "1rem",
+                    padding: isMobile ? "0.375rem 0.75rem" : "0.5rem 1rem",
                   }}
                 >
-                  {isMobile ? 'All Brands' : 'Show All Brands'} ↗
+                  {isMobile ? "All Brands" : "Show All Brands"} ↗
                 </a>
               </span>
             </div>
@@ -175,9 +171,7 @@ const Dashboard = () => {
               {brands.map((brand, idx) => (
                 <motion.div
                   className={`${
-                    isMobile ? 'col-4' : 
-                    isTablet ? 'col-3' : 
-                    'col-2'
+                    isMobile ? "col-4" : isTablet ? "col-3" : "col-2"
                   }`}
                   key={idx}
                   initial={{ opacity: 0 }}
@@ -189,15 +183,15 @@ const Dashboard = () => {
                       src={brand.logo}
                       alt={brand.name}
                       className="brand-logo mb-2"
-                      style={{ 
+                      style={{
                         height: isMobile ? 40 : 50,
-                        objectFit: "contain" ,
-                        maxWidth:"100px",
+                        objectFit: "contain",
+                        maxWidth: "100px",
                       }}
                     />
-                    <p 
+                    <p
                       className="mb-0 fw-medium"
-                      style={{ fontSize: isMobile ? '0.8rem' : '1rem' }}
+                      style={{ fontSize: isMobile ? "0.8rem" : "1rem" }}
                     >
                       {brand.name}
                     </p>
@@ -208,25 +202,28 @@ const Dashboard = () => {
           </div>
         </motion.section>
 
-        <hr style={{ margin: isMobile ? '2rem 0' : '3rem 0' }} />
+        <hr style={{ margin: isMobile ? "2rem 0" : "3rem 0" }} />
 
         <section className="ftco-section ftco-about py-5">
-          <div className="container" style={{ 
-            width: isMobile ? '100%' : isTablet ? '90%' : 1300,
-            padding: isMobile ? 0 : ''
-          }}>
+          <div
+            className="container"
+            style={{
+              width: isMobile ? "100%" : isTablet ? "90%" : 1300,
+              padding: isMobile ? 0 : "",
+            }}
+          >
             <div
               className="d-flex align-items-center justify-content-center text-white"
               style={{
                 backgroundImage: `url('./enhanced-image.jpg')`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
+                backgroundSize: "cover",
+                backgroundPosition: "center",
                 borderRadius: "20px",
                 minHeight: isMobile ? 400 : 500,
                 padding: isMobile ? "2rem" : "4rem",
                 flexDirection: "column",
                 textAlign: "center",
-                backgroundColor: "#000000aa"
+                backgroundColor: "#000000aa",
               }}
             >
               <div
@@ -238,44 +235,52 @@ const Dashboard = () => {
                   maxWidth: 700,
                 }}
               >
-                <span 
-                  className="text-uppercase fw-semibold d-block mb-2" 
-                  style={{ 
+                <span
+                  className="text-uppercase fw-semibold d-block mb-2"
+                  style={{
                     color: "#06b4d8",
-                    fontSize: isMobile ? '0.8rem' : '1rem'
+                    fontSize: isMobile ? "0.8rem" : "1rem",
                   }}
                 >
                   About us
                 </span>
-                <h2 
-                  className="fw-bold mb-4" 
-                  style={{ 
-                    fontSize: isMobile ? '1.75rem' : '2rem',
-                    lineHeight: 1.2
+                <h2
+                  className="fw-bold mb-4"
+                  style={{
+                    fontSize: isMobile ? "1.75rem" : "2rem",
+                    lineHeight: 1.2,
                   }}
                 >
                   Welcome to Car<span style={{ color: "#06b4d8" }}>X</span>press
                 </h2>
-                <p style={{ 
-                  fontSize: isMobile ? '0.9rem' : '1rem',
-                  marginBottom: isMobile ? '1rem' : '1.5rem'
-                }}>
-                  CarXpress is created by a team of three passionate developers committed to revolutionizing car sales and rentals.
+                <p
+                  style={{
+                    fontSize: isMobile ? "0.9rem" : "1rem",
+                    marginBottom: isMobile ? "1rem" : "1.5rem",
+                  }}
+                >
+                  CarXpress is created by a team of three passionate developers
+                  committed to revolutionizing car sales and rentals.
                 </p>
-                <p style={{ 
-                  fontSize: isMobile ? '0.9rem' : '1rem',
-                  marginBottom: isMobile ? '1.5rem' : '2rem'
-                }}>
-                  We aim to provide a seamless, secure, and user-friendly platform that connects car owners and buyers with renters effortlessly.
-                  With a focus on convenience, trust, and accessibility, our AI-driven system makes finding, listing, buying, and renting cars easier than ever.
+                <p
+                  style={{
+                    fontSize: isMobile ? "0.9rem" : "1rem",
+                    marginBottom: isMobile ? "1.5rem" : "2rem",
+                  }}
+                >
+                  We aim to provide a seamless, secure, and user-friendly
+                  platform that connects car owners and buyers with renters
+                  effortlessly. With a focus on convenience, trust, and
+                  accessibility, our AI-driven system makes finding, listing,
+                  buying, and renting cars easier than ever.
                 </p>
-                <a 
-                  href="/signin" 
-                  className="btn py-2 px-4" 
-                  style={{ 
-                    backgroundColor: "#06b4d8", 
+                <a
+                  href="/signin"
+                  className="btn py-2 px-4"
+                  style={{
+                    backgroundColor: "#06b4d8",
                     color: "white",
-                    fontSize: isMobile ? '0.875rem' : '1rem'
+                    fontSize: isMobile ? "0.875rem" : "1rem",
                   }}
                 >
                   Search Vehicle
@@ -285,15 +290,21 @@ const Dashboard = () => {
           </div>
         </section>
 
-        <div className="text-center mb-4" style={{ marginTop: isMobile ? 30 : 50 }}>
-          <h3 className="fw-bold" style={{ fontSize: isMobile ? '1.5rem' : '1.75rem' }}>
+        <div
+          className="text-center mb-4"
+          style={{ marginTop: isMobile ? 30 : 50 }}
+        >
+          <h3
+            className="fw-bold"
+            style={{ fontSize: isMobile ? "1.5rem" : "1.75rem" }}
+          >
             Featured Vehicles
           </h3>
-          <p 
-            className="text-muted" 
-            style={{ 
-              fontSize: isMobile ? '0.9rem' : '1rem',
-              marginBottom: isMobile ? '1rem' : '1.5rem'
+          <p
+            className="text-muted"
+            style={{
+              fontSize: isMobile ? "0.9rem" : "1rem",
+              marginBottom: isMobile ? "1rem" : "1.5rem",
             }}
           >
             Explore some of the top listed cars available now.
@@ -310,18 +321,20 @@ const Dashboard = () => {
           >
             {cars.map((car, idx) => (
               <SwiperSlide key={car._id || idx}>
-                <div 
-                  className="card h-100 shadow-sm" 
-                  style={{ 
+                <div
+                  className="card h-100 shadow-sm"
+                  style={{
                     height: isMobile ? 350 : 400,
-                    marginBottom: isMobile ? 20 : 0
+                    marginBottom: isMobile ? 20 : 0,
                   }}
                 >
                   <div
                     className="card-img-top"
                     style={{
                       height: isMobile ? 150 : 200,
-                      backgroundImage: `url(${car.images?.[0]?.url || "/placeholder.jpg"})`,
+                      backgroundImage: `url(${
+                        car.images?.[0]?.url || "/placeholder.jpg"
+                      })`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                       borderTopLeftRadius: "8px",
@@ -329,36 +342,37 @@ const Dashboard = () => {
                     }}
                   />
                   <div className="card-body d-flex flex-column text-center">
-                    <h5 
-                      className="card-title" 
-                      style={{ 
-                        fontSize: isMobile ? '1rem' : '1.25rem',
-                        marginBottom: isMobile ? '0.5rem' : '1rem'
+                    <h5
+                      className="card-title"
+                      style={{
+                        fontSize: isMobile ? "1rem" : "1.25rem",
+                        marginBottom: isMobile ? "0.5rem" : "1rem",
                       }}
                     >
                       {car.brand} {car.model}
                     </h5>
 
-                    <p 
-                      className="fw-bold" 
-                      style={{ 
-                        fontSize: isMobile ? '0.9rem' : '1rem',
-                        marginBottom: isMobile ? '0.5rem' : '1rem'
+                    <p
+                      className="fw-bold"
+                      style={{
+                        fontSize: isMobile ? "0.9rem" : "1rem",
+                        marginBottom: isMobile ? "0.5rem" : "1rem",
                       }}
                     >
                       {car.forSale ? (
                         <>BHD {car.salePrice}</>
                       ) : (
                         <>
-                          BHD {car.pricePerDay} <span className="text-muted">/ day</span>
+                          BHD {car.pricePerDay}{" "}
+                          <span className="text-muted">/ day</span>
                         </>
                       )}
                     </p>
 
                     {car.isSold && (
-                      <span 
+                      <span
                         className="badge bg-danger mb-2"
-                        style={{ fontSize: isMobile ? '0.75rem' : '0.875rem' }}
+                        style={{ fontSize: isMobile ? "0.75rem" : "0.875rem" }}
                       >
                         SOLD
                       </span>
@@ -368,11 +382,13 @@ const Dashboard = () => {
                       <Link
                         to={`/signin`}
                         className="btn btn-sm"
-                        style={{ 
-                          color: "black", 
+                        style={{
+                          color: "black",
                           backgroundColor: "#06b4d8",
-                          fontSize: isMobile ? '0.8rem' : '0.9rem',
-                          padding: isMobile ? '0.25rem 0.5rem' : '0.375rem 0.75rem'
+                          fontSize: isMobile ? "0.8rem" : "0.9rem",
+                          padding: isMobile
+                            ? "0.25rem 0.5rem"
+                            : "0.375rem 0.75rem",
                         }}
                       >
                         Details
@@ -384,9 +400,9 @@ const Dashboard = () => {
             ))}
           </Swiper>
         ) : (
-          <p 
+          <p
             className="text-center text-muted"
-            style={{ fontSize: isMobile ? '0.9rem' : '1rem' }}
+            style={{ fontSize: isMobile ? "0.9rem" : "1rem" }}
           >
             Loading featured vehicles...
           </p>
@@ -396,20 +412,20 @@ const Dashboard = () => {
           <div className="container">
             <div className="row justify-content-center mb-5">
               <div className="col-md-7 text-center">
-                <span 
-                  className="text-uppercase" 
-                  style={{ 
+                <span
+                  className="text-uppercase"
+                  style={{
                     color: "#06b4d8",
-                    fontSize: isMobile ? '0.875rem' : '1rem'
+                    fontSize: isMobile ? "0.875rem" : "1rem",
                   }}
                 >
                   Testimonial
                 </span>
-                <h2 
+                <h2
                   className="fw-bold"
-                  style={{ 
-                    fontSize: isMobile ? '1.5rem' : '2rem',
-                    marginTop: isMobile ? '0.5rem' : '1rem'
+                  style={{
+                    fontSize: isMobile ? "1.5rem" : "2rem",
+                    marginTop: isMobile ? "0.5rem" : "1rem",
                   }}
                 >
                   Happy Clients
@@ -426,7 +442,7 @@ const Dashboard = () => {
             >
               {testimonials.map((item, index) => (
                 <SwiperSlide key={index}>
-                  <div 
+                  <div
                     className="testimony-wrap text-center p-4 bg-white rounded-4 shadow-sm h-100 mx-2"
                     style={{ marginBottom: isMobile ? 20 : 0 }}
                   >
@@ -440,15 +456,15 @@ const Dashboard = () => {
                         backgroundPosition: "center",
                       }}
                     ></div>
-                    <p 
+                    <p
                       className="mb-3 fst-italic small px-3"
-                      style={{ fontSize: isMobile ? '0.8rem' : '1rem' }}
+                      style={{ fontSize: isMobile ? "0.8rem" : "1rem" }}
                     >
                       "{item.text}"
                     </p>
-                    <h6 
+                    <h6
                       className="fw-semibold mb-0"
-                      style={{ fontSize: isMobile ? '0.9rem' : '1rem' }}
+                      style={{ fontSize: isMobile ? "0.9rem" : "1rem" }}
                     >
                       {item.name}
                     </h6>
